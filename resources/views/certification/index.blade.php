@@ -157,7 +157,7 @@
                 if (willDelete) {
                     // Requisição AJAX para excluir o certificado
                     $.ajax({
-                        url: `/certification/${id}/destroy`,
+                        url: `https://awnsolucoescontabeis.com.br/awncert-app/certification/${id}/destroy`,
                         type: 'DELETE',
                         data: {
                             "_token": "{{ csrf_token() }}",

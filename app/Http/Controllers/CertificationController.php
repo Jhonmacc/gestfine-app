@@ -16,6 +16,34 @@ class CertificationController extends Controller
         return view('certification.index', compact('certificates'));
     }
 
+    public function getChartData()
+{
+    $certificates = Certification::all();
+
+    $withinDeadline = 0;
+    $nearExpiration = 0;
+    $expired = 0;
+
+    foreach ($certificates as $certificate) {
+        $validTo = strtotime($certificate->validTo_time_t);
+        $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
+
+        if ($daysUntilExpiry > 0) {
+            $withinDeadline++;
+        } elseif ($daysUntilExpiry > -10) {
+            $nearExpiration++;
+        } else {
+            $expired++;
+        }
+    }
+
+    return response()->json([
+        'labels' => ['Dentro do prazo', 'Perto de vencer', 'Vencidos'],
+        'data' => [$withinDeadline, $nearExpiration, $expired]
+    ]);
+}
+
+
     public function validateCertification(Request $request)
     {
         $request->validate([
