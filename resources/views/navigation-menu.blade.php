@@ -96,14 +96,14 @@
                     </button>
                     <div id="profile-dropdown" class="hidden absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-10">
                         <!-- Dropdown content -->
-                        <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                        <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Perfil</a>
                         @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                             <a href="{{ route('api-tokens.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">API Tokens</a>
                         @endif
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                             @csrf
                         </form>
-                        <a href="#" onclick="document.getElementById('logout-form').submit();" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                        <a href="#" onclick="document.getElementById('logout-form').submit();" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sair</a>
                     </div>
                 </div>
                 <script>document.addEventListener("DOMContentLoaded", function() {
