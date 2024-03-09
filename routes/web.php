@@ -1,6 +1,7 @@
 <?php
-
+use App\Http\Controllers\CertificationController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +26,11 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+    Route::get('/certification', [CertificationController::class, 'index'])->name('certification.index');
+    Route::post('/certification/validate', [CertificationController::class, 'validateCertification'])->name('certification.validate');
+    Route::delete('/certification/{id}/destroy', [CertificationController::class, 'destroy'])->name('certification.destroy');
+//Rotas de Testes
+    Route::get('/testes', function () {
+        return view('testes');
+    })->name('testes');
 });
