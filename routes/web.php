@@ -26,6 +26,9 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+    
+    Route::get('/dashboard/chart-data', [CertificationController::class, 'getChartData'])->name('dashboard.chartData');
+
     Route::get('/certification', [CertificationController::class, 'index'])->name('certification.index');
     Route::post('/certification/validate', [CertificationController::class, 'validateCertification'])->name('certification.validate');
     Route::delete('/certification/{id}/destroy', [CertificationController::class, 'destroy'])->name('certification.destroy');
