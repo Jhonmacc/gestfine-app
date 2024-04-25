@@ -89,6 +89,7 @@
                     <th>Razão Social e CNPJ/CPF</th>
                     <th>Societário/Empresa</th>
                     <th>Dias para Vencimento</th>
+                    <th>Download</th>
                 </tr>
             </thead>
             <tbody>
@@ -125,6 +126,9 @@
                             <td>{{ $certificate->cnpj_cpf }}</td>
                             <td>{{ $certificate->societario }}</td>
                             <td>{{ $daysUntilExpiry }}</td>
+                            <td>
+                                <a href="{{ route('certification.download', $certificate->id) }}" class="btn btn-sm btn-primary">Baixar</a>
+                            </td>
                         </tr>
                     @endforeach
                 @endif
