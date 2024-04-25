@@ -49,11 +49,13 @@ class CertificationController extends Controller
         $request->validate([
             'certificate' => 'required|file',
             'password' => 'required|string',
+            'societario' => 'nullable|string',
         ]);
 
         // Captura o arquivo e a senha do certificado do request
         $certificateFile = $request->file('certificate');
         $certPassword = $request->input('password');
+        $societario = $request->input('societario');
 
         // Lê o conteúdo do arquivo do certificado
         $pfxContent = file_get_contents($certificateFile->getPathName());
@@ -77,6 +79,7 @@ class CertificationController extends Controller
         $certification->name = $certInfo['name'];
         $certification->validTo_time_t = date('Y-m-d', $certInfo['validTo_time_t']);
         $certification->cnpj_cpf = $certInfo['subject']['CN'];
+        $certification->societario = $societario;
         $certification->save();
 
         return redirect()->route('certification.index')->with('success', 'Certificado salvo com sucesso!');

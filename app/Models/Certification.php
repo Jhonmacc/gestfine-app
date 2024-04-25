@@ -13,6 +13,7 @@ class Certification extends Model
     'name',
     'validTo_time_t',
     'cnpj_cpf',
+    'societario',
     ];
 
 }

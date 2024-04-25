@@ -52,6 +52,10 @@
                     <label for="password" class="form-label">Senha do Certificado</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
+                <div class="col-md-6">
+                    <label for="password" class="form-label">Quadro Societário/Empresa</label>
+                    <input type="text" class="form-control" id="societario" name="societario">
+                </div>
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary">Enviar</button>
                 </div>
@@ -83,6 +87,7 @@
                     <th>Nome</th>
                     <th>Data</th>
                     <th>Razão Social e CNPJ/CPF</th>
+                    <th>Societário/Empresa</th>
                     <th>Dias para Vencimento</th>
                 </tr>
             </thead>
@@ -118,6 +123,7 @@
                             <td style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
                                 {{ date('d/m/Y', strtotime($certificate->validTo_time_t)) }}</td>
                             <td>{{ $certificate->cnpj_cpf }}</td>
+                            <td>{{ $certificate->societario }}</td>
                             <td>{{ $daysUntilExpiry }}</td>
                         </tr>
                     @endforeach
