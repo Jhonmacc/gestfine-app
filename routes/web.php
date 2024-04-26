@@ -27,6 +27,10 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
+    Route::get('/register', function () {
+        return view('auth.register'); 
+    })->name('register');
+
     Route::get('/dashboard/chart-data', [CertificationController::class, 'getChartData'])->name('dashboard.chartData');
     Route::get('/certification', [CertificationController::class, 'index'])->name('certification.index');
     Route::get('/certification/download/{id}', [CertificationController::class, 'download'])->name('certification.download');
