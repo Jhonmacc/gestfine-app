@@ -88,7 +88,7 @@
                     <th>Data</th>
                     <th>Razão Social e CNPJ/CPF</th>
                     <th>Societário/Empresa</th>
-                    <th>Dias para Vencimento</th>
+                    <th>Dias Para Vencimento</th>
                     <th>Download</th>
                 </tr>
             </thead>
