@@ -18,31 +18,40 @@ class CertificationController extends Controller
     }
 
     public function getChartData()
-    {
-        $certificates = Certification::all();
+{
+    $certificates = Certification::all();
 
-        $withinDeadline = 0;
-        $nearExpiration = 0;
-        $expired = 0;
+    $withinDeadline = 0;
+    $nearExpiration = 0;
+    $expired = 0;
+    $societarioCount = 0;
+    $nonSocietarioCount = 0;
 
-        foreach ($certificates as $certificate) {
-            $validTo = strtotime($certificate->validTo_time_t);
-            $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
+    foreach ($certificates as $certificate) {
+        $validTo = strtotime($certificate->validTo_time_t);
+        $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
 
-            if ($daysUntilExpiry > 0) {
-                $withinDeadline++;
-            } elseif ($daysUntilExpiry > -10) {
-                $nearExpiration++;
-            } else {
-                $expired++;
-            }
+        if ($daysUntilExpiry > 0) {
+            $withinDeadline++;
+        } elseif ($daysUntilExpiry > -10) {
+            $nearExpiration++;
+        } else {
+            $expired++;
         }
 
-        return response()->json([
-            'labels' => ['Dentro do prazo', 'Perto de vencer', 'Vencidos'],
-            'data' => [$withinDeadline, $nearExpiration, $expired]
-        ]);
+        if (!empty($certificate->societario)) {
+            $societarioCount++;
+        } else {
+            $nonSocietarioCount++;
+        }
     }
+
+    return response()->json([
+        'statusData' => [$withinDeadline, $nearExpiration, $expired],
+        'societarioData' => [$societarioCount, $nonSocietarioCount]
+    ]);
+}
+
 
     public function validateCertification(Request $request)
     {
