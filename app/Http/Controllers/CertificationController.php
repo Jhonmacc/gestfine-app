@@ -12,46 +12,53 @@ class CertificationController extends Controller
     {
         // Recupera todos os certificados do banco de dados
         $certificates = Certification::all();
+        //Cálculo para os Dashboard
+        $totalCertificates = $certificates->count();
+        $validCertificates = $certificates->where('validTo_time_t', '>=', now())->count();
+        $expiredCertificates = $certificates->where('validTo_time_t', '<', now())->count();
+        $nearExpiration = $certificates->filter(function ($certificate) {
+            $expirationDate = strtotime($certificate->validTo_time_t);
+            $daysToExpire = ($expirationDate - time()) / (60 * 60 * 24);
+            return $daysToExpire > 0 && $daysToExpire <= 30;
+        })->count();
 
-        // Passa os certificados para a view
-        return view('certification.index', compact('certificates'));
+        return view('certification.index', compact('certificates', 'totalCertificates', 'validCertificates', 'expiredCertificates', 'nearExpiration'));
     }
 
     public function getChartData()
-{
-    $certificates = Certification::all();
+    {
+        $certificates = Certification::all();
 
-    $withinDeadline = 0;
-    $nearExpiration = 0;
-    $expired = 0;
-    $societarioCount = 0;
-    $nonSocietarioCount = 0;
+        $withinDeadline = 0;
+        $nearExpiration = 0;
+        $expired = 0;
+        $societarioCount = 0;
+        $nonSocietarioCount = 0;
 
-    foreach ($certificates as $certificate) {
-        $validTo = strtotime($certificate->validTo_time_t);
-        $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
+        foreach ($certificates as $certificate) {
+            $validTo = strtotime($certificate->validTo_time_t);
+            $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
 
-        if ($daysUntilExpiry > 0) {
-            $withinDeadline++;
-        } elseif ($daysUntilExpiry > -10) {
-            $nearExpiration++;
-        } else {
-            $expired++;
+            if ($daysUntilExpiry > 0) {
+                $withinDeadline++;
+            } elseif ($daysUntilExpiry > -10) {
+                $nearExpiration++;
+            } else {
+                $expired++;
+            }
+
+            if (!empty($certificate->societario)) {
+                $societarioCount++;
+            } else {
+                $nonSocietarioCount++;
+            }
         }
 
-        if (!empty($certificate->societario)) {
-            $societarioCount++;
-        } else {
-            $nonSocietarioCount++;
-        }
+        return response()->json([
+            'statusData' => [$withinDeadline, $nearExpiration, $expired],
+            'societarioData' => [$societarioCount, $nonSocietarioCount]
+        ]);
     }
-
-    return response()->json([
-        'statusData' => [$withinDeadline, $nearExpiration, $expired],
-        'societarioData' => [$societarioCount, $nonSocietarioCount]
-    ]);
-}
-
 
     public function validateCertification(Request $request)
     {
