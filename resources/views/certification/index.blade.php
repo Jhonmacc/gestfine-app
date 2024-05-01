@@ -41,7 +41,7 @@
         background-color: #d36200;
     }
     .card:hover {
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
 </style>
 
@@ -52,32 +52,44 @@
         <div class="col-md-3">
             <div class="card text-center blue-background">
                 <div class="card-block">
-                    <h6 class="card-title">Certificados Cadastrados</h4>
-                    <h2><i class="fa fa-home fa-3x"></i>{{ $totalCertificates }}</h2>
+                    <h6 class="card-title">Certificados Cadastrados</h6>
+                    <h2>
+                        <i class="fa fa-home fa-3x"></i>
+                        {{ $totalCertificates }}
+                    </h2>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-center green-background">
                 <div class="card-block">
-                    <h6 class="card-title">Certificados No Prazo</h4>
-                    <h2><i class="green-background fa fa-address-card-o fa-3x">{{ $validCertificates }}</i></h2>
+                    <h6 class="card-title">Certificados No Prazo</h6>
+                    <h2>
+                        <i class="fa fa-address-card-o fa-3x"></i>
+                        {{ $validCertificates }}
+                    </h2>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-center red-background">
                 <div class="card-block">
-                    <h6 class="card-title">Certificados Vencidos</h4>
-                    <h2><i class="fa fa-address-card-o fa-3x">{{ $expiredCertificates }}</i></h2>
+                    <h6 class="card-title">Certificados Vencidos</h6>
+                    <h2>
+                        <i class="fa fa-address-card-o fa-3x"></i>
+                        {{ $expiredCertificates }}
+                    </h2>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-center orange-background">
                 <div class="card-block">
-                    <h6 class="card-title">Certificados Vencendo</h4>
-                    <h2><i class="fa fa-address-card-o fa-3x">{{ $nearExpiration }}</i></h2>
+                    <h6 class="card-title">Certificados Vencendo</h6>
+                    <h2>
+                        <i class="fa fa-address-card-o fa-3x"></i>
+                        {{ $nearExpiration }}
+                    </h2>
                 </div>
             </div>
         </div>
