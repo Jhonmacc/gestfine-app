@@ -1,7 +1,7 @@
 <?php
 use App\Http\Controllers\CertificationController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+
+Route::get('/', [LoginController::class, 'welcome']);
 
 Route::middleware([
     'auth:sanctum',
@@ -28,7 +28,7 @@ Route::middleware([
     })->name('dashboard');
 
     Route::get('/register', function () {
-        return view('auth.register'); 
+        return view('auth.register');
     })->name('register');
 
     Route::get('/dashboard/chart-data', [CertificationController::class, 'getChartData'])->name('dashboard.chartData');
