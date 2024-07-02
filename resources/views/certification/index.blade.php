@@ -331,7 +331,7 @@
         }).then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url: `http://127.0.0.1:8000/certification/${id}/destroy`,
+                    url: `https://awnsolucoescontabeis.com.br/awncert-app/certification/${id}/destroy`,
                     type: 'DELETE',
                     data: {
                         "_token": "{{ csrf_token() }}",
