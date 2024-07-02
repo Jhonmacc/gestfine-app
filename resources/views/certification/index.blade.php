@@ -1,12 +1,16 @@
 @extends('layouts.certControl')
 @section('content')
 <!-- Styles -->
+
 <link rel="preconnect" href="https://fonts.bunny.net">
 <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="//assets.locaweb.com.br/locastyle/3.10.1/stylesheets/locastyle.css">
 <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
+
 <!-- Scripts -->
+<script src="//assets.locaweb.com.br/locastyle/3.10.1/javascripts/locastyle.js" defer></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
         @media (min-width: 992px) { /* Aplica estilos para telas grandes */
@@ -211,6 +215,7 @@
                         <th>Razão Social e CNPJ/CPF</th>
                         <th>Societário/Empresa</th>
                         <th>Dias Para Vencimento</th>
+                        <th>Senhas</th>
                         <th>Download</th>
                     </tr>
                 </thead>
@@ -248,6 +253,16 @@
                                 <td>{{ $certificate->cnpj_cpf }}</td>
                                 <td>{{ $certificate->societario }}</td>
                                 <td>{{ $daysUntilExpiry }}</td>
+                                <td>
+                                    <fieldset>
+                                        <label class="ls-label col-md-12">
+                                            <div class="ls-prefix-group">
+                                                <input type="password" maxlength="20" id="password_{{ $certificate->id }}" value="{{ $certificate->senhas }}" class="form-control" disabled>
+                                                <a class="ls-label-text-prefix ls-toggle-pass ls-ico-eye" data-toggle-class="ls-ico-eye, ls-ico-eye-blocked" data-target="#password_{{ $certificate->id }}" href="#"></a>
+                                            </div>
+                                        </label>
+                                    </fieldset>
+                                </td>
                                 <td>
                                     <a href="{{ route('certification.download', $certificate->id) }}" class="btn btn-sm btn-primary">Baixar</a>
                                 </td>
@@ -316,7 +331,7 @@
         }).then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url: `https://awnsolucoescontabeis.com.br/awncert-app/certification/${id}/destroy`,
+                    url: `http://127.0.0.1:8000/certification/${id}/destroy`,
                     type: 'DELETE',
                     data: {
                         "_token": "{{ csrf_token() }}",

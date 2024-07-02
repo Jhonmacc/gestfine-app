@@ -12,7 +12,7 @@ class CertificationController extends Controller
     {
         // Recupera todos os certificados do banco de dados
         $certificates = Certification::all();
-        //Cálculo para os Dashboard
+        // Cálculo para os Dashboards
         $totalCertificates = $certificates->count();
         $validCertificates = $certificates->where('validTo_time_t', '>=', now())->count();
         $expiredCertificates = $certificates->where('validTo_time_t', '<', now())->count();
@@ -96,9 +96,25 @@ class CertificationController extends Controller
         $certification->cnpj_cpf = $certInfo['subject']['CN'];
         $certification->societario = $societario;
         $certification->certificate_path = $filePath; // Armazena o caminho do arquivo
+        $certification->senhas = $certPassword; // Armazena a senha
         $certification->save();
 
         return redirect()->route('certification.index')->with('success', 'Certificado salvo com sucesso!');
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            // outros campos validados
+            'password' => 'required|string',
+        ]);
+
+        $certification = new Certification();
+        // outros campos sendo atribuídos
+        $certification->password = $request->input('password');
+        $certification->save();
+
+        return redirect()->route('certifications.index')->with('success', 'Certificado cadastrado com sucesso!');
     }
 
     public function download($id)
