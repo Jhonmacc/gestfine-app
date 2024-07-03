@@ -182,13 +182,15 @@
         </fieldset>
 
         <fieldset class="form-group border p-3">
-            <label for="statusFilter">Filtrar por Status:</label>
+            <label for="statusFilter " class="form-label"><strong>Filtrar por Status:</strong></label>
+            <div class="form-group">
             <select id="statusFilter" class="form-control">
                 <option value="Todos">Todos</option>
                 <option value="No Prazo">No Prazo</option>
                 <option value="Perto de Vencer">Perto de Vencer</option>
                 <option value="Vencido">Vencido</option>
             </select>
+        </div>
         </fieldset>
 
 
