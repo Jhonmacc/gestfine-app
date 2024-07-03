@@ -17,6 +17,7 @@ use App\Http\Controllers\LoginController;
 
 
 Route::get('/', [LoginController::class, 'welcome']);
+Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 
 Route::middleware([
     'auth:sanctum',

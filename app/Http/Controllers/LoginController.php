@@ -19,4 +19,11 @@ class LoginController extends Controller
         $backgroundImage = $this->pexelsService->getRandomPhoto();
         return view('welcome', compact('backgroundImage'));
     }
+
+    public function showLoginForm()
+{
+    $backgroundImage = $this->pexelsService->getRandomPhoto();
+    return view('auth.login', compact('backgroundImage'));
+}
+
 }
