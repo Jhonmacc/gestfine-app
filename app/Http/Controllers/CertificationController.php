@@ -5,25 +5,47 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Certification;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class CertificationController extends Controller
 {
-    public function index()
-    {
-        // Recupera todos os certificados do banco de dados
-        $certificates = Certification::all();
-        // Cálculo para os Dashboards
-        $totalCertificates = $certificates->count();
-        $validCertificates = $certificates->where('validTo_time_t', '>=', now())->count();
-        $expiredCertificates = $certificates->where('validTo_time_t', '<', now())->count();
-        $nearExpiration = $certificates->filter(function ($certificate) {
-            $expirationDate = strtotime($certificate->validTo_time_t);
-            $daysToExpire = ($expirationDate - time()) / (60 * 60 * 24);
-            return $daysToExpire > 0 && $daysToExpire <= 30;
-        })->count();
+    public function index(Request $request)
+{
+    $certificates = Certification::all();
 
-        return view('certification.index', compact('certificates', 'totalCertificates', 'validCertificates', 'expiredCertificates', 'nearExpiration'));
+    $status = $request->input('status', 'Todos');
+
+    if ($status !== 'Todos') {
+        $certificates = $certificates->filter(function ($certificate) use ($status) {
+            $validTo = Carbon::parse($certificate->validTo_time_t);
+            $daysUntilExpiry = $validTo->diffInDays(Carbon::now(), false);
+
+            switch ($status) {
+                case 'No Prazo':
+                    return $daysUntilExpiry > 30;
+                case 'Perto de Vencer':
+                    return $daysUntilExpiry > 0 && $daysUntilExpiry <= 30;
+                case 'Vencido':
+                    return $daysUntilExpiry <= 0;
+                default:
+                    return true;
+            }
+        });
     }
+
+    $totalCertificates = $certificates->count();
+    $validCertificates = $certificates->where('validTo_time_t', '>=', now())->count();
+    $expiredCertificates = $certificates->where('validTo_time_t', '<', now())->count();
+    $nearExpiration = $certificates->filter(function ($certificate) {
+        $expirationDate = strtotime($certificate->validTo_time_t);
+        $daysToExpire = ($expirationDate - time()) / (60 * 60 * 24);
+        return $daysToExpire > 0 && $daysToExpire <= 30;
+    })->count();
+
+    return view('certification.index', compact('certificates', 'totalCertificates', 'validCertificates', 'expiredCertificates', 'nearExpiration'));
+}
+
+
 
     public function getChartData()
     {
