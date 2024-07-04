@@ -277,10 +277,9 @@
                                         {{ $daysUntilExpiry }} dias (No Prazo)
                                     @endif
                                 </td>
-
                                 <td>
                                     <fieldset class="password-fieldset">
-                                        <input type="password" value="{{ $certificate->senhas }}" class="form-control password-input">
+                                        <input type="password" value="{{ $certificate->senhas }}" class="form-control password-input" data-id="{{ $certificate->id }}">
                                         <i class="toggle-password fa fa-eye"></i>
                                     </fieldset>
                                 </td>
@@ -398,6 +397,45 @@
             }
         });
     }
+    // Função para alternar a visibilidade da senha
+  
+
+    // Função para validar e atualizar a senha ao sair do campo input
+    $(document).on('blur', '.password-input', function() {
+        const input = $(this);
+        const password = input.val();
+        const certificateId = input.data('id');
+
+        $.ajax({
+            url: '/certification/validate-password',
+            type: 'POST',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "password": password,
+                "id": certificateId
+            },
+            success: function(response) {
+                if (response.valid) {
+                    swal({
+                        title: "Sucesso!",
+                        text: "Senha alterada com sucesso!",
+                        icon: "success",
+                        timer: 1000,
+                        buttons: false
+                    });
+                } else {
+                    swal({
+                        title: "Erro!",
+                        text: "A senha digitada está incorreta!",
+                        icon: "error",
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                swal("Erro!", "Ocorreu um erro ao validar a senha", "error");
+            }
+        });
+    });
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {

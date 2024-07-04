@@ -121,6 +121,30 @@ class CertificationController extends Controller
 
         return redirect()->route('certification.index')->with('success', 'Certificado salvo com sucesso!');
     }
+    public function validatePassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+            'id' => 'required|integer|exists:certifications,id',
+        ]);
+
+        $certificate = Certification::find($request->id);
+
+        // Lê o conteúdo do arquivo do certificado
+        $pfxContent = Storage::disk('public')->get($certificate->certificate_path);
+
+        // Tenta ler o certificado com a nova senha
+        if (openssl_pkcs12_read($pfxContent, $x509certdata, $request->password)) {
+            // Atualiza a senha no banco de dados
+            $certificate->senhas = $request->password;
+            $certificate->save();
+
+            return response()->json(['valid' => true]);
+        } else {
+            return response()->json(['valid' => false]);
+        }
+    }
+
     public function update(Request $request, $id)
     {
         $request->validate([
