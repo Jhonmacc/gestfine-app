@@ -61,7 +61,7 @@ class CertificationController extends Controller
 
             if ($daysUntilExpiry > 0) {
                 $withinDeadline++;
-            } elseif ($daysUntilExpiry > -10) {
+            } elseif ($daysUntilExpiry > -30) {
                 $nearExpiration++;
             } else {
                 $expired++;
