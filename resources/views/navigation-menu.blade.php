@@ -100,31 +100,33 @@
                         @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                             <a href="{{ route('api-tokens.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">API Tokens</a>
                         @endif
+                        <a href="{{ route('parametros.edit-parameters') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Editar Parâmetros</a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                             @csrf
                         </form>
                         <a href="#" onclick="document.getElementById('logout-form').submit();" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sair</a>
                     </div>
                 </div>
-                <script>document.addEventListener("DOMContentLoaded", function() {
-                    var dropdownTrigger = document.getElementById('profile-dropdown-trigger');
-                    var dropdown = document.getElementById('profile-dropdown');
-                    var dropdownIcon = document.getElementById('dropdown-icon');
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        var dropdownTrigger = document.getElementById('profile-dropdown-trigger');
+                        var dropdown = document.getElementById('profile-dropdown');
+                        var dropdownIcon = document.getElementById('dropdown-icon');
 
-                    dropdownTrigger.addEventListener('click', function() {
-                        dropdown.classList.toggle('open');
-                        dropdownIcon.classList.toggle('rotate-180'); // Rotate icon when dropdown is opened
-                    });
+                        dropdownTrigger.addEventListener('click', function() {
+                            dropdown.classList.toggle('open');
+                            dropdownIcon.classList.toggle('rotate-180'); // Rotate icon when dropdown is opened
+                        });
 
-                    // Close dropdown when clicking outside
-                    document.addEventListener('click', function(event) {
-                        if (!dropdownTrigger.contains(event.target) && !dropdown.contains(event.target)) {
-                            dropdown.classList.remove('open');
-                            dropdownIcon.classList.remove('rotate-180');
-                        }
+                        // Close dropdown when clicking outside
+                        document.addEventListener('click', function(event) {
+                            if (!dropdownTrigger.contains(event.target) && !dropdown.contains(event.target)) {
+                                dropdown.classList.remove('open');
+                                dropdownIcon.classList.remove('rotate-180');
+                            }
+                        });
                     });
-                });
-                </script>
+                    </script>
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">

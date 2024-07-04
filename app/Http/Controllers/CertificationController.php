@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Certification;
+use App\Models\Parametro;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
@@ -11,6 +12,14 @@ class CertificationController extends Controller
 {
     public function index(Request $request)
     {
+        // Buscar o valor do parâmetro 'dias_para_vencer'
+        $daysUntilWarning = Parametro::where('dias_faltantes', 'dias_para_vencer')->value('valor');
+        if (is_null($daysUntilWarning)) {
+            $daysUntilWarning = 10; // Valor padrão caso o parâmetro não esteja definido
+        } else {
+            $daysUntilWarning = (int) $daysUntilWarning; // Certifique-se de que é um inteiro
+        }
+
         $certificates = Certification::all();
 
         $status = $request->input('status', 'Todos');
@@ -42,7 +51,7 @@ class CertificationController extends Controller
             return $daysToExpire > 0 && $daysToExpire <= 30;
         })->count();
 
-        return view('certification.index', compact('certificates', 'totalCertificates', 'validCertificates', 'expiredCertificates', 'nearExpiration'));
+        return view('certification.index', compact('certificates', 'totalCertificates', 'validCertificates', 'expiredCertificates', 'nearExpiration', 'daysUntilWarning'));
     }
 
     public function getChartData()

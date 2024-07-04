@@ -2,17 +2,6 @@
 @section('content')
 <!-- Styles -->
 
-<link rel="preconnect" href="https://fonts.bunny.net">
-<link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
-<link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="//assets.locaweb.com.br/locastyle/3.10.1/stylesheets/locastyle.css">
-<!-- Styles do campo senha icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-<!-- Scripts jquery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
         @media (min-width: 992px) { /* Aplica estilos para telas grandes */
         .card {
@@ -241,17 +230,17 @@
                 </thead>
                 <tbody>
                     @if (isset($certificates))
-                        @foreach ($certificates as $certificate)
-                            @php
-                                $validTo = strtotime($certificate->validTo_time_t);
-                                $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
-                                $bgColor = $daysUntilExpiry <= 0 ? 'red' : ($daysUntilExpiry <= 10 ? 'yellow' : 'green');
-                                $fontColor = $daysUntilExpiry <= 0 || $daysUntilExpiry > 10 ? 'white' : 'black';
+                    @foreach ($certificates as $certificate)
+                        @php
+                            $validTo = strtotime($certificate->validTo_time_t);
+                            $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
+                            $bgColor = $daysUntilExpiry <= 0 ? 'red' : ($daysUntilExpiry <= $daysUntilWarning ? 'yellow' : 'green');
+                            $fontColor = $daysUntilExpiry <= 0 || $daysUntilExpiry > $daysUntilWarning ? 'white' : 'black';
 
-                                // Tratamento do nome
-                                preg_match('/CN=(.*?):\d+/', $certificate->name, $matches);
-                                $cleanName = $matches[1] ?? 'Nome Indisponível';
-                            @endphp
+                            // Tratamento do nome
+                            preg_match('/CN=(.*?):\d+/', $certificate->name, $matches);
+                            $cleanName = $matches[1] ?? 'Nome Indisponível';
+                        @endphp
                             <tr>
                                 <td>
                                     <div class="dropdown">
@@ -271,7 +260,7 @@
                                 <td style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
                                     @if ($daysUntilExpiry <= 0)
                                         Vencido
-                                    @elseif ($daysUntilExpiry <= 10)
+                                    @elseif ($daysUntilExpiry <= $daysUntilWarning)
                                         {{ $daysUntilExpiry }} dias (Perto de Vencer)
                                     @else
                                         {{ $daysUntilExpiry }} dias (No Prazo)
@@ -293,12 +282,8 @@
             </table>
         </fieldset>
 
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-
     <script>
-    $(document).ready(function() {
+        $(document).ready(function() {
         var table = $('#certificates-table').DataTable({
             language: {
                 url: '//cdn.datatables.net/plug-ins/2.0.1/i18n/pt-BR.json',
@@ -306,15 +291,15 @@
         });
 
         $(document).on('click', '.edit-btn', function(e) {
-        e.preventDefault();
-        var id = $(this).data('id');
-        var societario = $(this).closest('tr').find('td').eq(4).text(); // Supondo que a coluna Societário é a quarta coluna
+            e.preventDefault();
+            var id = $(this).data('id');
+            var societario = $(this).closest('tr').find('td').eq(4).text(); // Supondo que a coluna Societário é a quarta coluna
 
-        $('#editCertificateForm').attr('action', '/certification/' + id + '/update');
-        $('#editSocietario').val(societario);
+            $('#editCertificateForm').attr('action', '/certification/' + id + '/update');
+            $('#editSocietario').val(societario);
 
-        $('#editCertificateModal').modal('show');
-    });
+            $('#editCertificateModal').modal('show');
+        });
 
         // Função para aplicar filtros com base no status selecionado
         function applyStatusFilter(status) {
@@ -345,7 +330,7 @@
             applyStatusFilter(selectedStatus);
         });
 
-        // reset para voltar ao estado padrão (Todos os certificados)
+        // Reset para voltar ao estado padrão (Todos os certificados)
         $('#resetFilter').on('click', function() {
             $('#statusFilter').val('Todos'); // Define o filtro como 'Todos'
             applyStatusFilter('Todos'); // Aplica o filtro 'Todos'
@@ -358,82 +343,80 @@
 
             confirmDeletion(id, name);
         });
-    });
 
-    function confirmDeletion(id, name) {
-        swal({
-            title: "Você tem certeza?",
-            text: `Você realmente deseja excluir o certificado ${name}?`,
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        }).then((willDelete) => {
-            if (willDelete) {
-                $.ajax({
-                    url: `https://awnsolucoescontabeis.com.br/awncert-app/certification/${id}/destroy`,
-                    type: 'DELETE',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                    },
-                    success: function(result) {
-                        if (result.success) {
-                            swal({
-                                title: "Excluído!",
-                                text: `O Certificado ${name} foi excluído com sucesso!`,
-                                icon: "success",
-                                timer: 2000,
-                                buttons: false
-                            }).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            swal("Erro!", result.message, "error");
+        function confirmDeletion(id, name) {
+            swal({
+                title: "Você tem certeza?",
+                text: `Você realmente deseja excluir o certificado ${name}?`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "{{ route('certification.destroy', ['id' => '__id__']) }}".replace('__id__', id),
+                        type: 'DELETE',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                        },
+                        success: function(result) {
+                            if (result.success) {
+                                swal({
+                                    title: "Excluído!",
+                                    text: `O Certificado ${name} foi excluído com sucesso!`,
+                                    icon: "success",
+                                    timer: 2000,
+                                    buttons: false
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                swal("Erro!", result.message, "error");
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            swal("Erro!", "Ocorreu um erro ao excluir o certificado", "error");
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        swal("Erro!", "Ocorreu um erro ao excluir o certificado", "error");
-                    }
-                });
-            }
-        });
-    }
-    // Função para alternar a visibilidade da senha
-  
-
-    // Função para validar e atualizar a senha ao sair do campo input
-    $(document).on('blur', '.password-input', function() {
-        const input = $(this);
-        const password = input.val();
-        const certificateId = input.data('id');
-
-        $.ajax({
-            url: '/certification/validate-password',
-            type: 'POST',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                "password": password,
-                "id": certificateId
-            },
-            success: function(response) {
-                if (response.valid) {
-                    swal({
-                        title: "Sucesso!",
-                        text: "Senha alterada com sucesso!",
-                        icon: "success",
-                        timer: 1000,
-                        buttons: false
-                    });
-                } else {
-                    swal({
-                        title: "Erro!",
-                        text: "A senha digitada está incorreta!",
-                        icon: "error",
                     });
                 }
-            },
-            error: function(xhr, status, error) {
-                swal("Erro!", "Ocorreu um erro ao validar a senha", "error");
-            }
+            });
+        }
+
+        // Função para validar e atualizar a senha ao sair do campo input
+        $(document).on('blur', '.password-input', function() {
+            const input = $(this);
+            const password = input.val();
+            const certificateId = input.data('id');
+
+            $.ajax({
+                url: '/certification/validate-password',
+                type: 'POST',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "password": password,
+                    "id": certificateId
+                },
+                success: function(response) {
+                    if (response.valid) {
+                        swal({
+                            title: "Sucesso!",
+                            text: "Senha alterada com sucesso!",
+                            icon: "success",
+                            timer: 1000,
+                            buttons: false
+                        });
+                    } else {
+                        swal({
+                            title: "Erro!",
+                            text: "A senha digitada está incorreta!",
+                            icon: "error",
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    swal("Erro!", "Ocorreu um erro ao validar a senha", "error");
+                }
+            });
         });
     });
     </script>
