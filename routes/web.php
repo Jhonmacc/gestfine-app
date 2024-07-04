@@ -36,6 +36,7 @@ Route::middleware([
     Route::get('/certification', [CertificationController::class, 'index'])->name('certification.index');
     Route::get('/certification/download/{id}', [CertificationController::class, 'download'])->name('certification.download');
     Route::post('/certification/validate', [CertificationController::class, 'validateCertification'])->name('certification.validate');
+    Route::put('/certification/{id}/update', [CertificationController::class, 'update'])->name('certification.update');
     Route::delete('/certification/{id}/destroy', [CertificationController::class, 'destroy'])->name('certification.destroy');
 
 //Rotas de Testes

@@ -192,8 +192,38 @@
             </select>
         </div>
         </fieldset>
-
-
+        <div class="modal fade" id="editCertificateModal" tabindex="-1" aria-labelledby="editCertificateModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form id="editCertificateForm" action="{{ route('certification.update', ['id' => 0]) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editCertificateModalLabel">Substituir Certificado</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="editCertificate" class="form-label">Novo Certificado (.pfx)</label>
+                                <input type="file" class="form-control" id="editCertificate" name="certificate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPassword" class="form-label">Nova Senha do Certificado</label>
+                                <input type="password" class="form-control" id="editPassword" name="password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editSocietario" class="form-label">Quadro Societário/Empresa</label>
+                                <input type="text" class="form-control" id="editSocietario" name="societario">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <fieldset class="form-group border p-3">
             <legend class="badge text-bg-primary span12" style="font-size: 18px;">Lista de Certificados</legend>
             <table id="certificates-table" class="table table-sm table-striped table-bordered" style="width:100%">
@@ -229,6 +259,7 @@
                                             Ações
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $certificate->id }}">
+                                            <li><a class="dropdown-item edit-btn" href="#" data-id="{{ $certificate->id }}" data-name="{{ $cleanName }}">Editar</a></li>
                                             <li><a class="dropdown-item delete-btn" href="#" data-id="{{ $certificate->id }}" data-name="{{ $cleanName }}">Excluir</a></li>
                                         </ul>
                                     </div>
@@ -274,6 +305,17 @@
                 url: '//cdn.datatables.net/plug-ins/2.0.1/i18n/pt-BR.json',
             },
         });
+
+        $(document).on('click', '.edit-btn', function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        var societario = $(this).closest('tr').find('td').eq(4).text(); // Supondo que a coluna Societário é a quarta coluna
+
+        $('#editCertificateForm').attr('action', '/certification/' + id + '/update');
+        $('#editSocietario').val(societario);
+
+        $('#editCertificateModal').modal('show');
+    });
 
         // Função para aplicar filtros com base no status selecionado
         function applyStatusFilter(status) {
