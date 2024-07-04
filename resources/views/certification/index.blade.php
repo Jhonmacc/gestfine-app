@@ -245,7 +245,7 @@
                             @php
                                 $validTo = strtotime($certificate->validTo_time_t);
                                 $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
-                                $bgColor = $daysUntilExpiry <= 0 ? 'red' : ($daysUntilExpiry <= 30 ? 'yellow' : 'green');
+                                $bgColor = $daysUntilExpiry <= 0 ? 'red' : ($daysUntilExpiry <= 10 ? 'yellow' : 'green');
                                 $fontColor = $daysUntilExpiry <= 0 || $daysUntilExpiry > 10 ? 'white' : 'black';
 
                                 // Tratamento do nome
@@ -398,7 +398,7 @@
         });
     }
     // Função para alternar a visibilidade da senha
-
+  
 
     // Função para validar e atualizar a senha ao sair do campo input
     $(document).on('blur', '.password-input', function() {
