@@ -213,9 +213,9 @@
                 </form>
             </div>
         </div>
-        <fieldset class="form-group border p-3">
-            <legend class="badge text-bg-primary span12" style="font-size: 18px;">Lista de Certificados</legend>
-            <table id="certificates-table" class="table table-sm table-striped table-bordered" style="width:100%">
+        <legend class="badge text-bg-primary span12" style="font-size: 18px;">Lista de Certificados</legend>
+        <fieldset class="container mx-auto p-2 px-10">
+            <table id="certificates-table" class="table table-sm table-striped table-bordered" style="width:100%; font-size: 14px;">
                 <thead>
                     <tr>
                         <th>Ações</th>
@@ -244,7 +244,7 @@
                             <tr>
                                 <td>
                                     <div class="dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton{{ $certificate->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton{{ $certificate->id }}" data-bs-toggle="dropdown" aria-expanded="false">
                                             Ações
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $certificate->id }}">

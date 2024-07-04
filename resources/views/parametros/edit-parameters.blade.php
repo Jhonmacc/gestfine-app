@@ -19,8 +19,8 @@
     @endif
     <form id="parameters-form" action="{{ route('parametros.update') }}" method="POST">
         @csrf
-        <fieldset class="form-group border p-3">
-            <table id="parameters-table" class="table table-sm table-striped table-bordered" style="width:100%">
+        <fieldset class="container mx-auto p-2 px-8">
+            <table id="parameters-table" class="table table-sm table-striped table-bordered" style="width:100%; font-size: 14px;">
                 <thead>
                     <tr>
                         <th class="px-6 py-3 border-b-2 border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-left leading-4 text-blue-500 dark:text-white tracking-wider">ID</th>
