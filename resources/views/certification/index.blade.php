@@ -286,6 +286,10 @@
     <script>
         $(document).ready(function() {
         var table = $('#certificates-table').DataTable({
+            responsive: true,
+            rowReorder: {
+        selector: 'td:nth-child(2)'
+    },
             language: {
                 url: '//cdn.datatables.net/plug-ins/2.0.1/i18n/pt-BR.json',
             },
