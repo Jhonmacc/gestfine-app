@@ -382,7 +382,6 @@
                 }
             });
         }
-
         // Função para validar e atualizar a senha ao sair do campo input
         $(document).on('blur', '.password-input', function() {
             const input = $(this);
