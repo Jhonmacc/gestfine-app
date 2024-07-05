@@ -10,50 +10,49 @@ use Carbon\Carbon;
 
 class CertificationController extends Controller
 {
-    public function index(Request $request)
-    {
-        // Buscar o valor do parâmetro 'dias_para_vencer'
-        $daysUntilWarning = Parametro::where('dias_faltantes', 'dias_para_vencer')->value('valor');
-        if (is_null($daysUntilWarning)) {
-            $daysUntilWarning = 10; // Valor padrão caso o parâmetro não esteja definido
-        } else {
-            $daysUntilWarning = (int) $daysUntilWarning; // Certifique-se de que é um inteiro
-        }
+	public function index(Request $request)
+	{
+			// Buscar o valor do parâmetro 'dias_para_vencer'
+			$daysUntilWarning = Parametro::where('dias_faltantes', 'dias_para_vencer')->value('valor');
+			if (is_null($daysUntilWarning)) {
+					$daysUntilWarning = 10; // Valor padrão caso o parâmetro não esteja definido
+			} else {
+					$daysUntilWarning = (int) $daysUntilWarning; // Certifique-se de que é um inteiro
+			}
 
-        $certificates = Certification::all();
+			$certificates = Certification::all();
 
-        $status = $request->input('status', 'Todos');
+			$status = $request->input('status', 'Todos');
 
-        if ($status !== 'Todos') {
-            $certificates = $certificates->filter(function ($certificate) use ($status) {
-                $validTo = Carbon::parse($certificate->validTo_time_t);
-                $daysUntilExpiry = $validTo->diffInDays(Carbon::now(), false);
+			if ($status !== 'Todos') {
+					$certificates = $certificates->filter(function ($certificate) use ($status, $daysUntilWarning) {
+							$validTo = Carbon::parse($certificate->validTo_time_t);
+							$daysUntilExpiry = $validTo->diffInDays(Carbon::now(), false);
 
-                switch ($status) {
-                    case 'No Prazo':
-                        return $daysUntilExpiry > 30;
-                    case 'Perto de Vencer':
-                        return $daysUntilExpiry > 0 && $daysUntilExpiry <= 30;
-                    case 'Vencido':
-                        return $daysUntilExpiry <= 0;
-                    default:
-                        return true;
-                }
-            });
-        }
+							switch ($status) {
+									case 'No Prazo':
+											return $daysUntilExpiry > $daysUntilWarning;
+									case 'Perto de Vencer':
+											return $daysUntilExpiry > 0 && $daysUntilExpiry <= $daysUntilWarning;
+									case 'Vencido':
+											return $daysUntilExpiry <= 0;
+									default:
+											return true;
+							}
+					});
+			}
 
-        $totalCertificates = $certificates->count();
-        $validCertificates = $certificates->where('validTo_time_t', '>=', now())->count();
-        $expiredCertificates = $certificates->where('validTo_time_t', '<', now())->count();
-        $nearExpiration = $certificates->filter(function ($certificate) {
-            $expirationDate = strtotime($certificate->validTo_time_t);
-            $daysToExpire = ($expirationDate - time()) / (60 * 60 * 24);
-            return $daysToExpire > 0 && $daysToExpire <= 30;
-        })->count();
+			$totalCertificates = $certificates->count();
+			$validCertificates = $certificates->where('validTo_time_t', '>=', now())->count();
+			$expiredCertificates = $certificates->where('validTo_time_t', '<', now())->count();
+			$nearExpiration = $certificates->filter(function ($certificate) use ($daysUntilWarning) {
+					$expirationDate = strtotime($certificate->validTo_time_t);
+					$daysToExpire = ($expirationDate - time()) / (60 * 60 * 24);
+					return $daysToExpire > 0 && $daysToExpire <= $daysUntilWarning;
+			})->count();
 
-        return view('certification.index', compact('certificates', 'totalCertificates', 'validCertificates', 'expiredCertificates', 'nearExpiration', 'daysUntilWarning'));
-    }
-
+			return view('certification.index', compact('certificates', 'totalCertificates', 'validCertificates', 'expiredCertificates', 'nearExpiration', 'daysUntilWarning'));
+	}
     public function getChartData()
     {
         $certificates = Certification::all();
