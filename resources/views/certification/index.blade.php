@@ -266,7 +266,7 @@
                                         {{ $daysUntilExpiry }} dias (No Prazo)
                                     @endif
                                 </td>
-                                <td>
+                                <td style="width: 200px; white-space: nowrap;">
                                     <fieldset class="password-fieldset">
                                         <input type="password" value="{{ $certificate->senhas }}" class="form-control password-input" data-id="{{ $certificate->id }}">
                                         <i class="toggle-password fa fa-eye"></i>
