@@ -293,9 +293,10 @@
         $(document).on('click', '.edit-btn', function(e) {
             e.preventDefault();
             var id = $(this).data('id');
-            var societario = $(this).closest('tr').find('td').eq(4).text(); // Supondo que a coluna Societário é a quarta coluna
+            var societario = $(this).closest('tr').find('td').eq(4).text();
 
-            $('#editCertificateForm').attr('action', '/certification/' + id + '/update');
+            // variável global baseUrl para definir a ação do formulário
+            $('#editCertificateForm').attr('action', window.baseUrl + '/certification/' + id + '/update');
             $('#editSocietario').val(societario);
 
             $('#editCertificateModal').modal('show');
