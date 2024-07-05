@@ -272,9 +272,10 @@
                                         <i class="toggle-password fa fa-eye"></i>
                                     </fieldset>
                                 </td>
-                                <td>
+                                <td style="text-align: right;">
                                     <a href="{{ route('certification.download', $certificate->id) }}" class="btn btn-sm btn-primary">Baixar</a>
                                 </td>
+
                             </tr>
                         @endforeach
                     @endif
