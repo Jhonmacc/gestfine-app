@@ -70,7 +70,7 @@
         <div class="col-md-3">
             <div class="card text-center green-background">
                 <div class="card-block">
-                    <h6 class="card-title">Certificados No Prazo</h6>
+                    <h6 class="card-title">Certificados Válidos</h6>
                     <h2>
                         <i class="fa fa-address-card-o fa-3x"></i>
                         {{ $validCertificates }}

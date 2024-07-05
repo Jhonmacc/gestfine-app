@@ -55,6 +55,14 @@ class CertificationController extends Controller
 	}
     public function getChartData()
     {
+        // Buscar o valor do parâmetro 'dias_para_vencer'
+        $daysUntilWarning = Parametro::where('dias_faltantes', 'dias_para_vencer')->value('valor');
+        if (is_null($daysUntilWarning)) {
+            $daysUntilWarning = 10; // Valor padrão caso o parâmetro não esteja definido
+        } else {
+            $daysUntilWarning = (int) $daysUntilWarning; // Certifique-se de que é um inteiro
+        }
+
         $certificates = Certification::all();
 
         $withinDeadline = 0;
@@ -67,9 +75,9 @@ class CertificationController extends Controller
             $validTo = strtotime($certificate->validTo_time_t);
             $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
 
-            if ($daysUntilExpiry > 0) {
+            if ($daysUntilExpiry > $daysUntilWarning) {
                 $withinDeadline++;
-            } elseif ($daysUntilExpiry > -10) {
+            } elseif ($daysUntilExpiry > 0) {
                 $nearExpiration++;
             } else {
                 $expired++;

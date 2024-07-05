@@ -35,19 +35,17 @@
                     var certificateChart = new Chart(ctx, {
                         type: 'pie',
                         data: {
-                            labels: ['Dentro do prazo', 'Perto de vencer', 'Vencidos'],
+                            labels: ['Vencidos', 'Perto de vencer'],
                             datasets: [{
                                 label: 'Status dos Certificados',
                                 data: data.statusData,
                                 backgroundColor: [
-                                    'rgba(75, 192, 192, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
-                                    'rgba(255, 99, 132, 0.2)'
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)'
                                 ],
                                 borderColor: [
-                                    'rgba(75, 192, 192, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                    'rgba(255, 99, 132, 1)'
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(255, 206, 86, 1)'
                                 ],
                                 borderWidth: 1
                             }]
@@ -62,10 +60,10 @@
                     var societarioChart = new Chart(societarioCtx, {
                         type: 'pie',
                         data: {
-                            labels: ['Pessoa Física', 'Pessoa Jurídica'],
+                            labels: ['CPF (Pessoa Física)', 'CNPJ (Pessoa Jurídica)'],
                             datasets: [{
                                 label: 'Quantidade',
-                                data: data.societarioData,
+                                data: data.cpfCnpjData,
                                 backgroundColor: [
                                     'rgba(54, 162, 235, 0.2)',
                                     'rgba(255, 159, 64, 0.2)'
@@ -87,5 +85,5 @@
                     console.error('Erro ao obter dados:', error);
                 });
         });
-        </script>
+    </script>
 </x-app-layout>
