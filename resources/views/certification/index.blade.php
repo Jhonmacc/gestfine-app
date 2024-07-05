@@ -390,7 +390,7 @@
             const certificateId = input.data('id');
 
             $.ajax({
-                url: '/certification/validate-password',
+                url: window.baseUrl + '/certification/validate-password',
                 type: 'POST',
                 data: {
                     "_token": "{{ csrf_token() }}",
