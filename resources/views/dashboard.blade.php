@@ -12,11 +12,15 @@
                 <legend class="badge text-bg-primary span12" style="font-size: 18px;" for="">Gráficos dos Certificados</legend>
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-6" id="certificateChartContainer">
-                            <canvas id="certificateChart" style="max-width: 400px; max-height: 400px;"></canvas>
+                        <div class="col-md-6">
+                            <div id="certificateChartContainer">
+                                <canvas id="certificateChart" style="max-width: 400px; max-height: 400px;"></canvas>
+                            </div>
                         </div>
-                        <div class="col-md-6" id="societarioChartContainer">
-                            <canvas id="societarioChart" style="max-width: 400px; max-height: 400px;"></canvas>
+                        <div class="col-md-6">
+                            <div id="cpfCnpjChartContainer">
+                                <canvas id="cpfCnpjChart" style="max-width: 400px; max-height: 400px;"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -24,28 +28,29 @@
         </div>
     </div>
 
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             fetch('{{ route("dashboard.chartData") }}')
                 .then(response => response.json())
                 .then(data => {
-                    var ctx = document.getElementById('certificateChart').getContext('2d');
-                    var certificateChart = new Chart(ctx, {
+                    var ctx1 = document.getElementById('certificateChart').getContext('2d');
+                    var certificateChart = new Chart(ctx1, {
                         type: 'pie',
                         data: {
-                            labels: ['Vencidos', 'Perto de vencer'],
+                            labels: ['Dentro do prazo', 'Perto de vencer', 'Vencidos'],
                             datasets: [{
                                 label: 'Status dos Certificados',
                                 data: data.statusData,
                                 backgroundColor: [
+                                    'rgba(20, 190, 100, 0.1)',
+                                    'rgba(255, 206, 86, 0.2)',
                                     'rgba(255, 99, 132, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)'
                                 ],
                                 borderColor: [
+                                    'rgba(20, 190, 100, 1)',
+                                    'rgba(255, 206, 86, 1)',
                                     'rgba(255, 99, 132, 1)',
-                                    'rgba(255, 206, 86, 1)'
                                 ],
                                 borderWidth: 1
                             }]
@@ -56,21 +61,21 @@
                         }
                     });
 
-                    var societarioCtx = document.getElementById('societarioChart').getContext('2d');
-                    var societarioChart = new Chart(societarioCtx, {
+                    var ctx2 = document.getElementById('cpfCnpjChart').getContext('2d');
+                    var cpfCnpjChart = new Chart(ctx2, {
                         type: 'pie',
                         data: {
-                            labels: ['CPF (Pessoa Física)', 'CNPJ (Pessoa Jurídica)'],
+                            labels: ['Pessoa Física', 'Pessoa Jurídica'],
                             datasets: [{
-                                label: 'Quantidade',
-                                data: data.cpfCnpjData,
+                                label: 'Certificados',
+                                data: [data.cpfCount, data.cnpjCount],
                                 backgroundColor: [
                                     'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 159, 64, 0.2)'
+                                    'rgba(255, 99, 132, 0.2)',
                                 ],
                                 borderColor: [
                                     'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 159, 64, 1)'
+                                    'rgba(255, 99, 132, 1)',
                                 ],
                                 borderWidth: 1
                             }]

@@ -73,7 +73,7 @@
                     <h6 class="card-title">Certificados Válidos</h6>
                     <h2>
                         <i class="fa fa-address-card-o fa-3x"></i>
-                        {{ $validCertificates }}
+                        {{ $withinDeadline }}
                     </h2>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                     <h6 class="card-title">Certificados Vencidos</h6>
                     <h2>
                         <i class="fa fa-address-card-o fa-3x"></i>
-                        {{ $expiredCertificates }}
+                        {{ $expired }}
                     </h2>
                 </div>
             </div>

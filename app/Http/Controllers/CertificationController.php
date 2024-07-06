@@ -11,90 +11,132 @@ use Carbon\Carbon;
 class CertificationController extends Controller
 {
 	public function index(Request $request)
-	{
-			// Buscar o valor do parâmetro 'dias_para_vencer'
-			$daysUntilWarning = Parametro::where('dias_faltantes', 'dias_para_vencer')->value('valor');
-			if (is_null($daysUntilWarning)) {
-					$daysUntilWarning = 10; // Valor padrão caso o parâmetro não esteja definido
-			} else {
-					$daysUntilWarning = (int) $daysUntilWarning; // Certifique-se de que é um inteiro
-			}
-
-			$certificates = Certification::all();
-
-			$status = $request->input('status', 'Todos');
-
-			if ($status !== 'Todos') {
-					$certificates = $certificates->filter(function ($certificate) use ($status, $daysUntilWarning) {
-							$validTo = Carbon::parse($certificate->validTo_time_t);
-							$daysUntilExpiry = $validTo->diffInDays(Carbon::now(), false);
-
-							switch ($status) {
-									case 'No Prazo':
-											return $daysUntilExpiry > $daysUntilWarning;
-									case 'Perto de Vencer':
-											return $daysUntilExpiry > 0 && $daysUntilExpiry <= $daysUntilWarning;
-									case 'Vencido':
-											return $daysUntilExpiry <= 0;
-									default:
-											return true;
-							}
-					});
-			}
-
-			$totalCertificates = $certificates->count();
-			$validCertificates = $certificates->where('validTo_time_t', '>=', now())->count();
-			$expiredCertificates = $certificates->where('validTo_time_t', '<', now())->count();
-			$nearExpiration = $certificates->filter(function ($certificate) use ($daysUntilWarning) {
-					$expirationDate = strtotime($certificate->validTo_time_t);
-					$daysToExpire = ($expirationDate - time()) / (60 * 60 * 24);
-					return $daysToExpire > 0 && $daysToExpire <= $daysUntilWarning;
-			})->count();
-
-			return view('certification.index', compact('certificates', 'totalCertificates', 'validCertificates', 'expiredCertificates', 'nearExpiration', 'daysUntilWarning'));
-	}
-    public function getChartData()
-    {
-        // Buscar o valor do parâmetro 'dias_para_vencer'
-        $daysUntilWarning = Parametro::where('dias_faltantes', 'dias_para_vencer')->value('valor');
-        if (is_null($daysUntilWarning)) {
-            $daysUntilWarning = 10; // Valor padrão caso o parâmetro não esteja definido
-        } else {
-            $daysUntilWarning = (int) $daysUntilWarning; // Certifique-se de que é um inteiro
-        }
-
-        $certificates = Certification::all();
-
-        $withinDeadline = 0;
-        $nearExpiration = 0;
-        $expired = 0;
-        $societarioCount = 0;
-        $nonSocietarioCount = 0;
-
-        foreach ($certificates as $certificate) {
-            $validTo = strtotime($certificate->validTo_time_t);
-            $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
-
-            if ($daysUntilExpiry > $daysUntilWarning) {
-                $withinDeadline++;
-            } elseif ($daysUntilExpiry > 0) {
-                $nearExpiration++;
-            } else {
-                $expired++;
-            }
-
-            if (!empty($certificate->societario)) {
-                $societarioCount++;
-            } else {
-                $nonSocietarioCount++;
-            }
-        }
-
-        return response()->json([
-            'statusData' => [$withinDeadline, $nearExpiration, $expired],
-            'societarioData' => [$societarioCount, $nonSocietarioCount]
-        ]);
+{
+    // Buscar o valor do parâmetro 'dias_para_vencer'
+    $daysUntilWarning = Parametro::where('dias_faltantes', 'dias_para_vencer')->value('valor');
+    if (is_null($daysUntilWarning)) {
+        $daysUntilWarning = 10; // Valor padrão caso o parâmetro não esteja definido
+    } else {
+        $daysUntilWarning = (int) $daysUntilWarning; // Certifique-se de que é um inteiro
     }
+
+    $certificates = Certification::all();
+
+    // Inicializar contadores
+    $totalCertificates = $certificates->count();
+    $withinDeadline = 0;
+    $nearExpiration = 0;
+    $expired = 0;
+    $cpfCount = 0;
+    $cnpjCount = 0;
+
+    // Contar certificados válidos, vencidos e próximos de vencer
+    foreach ($certificates as $certificate) {
+        $validTo = strtotime($certificate->validTo_time_t);
+        $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
+
+        if ($daysUntilExpiry > $daysUntilWarning) {
+            $withinDeadline++;
+        } elseif ($daysUntilExpiry > 0) {
+            $nearExpiration++;
+        } else {
+            $expired++;
+        }
+
+        // Verificar se é CPF ou CNPJ
+        $cnpjCpf = $certificate->cnpj_cpf;
+        if (strlen($cnpjCpf) == 11) {
+            $cpfCount++;
+        } elseif (strlen($cnpjCpf) == 14) {
+            $cnpjCount++;
+        }
+    }
+
+    $status = $request->input('status', 'Todos');
+
+    if ($status !== 'Todos') {
+        $certificates = $certificates->filter(function ($certificate) use ($status, $daysUntilWarning) {
+            $validTo = Carbon::parse($certificate->validTo_time_t);
+            $daysUntilExpiry = $validTo->diffInDays(Carbon::now(), false);
+
+            switch ($status) {
+                case 'No Prazo':
+                    return $daysUntilExpiry > $daysUntilWarning;
+                case 'Perto de Vencer':
+                    return $daysUntilExpiry > 0 && $daysUntilExpiry <= $daysUntilWarning;
+                case 'Vencido':
+                    return $daysUntilExpiry <= 0;
+                default:
+                    return true;
+            }
+        });
+    }
+
+    return view('certification.index', compact('certificates', 'totalCertificates', 'withinDeadline', 'expired', 'nearExpiration', 'daysUntilWarning', 'cpfCount', 'cnpjCount'));
+}
+
+
+public function getChartData()
+{
+    // Buscar o valor do parâmetro 'dias_para_vencer'
+    $daysUntilWarning = Parametro::where('dias_faltantes', 'dias_para_vencer')->value('valor');
+    if (is_null($daysUntilWarning)) {
+        $daysUntilWarning = 10; // Valor padrão caso o parâmetro não esteja definido
+    } else {
+        $daysUntilWarning = (int) $daysUntilWarning; // Certifique-se de que é um inteiro
+    }
+
+    $certificates = Certification::all();
+
+    $withinDeadline = 0;
+    $nearExpiration = 0;
+    $expired = 0;
+    $cpfCount = 0;
+    $cnpjCount = 0;
+
+    foreach ($certificates as $certificate) {
+        $validTo = strtotime($certificate->validTo_time_t);
+        $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
+
+        if ($daysUntilExpiry > $daysUntilWarning) {
+            $withinDeadline++;
+        } elseif ($daysUntilExpiry > 0) {
+            $nearExpiration++;
+        } else {
+            $expired++;
+        }
+
+        // Extrair apenas os números do campo cnpj_cpf
+        $number = preg_replace('/[^0-9]/', '', $certificate->cnpj_cpf);
+
+        // Determinar se é CPF ou CNPJ
+        if (strlen($number) === 11 && is_numeric($number)) {
+            $cpfCount++;
+        } elseif (strlen($number) === 14 && is_numeric($number)) {
+            $cnpjCount++;
+        }
+    }
+
+    return response()->json([
+        'statusData' => [$withinDeadline, $nearExpiration, $expired],
+        'cpfCount' => $cpfCount,
+        'cnpjCount' => $cnpjCount,
+    ]);
+}
+
+
+// Função para verificar se é CPF
+private function isCpf($value)
+{
+    return strlen($value) === 11 && is_numeric($value);
+}
+
+// Função para verificar se é CNPJ
+private function isCnpj($value)
+{
+    return strlen($value) === 14 && is_numeric($value);
+}
+
 
     public function validateCertification(Request $request)
     {
