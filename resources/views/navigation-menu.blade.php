@@ -100,7 +100,7 @@
                         @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                             <a href="{{ route('api-tokens.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">API Tokens</a>
                         @endif
-                        <a href="{{ route('parametros.edit-parameters') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Editar Parâmetros</a>
+                        <a href="{{ route('parametros.edit-parameters') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Parâmetros</a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                             @csrf
                         </form>

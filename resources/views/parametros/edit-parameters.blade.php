@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="container mx-auto px-4">
-    <h1 class="text-2xl font-semibold mb-4">Editar Parâmetros</h1>
+    <h1 class="text-2xl font-semibold mb-4">Parâmetros</h1>
     <legend class="badge text-bg-primary span12" style="font-size: 18px;">Lista de Parâmetros</legend>
     @if (session('success'))
         <script>
