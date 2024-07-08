@@ -7,9 +7,6 @@
         window.baseUrl = "{{ url('/') }}";
     </script>
     <title>Dashboard</title>
-    <!-- Adiciona o favicon -->
-    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
