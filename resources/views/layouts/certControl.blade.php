@@ -7,7 +7,9 @@
         window.baseUrl = "{{ url('/') }}";
     </script>
     <title>Controle de Certificados</title>
-
+    <!-- Adiciona o favicon -->
+    <link rel="icon" href="{{ asset('/public/favicon.ico') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('/public/favicon.ico') }}" type="image/x-icon">
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
