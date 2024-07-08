@@ -15,8 +15,8 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+        return view('dashboard.index');
+    })->name('dashboard.index');
 
     Route::get('/register', function () {
         return view('auth.register');

@@ -1,4 +1,4 @@
-@extends('layouts.certControl')
+@extends('layouts.parameters')
 @section('content')
 
 <div class="container mx-auto px-4">

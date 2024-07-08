@@ -1,3 +1,5 @@
+@extends('layouts.dashboard')
+@section('content')
 <x-app-layout>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <x-slot name="header">
@@ -92,3 +94,4 @@
         });
     </script>
 </x-app-layout>
+@endsection
