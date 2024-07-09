@@ -101,6 +101,7 @@
                             <a href="{{ route('api-tokens.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">API Tokens</a>
                         @endif
                         <a href="{{ route('parametros.edit-parameters') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Parâmetros</a>
+                        <a href="{{ route('users.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Usuários</a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                             @csrf
                         </form>

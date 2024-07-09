@@ -1,26 +1,34 @@
 <?php
+
 use App\Http\Controllers\CertificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ParametroController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', [LoginController::class, 'welcome']);
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::resource('parametros', ParametroController::class)->except(['show']);
-
 
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard.index');
-    })->name('dashboard.index');
+    // Rotas que requerem verificação do usuário ativo
+    Route::middleware(['active.user'])->group(function () {
+        Route::get('/dashboard', function () {
+            return view('dashboard.index');
+        })->name('dashboard.index');
+    });
 
+    // Registro de usuários
     Route::get('/register', function () {
         return view('auth.register');
     })->name('register');
+
+    // Gerenciamento de Usuários
+    Route::resource('users', UserController::class)->except(['create', 'edit', 'show']);
 
     // Rotas de Controle de Certificados
     Route::get('/dashboard/chart-data', [CertificationController::class, 'getChartData'])->name('dashboard.chartData');

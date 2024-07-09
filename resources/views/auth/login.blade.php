@@ -33,11 +33,17 @@
             <div>
                 <x-label for="email" value="{{ __('Email') }}" />
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                @error('email')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="mt-4">
                 <x-label for="password" value="{{ __('Senha') }}" />
                 <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
+                @error('password')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="block mt-4">
@@ -58,6 +64,20 @@
                     {{ __('Logar') }}
                 </x-button>
             </div>
+
+            @if ($errors->any())
+                <div class="mt-4">
+                    <div class="font-medium text-red-600">
+                        {{ __('Erros encontrados ao tentar logar:') }}
+                    </div>
+
+                    <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         </form>
     </x-authentication-card>
 </x-guest-layout>
