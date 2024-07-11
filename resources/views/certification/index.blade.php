@@ -14,29 +14,6 @@
             margin-bottom: 20px; /* Maior espaço entre os cards verticalmente em telas menores */
         }
     }
-    .card {
-        color: white;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
-        transition: all 0.3s ease;
-    }
-
-    .blue-background {
-        background-color: rgb(0, 175, 236);
-    }
-
-    .green-background {
-        background-color: #058105;
-    }
-
-    .red-background {
-        background-color: #d30400;
-    }
-    .orange-background {
-        background-color: #d36200;
-    }
-    .card:hover {
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
     .password-fieldset {
     position: relative;
 }
@@ -227,7 +204,7 @@
                         @php
                             $validTo = strtotime($certificate->validTo_time_t);
                             $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
-                            $bgColor = $daysUntilExpiry <= 0 ? 'red' : ($daysUntilExpiry <= $daysUntilWarning ? 'yellow' : 'green');
+                            $bgColor = $daysUntilExpiry <= 0 ? 'rgb(255, 0, 0)' : ($daysUntilExpiry <= $daysUntilWarning ? 'rgb(255, 165, 0)' : 'rgb(60, 179, 113)');
                             $fontColor = $daysUntilExpiry <= 0 || $daysUntilExpiry > $daysUntilWarning ? 'white' : 'black';
 
                             // Tratamento do nome
