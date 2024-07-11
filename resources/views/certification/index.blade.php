@@ -52,57 +52,50 @@
         cursor: pointer;
     }
 </style>
-
-<fieldset class="form-group border p-3">
-<h2>Controle de Certificados</h2>
-<div class="container">
-    <div class="row my-3">
-        <div class="col-md-3">
-            <div class="card text-center blue-background">
-                <div class="card-block">
-                    <h6 class="card-title">Certificados Cadastrados</h6>
-                    <h2>
-                        {{ $totalCertificates }}
-                    </h2>
+<fieldset class="border p-4 rounded-md">
+    <h2 class="text-2xl font-semibold mb-4">Controle de Certificados</h2>
+    <div class="container mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="relative bg-blue-500 text-white text-center p-4 rounded-md shadow-lg">
+                <div class="absolute left-2 top-2 w-full h-full flex">
+                    <i class="fa fa-certificate fa-4x opacity-20"></i>
+                </div>
+                <div class="z-10">
+                    <h6 class="text-lg">Certificados Cadastrados</h6>
+                    <h2 class="text-2xl font-bold">{{ $totalCertificates }}</h2>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center green-background">
-                <div class="card-block">
-                    <h6 class="card-title">Certificados No Prazo</h6>
-                    <h2>
-                        <i class="fa fa-address-card-o fa-3x"></i>
-                        {{ $withinDeadline }}
-                    </h2>
+            <div class="relative bg-green-500 text-white text-center p-4 rounded-md shadow-lg">
+                <div class="absolute left-2 top-2 w-full h-full flex">
+                    <i class="fa fa-check-circle fa-4x opacity-20"></i>
+                </div>
+                <div class="z-10">
+                    <h6 class="text-lg">Certificados No Prazo</h6>
+                    <h2 class="text-2xl font-bold">{{ $withinDeadline }}</h2>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center red-background">
-                <div class="card-block">
-                    <h6 class="card-title">Certificados Vencidos</h6>
-                    <h2>
-                        <i class="fa fa-address-card-o fa-3x"></i>
-                        {{ $expired }}
-                    </h2>
+            <div class="relative bg-red-500 text-white text-center p-4 rounded-md shadow-lg">
+                <div class="absolute top-2 left-2 w-full h-full flex">
+                    <i class="fa fa-times-circle fa-4x opacity-20"></i>
+                </div>
+                <div class="z-10">
+                    <h6 class="text-lg">Certificados Vencidos</h6>
+                    <h2 class="text-2xl font-bold">{{ $expired }}</h2>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center orange-background">
-                <div class="card-block">
-                    <h6 class="card-title">Certificados Vencendo</h6>
-                    <h2>
-                        <i class="fa fa-address-card-o fa-3x"></i>
-                        {{ $nearExpiration }}
-                    </h2>
+            <div class="relative bg-yellow-500 text-white text-center p-4 rounded-md shadow-lg">
+                <div class="absolute top-2 left-2 w-full h-full flex">
+                    <i class="fa fa-exclamation-circle fa-4x opacity-20"></i>
+                </div>
+                <div class="z-10">
+                    <h6 class="text-lg">Certificados Vencendo</h6>
+                    <h2 class="text-2xl font-bold">{{ $nearExpiration }}</h2>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </fieldset>
+
         @if (session('success'))
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
@@ -243,9 +236,13 @@
                         @endphp
                             <tr>
                                 <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton{{ $certificate->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div class="relative inline-block text-left">
+                                        <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-700" id="menu-button" aria-expanded="true" aria-haspopup="true" type="button" id="dropdownMenuButton{{ $certificate->id }}" data-bs-toggle="dropdown" aria-expanded="false">
                                             Ações
+                                            <svg class="-mr-1 h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                              </svg>
+
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $certificate->id }}">
                                             <li><a class="dropdown-item edit-btn" href="#" data-id="{{ $certificate->id }}" data-name="{{ $cleanName }}">Editar</a></li>
@@ -273,9 +270,14 @@
                                     </fieldset>
                                 </td>
                                 <td style="text-align: right;">
-                                    <a href="{{ route('certification.download', $certificate->id) }}" class="btn btn-sm btn-primary">Baixar</a>
+                                    <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded inline-flex items-center"
+                                            onclick="window.location.href = '{{ route('certification.download', $certificate->id) }}';">
+                                        <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
+                                        </svg>
+                                        <span>Download</span>
+                                    </button>
                                 </td>
-
                             </tr>
                         @endforeach
                     @endif
