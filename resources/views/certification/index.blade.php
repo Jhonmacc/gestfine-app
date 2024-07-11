@@ -185,7 +185,7 @@
         </div>
         <legend class="badge text-bg-primary span12" style="font-size: 18px;">Lista de Certificados</legend>
         <fieldset class="container mx-auto p-2 px-10">
-            <table id="certificates-table" class="table table-sm table-striped table-bordered" style="width:100%; font-size: 14px;">
+            <table id="certificates-table" class="table table-sm table-striped table-bordered" style="width:100%; font-size: 12px;">
                 <thead>
                     <tr>
                         <th>Ações</th>
@@ -214,7 +214,7 @@
                             <tr>
                                 <td>
                                     <div class="relative inline-block text-left">
-                                        <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-700" id="menu-button" aria-expanded="true" aria-haspopup="true" type="button" id="dropdownMenuButton{{ $certificate->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-blue-500 px-3 py-2 text font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-700" id="menu-button" aria-expanded="true" aria-haspopup="true" type="button" id="dropdownMenuButton{{ $certificate->id }}" data-bs-toggle="dropdown" aria-expanded="false">
                                             Ações
                                             <svg class="-mr-1 h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
@@ -246,7 +246,7 @@
                                         <i class="toggle-password fa fa-eye"></i>
                                     </fieldset>
                                 </td>
-                                <td style="text-align: right;">
+                                <td>
                                     <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded inline-flex items-center"
                                             onclick="window.location.href = '{{ route('certification.download', $certificate->id) }}';">
                                         <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
