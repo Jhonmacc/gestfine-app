@@ -30,19 +30,22 @@
     <table id="usersTable" class="table table-sm table-striped table-bordered" style="width:100%; font-size: 14px;">
         <thead>
             <tr>
-                <th>Ações</th>
+                <th class="text-center">Ações</th>
                 <th>Nome</th>
                 <th>Email</th>
-                <th>Ativo</th>
+                <th class="text-center">Ativo</th>
             </tr>
         </thead>
         <tbody>
             @foreach($users as $user)
                 <tr>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton{{ $user->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                    <td style="width: 100px; white-space: nowrap;">
+                        <div class="relative inline-block text-left">
+                            <button class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-blue-500 px-3 py-2 text-center font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-700" aria-expanded="true" aria-haspopup="true" type="button" id="dropdownMenuButton{{ $user->id }}" data-bs-toggle="dropdown" aria-expanded="false">
                                 Ações
+                                <svg class="-mr-1 h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                  </svg>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $user->id }}">
                                 <li><a class="dropdown-item btn-edit" href="#" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="{{ $user->id }}">Editar</a></li>
@@ -51,7 +54,7 @@
                     </td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td>{{ $user->ativo ? 'Sim' : 'Não' }}</td>
+                    <td class="text-center">{{ $user->ativo ? 'Sim' : 'Não' }}</td>
                 </tr>
             @endforeach
         </tbody>

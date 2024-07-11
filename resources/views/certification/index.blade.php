@@ -188,14 +188,14 @@
             <table id="certificates-table" class="table table-sm table-striped table-bordered" style="width:100%; font-size: 12px;">
                 <thead>
                     <tr>
-                        <th>Ações</th>
-                        <th>Nome</th>
-                        <th>Data</th>
-                        <th>Razão Social e CNPJ/CPF</th>
-                        <th>Societário/Empresa</th>
-                        <th>Dias Para Vencimento</th>
-                        <th>Senhas</th>
-                        <th>Download</th>
+                        <th class="text-center">Ações</th>
+                        <th class="text-center">Nome</th>
+                        <th class="text-center">Data</th>
+                        <th class="text-center">Razão Social e CNPJ/CPF</th>
+                        <th class="text-center">Societário/Empresa</th>
+                        <th class="text-center">Dias Para Vencimento</th>
+                        <th class="text-center">Senhas</th>
+                        <th class="text-center">Download</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -214,12 +214,11 @@
                             <tr>
                                 <td>
                                     <div class="relative inline-block text-left">
-                                        <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-blue-500 px-3 py-2 text font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-700" id="menu-button" aria-expanded="true" aria-haspopup="true" type="button" id="dropdownMenuButton{{ $certificate->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-blue-500 px-3 py-2 text font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-700" aria-expanded="true" aria-haspopup="true" type="button" id="dropdownMenuButton{{ $certificate->id }}" data-bs-toggle="dropdown" aria-expanded="false">
                                             Ações
                                             <svg class="-mr-1 h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                                               </svg>
-
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $certificate->id }}">
                                             <li><a class="dropdown-item edit-btn" href="#" data-id="{{ $certificate->id }}" data-name="{{ $cleanName }}">Editar</a></li>
@@ -228,7 +227,7 @@
                                     </div>
                                 </td>
                                 <td>{{ $cleanName }}</td>
-                                <td>{{ date('d/m/Y', strtotime($certificate->validFrom_time_t)) }} - {{ date('d/m/Y', $validTo) }}</td>
+                                <td class="text-center">{{ date('d/m/Y', strtotime($certificate->validFrom_time_t)) }} - {{ date('d/m/Y', $validTo) }}</td>
                                 <td>{{ $certificate->cnpj_cpf }}</td>
                                 <td>{{ $certificate->societario }}</td>
                                 <td style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
