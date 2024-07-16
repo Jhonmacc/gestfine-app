@@ -165,6 +165,11 @@ private function isCnpj($value)
 
         // Descriptografa e processa o certificado
         $certInfo = openssl_x509_parse(openssl_x509_read($x509certdata['cert']));
+         // Verifica se já existe um certificado com o mesmo CNPJ/CPF
+        $cnpjCpf = $certInfo['subject']['CN'];
+        if (Certification::where('cnpj_cpf', $cnpjCpf)->exists()) {
+            return back()->withErrors('Já existe um certificado com este CNPJ/CPF cadastrado!');
+    }
         // Salva o arquivo no sistema de arquivos do servidor
         $filePath = $certificateFile->storeAs('certificates', $fileName, 'public'); // Salva na pasta storage/app/public/certificates criando um link simbólico
         // Salva os dados do certificado no banco de dados
