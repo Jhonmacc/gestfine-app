@@ -163,6 +163,7 @@
 <!-- Script para DataTables -->
 <script>
     $(document).ready(function() {
+        var baseUrl = "{{ url('/') }}";
         var table = $('#usersTable').DataTable({
             responsive: true,
             rowReorder: {
@@ -193,7 +194,7 @@
         $('#usersTable').on('click', '.btn-edit', function() {
             var userId = $(this).data('user-id');
             var user = @json($users).find(user => user.id == userId);
-            $('#editUserForm').attr('action', '/users/' + userId);
+            $('#editUserForm').attr('action', baseUrl + '/users/' + userId);
             $('#edit-name').val(user.name);
             $('#edit-email').val(user.email);
             $('#edit-ativo').val(user.ativo ? '1' : '0');
