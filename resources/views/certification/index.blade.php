@@ -295,7 +295,7 @@
                         }
                     },
                     {
-                        extend: 'pdf',
+                        extend: 'pdfHtml5',
                         exportOptions: {
                             columns: ':visible',
                             orientation: 'landscape',
