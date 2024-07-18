@@ -296,10 +296,10 @@
                     },
                     {
                         extend: 'pdfHtml5',
+                        orientation: 'landscape',
+                            pageSize: 'LEGAL',
                         exportOptions: {
                             columns: ':visible',
-                            orientation: 'landscape',
-                            pageSize: 'LEGAL',
                         }
                     },
                     {
