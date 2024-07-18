@@ -127,7 +127,12 @@
                     </div>
                     <div class="col-md-6">
                         <label for="password" class="form-label">Senha do Certificado</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <span class="input-group-text" id="toggle-password">
+                                <i title="Mostar senha" class="fas fa-eye"></i>
+                            </span>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <label for="password" class="form-label">Quadro Societário/Empresa</label>
@@ -168,8 +173,13 @@
                             </div>
                             <div class="mb-3">
                                 <label for="editPassword" class="form-label">Nova Senha do Certificado</label>
+                                <div class="input-group">
                                 <input type="password" class="form-control" id="editPassword" name="password" required>
+                                <span class="input-group-text" id="toggle-password-edit">
+                                    <i title="Mostar senha" class="fas fa-eye"></i>
+                                </span>
                             </div>
+                        </div>
                             <div class="mb-3">
                                 <label for="editSocietario" class="form-label">Quadro Societário/Empresa</label>
                                 <input type="text" class="form-control" id="editSocietario" name="societario">
@@ -263,17 +273,54 @@
 
     <script>
         $(document).ready(function() {
-    var table = $('#certificates-table').DataTable({
-        responsive: true,
-        rowReorder: {
-            selector: 'td:nth-child(2)'
-        },
-        language: {
-            url: '//cdn.datatables.net/plug-ins/2.0.1/i18n/pt-BR.json',
-        },
-        lengthMenu: [10, 25, 50, 100, 1000], 
-        pageLength: 10
-    });
+            var table = $('#certificates-table').DataTable({
+                dom: 'Blfrtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'colvis',
+                        text: 'Selecionar Colunas'
+                    }
+                ],
+                responsive: true,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/2.0.1/i18n/pt-BR.json',
+                },
+                lengthMenu: [10, 25, 50, 100, 1000],
+                pageLength: 10
+            });
 
         $(document).on('click', '.edit-btn', function(e) {
             e.preventDefault();
@@ -434,4 +481,33 @@
             });
         });
     </script>
+    <script>
+     document.addEventListener("DOMContentLoaded", function() {
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('toggle-password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        const passwordInput = document.getElementById('editPassword');
+        const togglePassword = document.getElementById('toggle-password-edit');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    });
+    </script>
+
 @endsection
