@@ -297,7 +297,9 @@
                     {
                         extend: 'pdf',
                         exportOptions: {
-                            columns: ':visible'
+                            columns: ':visible',
+                            orientation: 'landscape',
+                            pageSize: 'LEGAL',
                         }
                     },
                     {
@@ -310,11 +312,6 @@
                         extend: 'colvis',
                         text: 'Selecionar Colunas'
                     },
-                    {
-                    extend: 'pdfHtml5',
-                    orientation: 'landscape',
-                    pageSize: 'LEGAL'
-                    }
                 ],
                 responsive: true,
                 rowReorder: {
