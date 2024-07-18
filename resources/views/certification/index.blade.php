@@ -309,6 +309,11 @@
                     {
                         extend: 'colvis',
                         text: 'Selecionar Colunas'
+                    },
+                    {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
                     }
                 ],
                 responsive: true,
