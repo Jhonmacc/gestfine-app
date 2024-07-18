@@ -310,7 +310,7 @@
                     },
                     {
                         extend: 'colvis',
-                        text: 'Selecionar Colunas'
+                        text: 'Ocultar Colunas'
                     },
                 ],
                 responsive: true,
