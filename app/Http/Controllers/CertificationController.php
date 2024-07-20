@@ -212,6 +212,7 @@ class CertificationController extends Controller
             'certificate' => 'required|file',
             'password' => 'required|string',
             'societario' => 'nullable|string',
+            'tipo_integrante' => 'nullable|string',
         ]);
 
         $certificate = Certification::findOrFail($id);
@@ -220,6 +221,7 @@ class CertificationController extends Controller
         $certificateFile = $request->file('certificate');
         $certPassword = $request->input('password');
         $societario = $request->input('societario');
+        $tipo_integrante = $request->input('tipo_integrante');
 
         // Lê o conteúdo do arquivo do certificado
         $pfxContent = file_get_contents($certificateFile->getPathName());
@@ -250,6 +252,7 @@ class CertificationController extends Controller
         $certificate->validTo_time_t = date('Y-m-d', $certInfo['validTo_time_t']);
         $certificate->cnpj_cpf = $certInfo['subject']['CN'];
         $certificate->societario = $societario;
+        $certificate->tipo_integrante = $tipo_integrante;
         $certificate->certificate_path = $filePath; // Armazena o caminho do arquivo
         $certificate->senhas = $certPassword; // Armazena a senha
         $certificate->save();

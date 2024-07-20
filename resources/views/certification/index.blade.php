@@ -181,6 +181,14 @@
                                 <label for="editSocietario" class="form-label">Quadro Societário/Empresa</label>
                                 <input type="text" class="form-control" id="editSocietario" name="societario">
                             </div>
+                            <div class="col-md-8">
+                                <label for="tipo_integrante" class="form-label">Tipo Integrante</label>
+                                <select class="form-select" id="editTipoIntegrante" name="tipo_integrante" required>
+                                    <option value="">Selecione</option>
+                                    <option value="Membro do quadro societário">Membro do quadro societário</option>
+                                    <option value="Representante da pessoa jurídica">Representante da pessoa jurídica</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -354,10 +362,24 @@
         e.preventDefault();
         var id = $(this).data('id');
         var societario = $(this).closest('tr').find('td').eq(4).text();
+        var tipo_integrante = $(this).closest('tr').find('td').eq(5).text().trim(); // Ajuste o índice da célula para o tipo de integrante se necessário
+
+    // Defina a URL de atualização do formulário
         $('#editCertificateForm').attr('action', window.baseUrl + '/certification/' + id + '/update');
+
+        // Preencha os campos do modal
         $('#editSocietario').val(societario);
-        $('#editCertificateModal').modal('show');
-    });
+
+        // Verifique se tipoIntegrante não é null ou vazio
+        if (tipo_integrante === 'Membro do quadro societário' || tipo_integrante === 'Representante da pessoa jurídica') {
+            $('#editTipoIntegrante').val(tipo_integrante);
+        } else {
+            $('#editTipoIntegrante').val(''); // Define como vazio se o valor for inválido ou null
+        }
+
+    // Exiba o modal
+    $('#editCertificateModal').modal('show');
+});
 
     $(document).on('click', '.delete-btn', function(e) {
         e.preventDefault();
