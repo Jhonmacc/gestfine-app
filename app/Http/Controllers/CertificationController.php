@@ -10,132 +10,127 @@ use Carbon\Carbon;
 
 class CertificationController extends Controller
 {
-	public function index(Request $request)
-{
-    // Buscar o valor do parâmetro 'dias_para_vencer'
-    $daysUntilWarning = Parametro::where('dias_faltantes', 'dias_para_vencer')->value('valor');
-    if (is_null($daysUntilWarning)) {
-        $daysUntilWarning = 10; // Valor padrão caso o parâmetro não esteja definido
-    } else {
-        $daysUntilWarning = (int) $daysUntilWarning; // Certifique-se de que é um inteiro
-    }
+    public function index(Request $request)
+    {
+        $daysUntilWarning = Parametro::where('dias_faltantes', 'dias_para_vencer')->value('valor') ?? 10;
 
-    $certificates = Certification::all();
+        $certificates = Certification::query(); // Inicia a query
 
-    // Inicializar contadores
-    $totalCertificates = $certificates->count();
-    $withinDeadline = 0;
-    $nearExpiration = 0;
-    $expired = 0;
-    $cpfCount = 0;
-    $cnpjCount = 0;
-
-    // Contar certificados válidos, vencidos e próximos de vencer
-    foreach ($certificates as $certificate) {
-        $validTo = strtotime($certificate->validTo_time_t);
-        $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
-
-        if ($daysUntilExpiry > $daysUntilWarning) {
-            $withinDeadline++;
-        } elseif ($daysUntilExpiry > 0) {
-            $nearExpiration++;
-        } else {
-            $expired++;
+        // Filtrar por tipo de integrante
+        $type = $request->input('type', '');
+        if (!empty($type)) {
+            $certificates->where('tipo_integrante', $type);
         }
 
-        // Verificar se é CPF ou CNPJ
-        $cnpjCpf = $certificate->cnpj_cpf;
-        if (strlen($cnpjCpf) == 11) {
-            $cpfCount++;
-        } elseif (strlen($cnpjCpf) == 14) {
-            $cnpjCount++;
+        // Filtrar por status
+        $status = $request->input('status', 'Todos');
+        if ($status !== 'Todos') {
+            $certificates->where(function($query) use ($status, $daysUntilWarning) {
+                $query->whereRaw('(DATEDIFF(validTo_time_t, NOW()) > ?)', [$daysUntilWarning])
+                      ->when($status === 'Perto de Vencer', function($query) use ($daysUntilWarning) {
+                          $query->whereRaw('(DATEDIFF(validTo_time_t, NOW()) BETWEEN 0 AND ?)', [$daysUntilWarning]);
+                      })
+                      ->when($status === 'Vencido', function($query) {
+                          $query->whereRaw('(DATEDIFF(validTo_time_t, NOW()) <= 0)');
+                      });
+            });
         }
-    }
 
-    $status = $request->input('status', 'Todos');
+        $certificates = $certificates->get();
 
-    if ($status !== 'Todos') {
-        $certificates = $certificates->filter(function ($certificate) use ($status, $daysUntilWarning) {
-            $validTo = Carbon::parse($certificate->validTo_time_t);
-            $daysUntilExpiry = $validTo->diffInDays(Carbon::now(), false);
+        // Inicializar contadores
+        $totalCertificates = $certificates->count();
+        $withinDeadline = 0;
+        $nearExpiration = 0;
+        $expired = 0;
+        $cpfCount = 0;
+        $cnpjCount = 0;
 
-            switch ($status) {
-                case 'No Prazo':
-                    return $daysUntilExpiry > $daysUntilWarning;
-                case 'Perto de Vencer':
-                    return $daysUntilExpiry > 0 && $daysUntilExpiry <= $daysUntilWarning;
-                case 'Vencido':
-                    return $daysUntilExpiry <= 0;
-                default:
-                    return true;
+        // Contar certificados válidos, vencidos e próximos de vencer
+        foreach ($certificates as $certificate) {
+            $validTo = strtotime($certificate->validTo_time_t);
+            $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
+
+            if ($daysUntilExpiry > $daysUntilWarning) {
+                $withinDeadline++;
+            } elseif ($daysUntilExpiry > 0) {
+                $nearExpiration++;
+            } else {
+                $expired++;
             }
-        });
+
+            // Verificar se é CPF ou CNPJ
+            $cnpjCpf = $certificate->cnpj_cpf;
+            if (strlen($cnpjCpf) == 11) {
+                $cpfCount++;
+            } elseif (strlen($cnpjCpf) == 14) {
+                $cnpjCount++;
+            }
+        }
+
+        return view('certification.index', compact('certificates', 'totalCertificates', 'withinDeadline', 'expired', 'nearExpiration', 'daysUntilWarning', 'cpfCount', 'cnpjCount'));
     }
 
-    return view('certification.index', compact('certificates', 'totalCertificates', 'withinDeadline', 'expired', 'nearExpiration', 'daysUntilWarning', 'cpfCount', 'cnpjCount'));
-}
-
-
-public function getChartData()
-{
-    // Buscar o valor do parâmetro 'dias_para_vencer'
-    $daysUntilWarning = Parametro::where('dias_faltantes', 'dias_para_vencer')->value('valor');
-    if (is_null($daysUntilWarning)) {
-        $daysUntilWarning = 10; // Valor padrão caso o parâmetro não esteja definido
-    } else {
-        $daysUntilWarning = (int) $daysUntilWarning; // Certifique-se de que é um inteiro
-    }
-
-    $certificates = Certification::all();
-
-    $withinDeadline = 0;
-    $nearExpiration = 0;
-    $expired = 0;
-    $cpfCount = 0;
-    $cnpjCount = 0;
-
-    foreach ($certificates as $certificate) {
-        $validTo = strtotime($certificate->validTo_time_t);
-        $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
-
-        if ($daysUntilExpiry > $daysUntilWarning) {
-            $withinDeadline++;
-        } elseif ($daysUntilExpiry > 0) {
-            $nearExpiration++;
+    public function getChartData()
+    {
+        // Buscar o valor do parâmetro 'dias_para_vencer'
+        $daysUntilWarning = Parametro::where('dias_faltantes', 'dias_para_vencer')->value('valor');
+        if (is_null($daysUntilWarning)) {
+            $daysUntilWarning = 10; // Valor padrão caso o parâmetro não esteja definido
         } else {
-            $expired++;
+            $daysUntilWarning = (int) $daysUntilWarning; // Certifique-se de que é um inteiro
         }
 
-        // Extrair apenas os números do campo cnpj_cpf
-        $number = preg_replace('/[^0-9]/', '', $certificate->cnpj_cpf);
+        $certificates = Certification::all();
 
-        // Determinar se é CPF ou CNPJ
-        if (strlen($number) === 11 && is_numeric($number)) {
-            $cpfCount++;
-        } elseif (strlen($number) === 14 && is_numeric($number)) {
-            $cnpjCount++;
+        $withinDeadline = 0;
+        $nearExpiration = 0;
+        $expired = 0;
+        $cpfCount = 0;
+        $cnpjCount = 0;
+
+        foreach ($certificates as $certificate) {
+            $validTo = strtotime($certificate->validTo_time_t);
+            $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
+
+            if ($daysUntilExpiry > $daysUntilWarning) {
+                $withinDeadline++;
+            } elseif ($daysUntilExpiry > 0) {
+                $nearExpiration++;
+            } else {
+                $expired++;
+            }
+
+            // Extrair apenas os números do campo cnpj_cpf
+            $number = preg_replace('/[^0-9]/', '', $certificate->cnpj_cpf);
+
+            // Determinar se é CPF ou CNPJ
+            if (strlen($number) === 11 && is_numeric($number)) {
+                $cpfCount++;
+            } elseif (strlen($number) === 14 && is_numeric($number)) {
+                $cnpjCount++;
+            }
         }
+
+        return response()->json([
+            'statusData' => [$withinDeadline, $nearExpiration, $expired],
+            'cpfCount' => $cpfCount,
+            'cnpjCount' => $cnpjCount,
+        ]);
     }
 
-    return response()->json([
-        'statusData' => [$withinDeadline, $nearExpiration, $expired],
-        'cpfCount' => $cpfCount,
-        'cnpjCount' => $cnpjCount,
-    ]);
-}
 
+    // Função para verificar se é CPF
+    private function isCpf($value)
+    {
+        return strlen($value) === 11 && is_numeric($value);
+    }
 
-// Função para verificar se é CPF
-private function isCpf($value)
-{
-    return strlen($value) === 11 && is_numeric($value);
-}
-
-// Função para verificar se é CNPJ
-private function isCnpj($value)
-{
-    return strlen($value) === 14 && is_numeric($value);
-}
+    // Função para verificar se é CNPJ
+    private function isCnpj($value)
+    {
+        return strlen($value) === 14 && is_numeric($value);
+    }
 
 
     public function validateCertification(Request $request)
@@ -144,12 +139,14 @@ private function isCnpj($value)
             'certificate' => 'required|file',
             'password' => 'required|string',
             'societario' => 'nullable|string',
+            'tipo_integrante' => 'required|string|in:Membro do quadro societário,Representante da pessoa jurídica',
         ]);
 
         // Captura o arquivo e a senha do certificado do request
         $certificateFile = $request->file('certificate');
         $certPassword = $request->input('password');
         $societario = $request->input('societario');
+        $tipoIntegrante = $request->input('tipo_integrante');
 
         // Lê o conteúdo do arquivo do certificado
         $pfxContent = file_get_contents($certificateFile->getPathName());
@@ -178,6 +175,7 @@ private function isCnpj($value)
         $certification->validTo_time_t = date('Y-m-d', $certInfo['validTo_time_t']);
         $certification->cnpj_cpf = $certInfo['subject']['CN'];
         $certification->societario = $societario;
+        $certification->tipo_integrante = $tipoIntegrante;
         $certification->certificate_path = $filePath; // Armazena o caminho do arquivo
         $certification->senhas = $certPassword; // Armazena a senha
         $certification->save();

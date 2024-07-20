@@ -138,6 +138,14 @@
                         <label for="password" class="form-label">Quadro Societário/Empresa</label>
                         <input type="text" class="form-control" id="societario" name="societario">
                     </div>
+                    <div class="col-md-6">
+                        <label for="tipo_integrante" class="form-label">Tipo Integrante</label>
+                        <select class="form-select" id="tipo_integrante" name="tipo_integrante" required>
+                            <option value="">Selecione</option>
+                            <option value="Membro do quadro societário">Membro do quadro societário</option>
+                            <option value="Representante da pessoa jurídica">Representante da pessoa jurídica</option>
+                        </select>
+                    </div>
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary">Enviar</button>
                     </div>
@@ -145,17 +153,6 @@
             </div>
         </fieldset>
 
-        <fieldset class="form-group border p-3">
-            <label for="statusFilter " class="form-label"><strong>Filtrar por Status:</strong></label>
-            <div class="form-group">
-            <select id="statusFilter" class="form-control">
-                <option value="Todos">Todos</option>
-                <option value="No Prazo">No Prazo</option>
-                <option value="Perto de Vencer">Perto de Vencer</option>
-                <option value="Vencido">Vencido</option>
-            </select>
-        </div>
-        </fieldset>
         <div class="modal fade" id="editCertificateModal" tabindex="-1" aria-labelledby="editCertificateModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <form id="editCertificateForm" action="{{ route('certification.update', ['id' => 0]) }}" method="POST" enctype="multipart/form-data">
@@ -194,6 +191,28 @@
             </div>
         </div>
         <legend class="badge text-bg-primary span12" style="font-size: 18px;">Lista de Certificados</legend>
+        <fieldset class="form-group border p-3">
+            <div class="d-flex align-items-center">
+                <div class="me-3">
+                    <label for="statusFilter" class="form-label"><strong>Filtrar por Status</strong></label>
+                    <select id="statusFilter" class="form-control">
+                        <option value="Todos">Todos</option>
+                        <option value="No Prazo">No Prazo</option>
+                        <option value="Perto de Vencer">Perto de Vencer</option>
+                        <option value="Vencido">Vencido</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="filter-select" class="form-label"><strong>Filtrar por Tipo de Integrante</strong></label>
+                    <select id="filter-select" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="Representante da pessoa jurídica">Representante Jurídico</option>
+                        <option value="Membro do quadro societário">Membro Societário</option>
+                    </select>
+                </div>
+            </div>
+        </fieldset>
         <fieldset class="container mx-auto p-2 px-10">
             <table id="certificates-table" class="table table-sm table-striped table-bordered" style="width:100%; font-size: 12px;">
                 <thead>
@@ -203,6 +222,7 @@
                         <th class="text-center">Data</th>
                         <th class="text-center">Razão Social e CNPJ/CPF</th>
                         <th class="text-center">Societário/Empresa</th>
+                        <th hidden class="text-center">Tipo Integrante</th>
                         <th class="text-center">Dias Para Vencimento</th>
                         <th class="text-center">Senhas</th>
                         <th class="text-center">Download</th>
@@ -240,6 +260,7 @@
                                 <td class="text-center">{{ date('d/m/Y', strtotime($certificate->validFrom_time_t)) }} - {{ date('d/m/Y', $validTo) }}</td>
                                 <td>{{ $certificate->cnpj_cpf }}</td>
                                 <td>{{ $certificate->societario }}</td>
+                                <td hidden >{{ $certificate->tipo_integrante }}</td>
                                 <td style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
                                     @if ($daysUntilExpiry <= 0)
                                         Vencido
@@ -270,246 +291,212 @@
                 </tbody>
             </table>
         </fieldset>
+        <script>
+            $(document).ready(function() {
+    var table = $('#certificates-table').DataTable({
+        dom: 'Blfrtip',
+        buttons: [
+            { extend: 'copy', exportOptions: { columns: ':visible' }},
+            { extend: 'csv', exportOptions: { columns: ':visible' }},
+            { extend: 'excel', exportOptions: { columns: ':visible' }},
+            { extend: 'pdfHtml5', orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: ':visible' }},
+            { extend: 'print', exportOptions: { columns: ':visible' }},
+            { extend: 'colvis', text: 'Ocultar Colunas' }
+        ],
+        responsive: true,
+        rowReorder: { selector: 'td:nth-child(2)' },
+        language: { url: '//cdn.datatables.net/plug-ins/2.0.1/i18n/pt-BR.json' },
+        lengthMenu: [10, 25, 50, 100, 1000],
+        pageLength: 10
+    });
 
-    <script>
-        $(document).ready(function() {
-            var table = $('#certificates-table').DataTable({
-                dom: 'Blfrtip',
-                buttons: [
-                    {
-                        extend: 'copy',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    },
-                    {
-                        extend: 'csv',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    },
-                    {
-                        extend: 'excel',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        orientation: 'landscape',
-                            pageSize: 'LEGAL',
-                        exportOptions: {
-                            columns: ':visible',
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    },
-                    {
-                        extend: 'colvis',
-                        text: 'Ocultar Colunas'
-                    },
-                ],
-                responsive: true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/2.0.1/i18n/pt-BR.json',
-                },
-                lengthMenu: [10, 25, 50, 100, 1000],
-                pageLength: 10
-            });
+    // Função para aplicar filtros com base no status e tipo de integrante selecionado
+    function applyFilters() {
+        var status = $('#statusFilter').val();
+        var type = $('#filter-select').val();
 
-        $(document).on('click', '.edit-btn', function(e) {
-            e.preventDefault();
-            var id = $(this).data('id');
-            var societario = $(this).closest('tr').find('td').eq(4).text();
+        table.column(6).search(getStatusSearchTerm(status), true, false);
+        table.column(5).search(type, true, false).draw();
+    }
 
-            // variável global baseUrl para definir a ação do formulário
-            $('#editCertificateForm').attr('action', window.baseUrl + '/certification/' + id + '/update');
-            $('#editSocietario').val(societario);
-
-            $('#editCertificateModal').modal('show');
-        });
-
-        // Função para aplicar filtros com base no status selecionado
-        function applyStatusFilter(status) {
-            if (status === "Todos") {
-                table.search('').columns().search('').draw();
-            } else {
-                var searchTerm;
-                switch(status) {
-                    case "No Prazo":
-                        searchTerm = "No Prazo";
-                        break;
-                    case "Perto de Vencer":
-                        searchTerm = "Perto de Vencer";
-                        break;
-                    case "Vencido":
-                        searchTerm = "Vencido";
-                        break;
-                    default:
-                        searchTerm = '';
-                }
-                table.column(5).search(searchTerm, true, false).draw();
-            }
+    // Função para obter o termo de busca baseado no status
+    function getStatusSearchTerm(status) {
+        switch (status) {
+            case 'No Prazo':
+                return 'No Prazo';
+            case 'Perto de Vencer':
+                return 'Perto de Vencer';
+            case 'Vencido':
+                return 'Vencido';
+            default:
+                return '';
         }
+    }
 
-        // Evento de mudança no filtro de status
-        $('#statusFilter').on('change', function() {
-            var selectedStatus = $(this).val();
-            applyStatusFilter(selectedStatus);
-        });
+    // Evento de mudança no filtro de status
+    $('#statusFilter').on('change', function() {
+        applyFilters();
+    });
 
-        // Reset para voltar ao estado padrão (Todos os certificados)
-        $('#resetFilter').on('click', function() {
-            $('#statusFilter').val('Todos'); // Define o filtro como 'Todos'
-            applyStatusFilter('Todos'); // Aplica o filtro 'Todos'
-        });
+    // Evento de mudança no filtro de tipo de integrante
+    $('#filter-select').on('change', function() {
+        applyFilters();
+    });
 
-        $(document).on('click', '.delete-btn', function(e) {
-            e.preventDefault();
-            var id = $(this).data('id');
-            var name = $(this).data('name');
+    // Reset para voltar ao estado padrão (Todos os certificados)
+    $('#resetFilter').on('click', function() {
+        $('#statusFilter').val('Todos');
+        $('#filter-select').val('');
+        applyFilters();
+    });
 
-            confirmDeletion(id, name);
-        });
+    $(document).on('click', '.edit-btn', function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        var societario = $(this).closest('tr').find('td').eq(4).text();
+        $('#editCertificateForm').attr('action', window.baseUrl + '/certification/' + id + '/update');
+        $('#editSocietario').val(societario);
+        $('#editCertificateModal').modal('show');
+    });
 
-        function confirmDeletion(id, name) {
-            swal({
-                title: "Você tem certeza?",
-                text: `Você realmente deseja excluir o certificado ${name}?`,
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            }).then((willDelete) => {
-                if (willDelete) {
-                    $.ajax({
-                        url: "{{ route('certification.destroy', ['id' => '__id__']) }}".replace('__id__', id),
-                        type: 'DELETE',
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                        },
-                        success: function(result) {
-                            if (result.success) {
-                                swal({
-                                    title: "Excluído!",
-                                    text: `O Certificado ${name} foi excluído com sucesso!`,
-                                    icon: "success",
-                                    timer: 2000,
-                                    buttons: false
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            } else {
-                                swal("Erro!", result.message, "error");
+    $(document).on('click', '.delete-btn', function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        var name = $(this).data('name');
+        confirmDeletion(id, name);
+    });
+
+            function confirmDeletion(id, name) {
+                swal({
+                    title: "Você tem certeza?",
+                    text: `Você realmente deseja excluir o certificado ${name}?`,
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: "{{ route('certification.destroy', ['id' => '__id__']) }}".replace('__id__', id),
+                            type: 'DELETE',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            success: function(result) {
+                                if (result.success) {
+                                    swal({
+                                        title: "Excluído!",
+                                        text: `O Certificado ${name} foi excluído com sucesso!`,
+                                        icon: "success",
+                                        timer: 2000,
+                                        buttons: false
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    swal("Erro!", result.message, "error");
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                swal("Erro!", "Ocorreu um erro ao excluir o certificado", "error");
                             }
-                        },
-                        error: function(xhr, status, error) {
-                            swal("Erro!", "Ocorreu um erro ao excluir o certificado", "error");
-                        }
-                    });
-                }
-            });
-        }
-        // Função para validar e atualizar a senha ao sair do campo input
-        $(document).on('blur', '.password-input', function() {
-            const input = $(this);
-            const password = input.val();
-            const certificateId = input.data('id');
-
-            $.ajax({
-                url: window.baseUrl + '/certification/validate-password',
-                type: 'POST',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    "password": password,
-                    "id": certificateId
-                },
-                success: function(response) {
-                    if (response.valid) {
-                        swal({
-                            title: "Sucesso!",
-                            text: "Senha alterada com sucesso!",
-                            icon: "success",
-                            timer: 1000,
-                            buttons: false
-                        });
-                    } else {
-                        swal({
-                            title: "Erro!",
-                            text: "A senha digitada está incorreta!",
-                            icon: "error",
                         });
                     }
-                },
-                error: function(xhr, status, error) {
-                    swal("Erro!", "Ocorreu um erro ao validar a senha", "error");
-                }
-            });
-        });
-    });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var collapseElement = document.getElementById('formContent');
-            var toggleIcon = document.getElementById('toggleIcon');
+                });
+            }
+            // Função para validar e atualizar a senha ao sair do campo input
+            $(document).on('blur', '.password-input', function() {
+                const input = $(this);
+                const password = input.val();
+                const certificateId = input.data('id');
 
-            collapseElement.addEventListener('show.bs.collapse', function () {
-                toggleIcon.className = 'bi bi-node-minus-fill'; // Ícone para quando está aberto
-            });
-
-            collapseElement.addEventListener('hide.bs.collapse', function () {
-                toggleIcon.className = 'bi bi-node-plus-fill'; // Ícone para quando está fechado
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const togglePasswordIcons = document.querySelectorAll('.toggle-password');
-
-            togglePasswordIcons.forEach(icon => {
-                icon.addEventListener('click', function() {
-                    const input = this.previousElementSibling;
-                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-                    input.setAttribute('type', type);
-                    this.classList.toggle('fa-eye');
-                    this.classList.toggle('fa-eye-slash');
+                $.ajax({
+                    url: window.baseUrl + '/certification/validate-password',
+                    type: 'POST',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        "password": password,
+                        "id": certificateId
+                    },
+                    success: function(response) {
+                        if (response.valid) {
+                            swal({
+                                title: "Sucesso!",
+                                text: "Senha alterada com sucesso!",
+                                icon: "success",
+                                timer: 1000,
+                                buttons: false
+                            });
+                        } else {
+                            swal({
+                                title: "Erro!",
+                                text: "A senha digitada está incorreta!",
+                                icon: "error",
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        swal("Erro!", "Ocorreu um erro ao validar a senha", "error");
+                    }
                 });
             });
         });
-    </script>
-    <script>
-     document.addEventListener("DOMContentLoaded", function() {
-        const passwordInput = document.getElementById('password');
-        const togglePassword = document.getElementById('toggle-password');
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var collapseElement = document.getElementById('formContent');
+                var toggleIcon = document.getElementById('toggleIcon');
 
-        togglePassword.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
+                collapseElement.addEventListener('show.bs.collapse', function () {
+                    toggleIcon.className = 'bi bi-node-minus-fill'; // Ícone para quando está aberto
+                });
 
-            this.querySelector('i').classList.toggle('fa-eye');
-            this.querySelector('i').classList.toggle('fa-eye-slash');
+                collapseElement.addEventListener('hide.bs.collapse', function () {
+                    toggleIcon.className = 'bi bi-node-plus-fill'; // Ícone para quando está fechado
+                });
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const togglePasswordIcons = document.querySelectorAll('.toggle-password');
+
+                togglePasswordIcons.forEach(icon => {
+                    icon.addEventListener('click', function() {
+                        const input = this.previousElementSibling;
+                        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                        input.setAttribute('type', type);
+                        this.classList.toggle('fa-eye');
+                        this.classList.toggle('fa-eye-slash');
+                    });
+                });
+            });
+        </script>
+        <script>
+         document.addEventListener("DOMContentLoaded", function() {
+            const passwordInput = document.getElementById('password');
+            const togglePassword = document.getElementById('toggle-password');
+
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
         });
-    });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-        const passwordInput = document.getElementById('editPassword');
-        const togglePassword = document.getElementById('toggle-password-edit');
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+            const passwordInput = document.getElementById('editPassword');
+            const togglePassword = document.getElementById('toggle-password-edit');
 
-        togglePassword.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
 
-            this.querySelector('i').classList.toggle('fa-eye');
-            this.querySelector('i').classList.toggle('fa-eye-slash');
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
         });
-    });
     </script>
 
 @endsection
