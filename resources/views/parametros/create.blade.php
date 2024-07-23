@@ -23,6 +23,10 @@
                 <input type="text" class="form-control" id="dias_faltantes" name="dias_faltantes" required>
             </div>
             <div class="mb-3">
+                <label for="texto" class="form-label">Texto:</label>
+                <textarea class="form-control" id="texto" name="texto" required></textarea>
+            </div>
+            <div class="mb-3">
                 <label for="valor" class="form-label">Valor:</label>
                 <input type="text" class="form-control" id="valor" name="valor" required>
             </div>

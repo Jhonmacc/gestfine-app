@@ -13,6 +13,7 @@ class Parametro extends Model
 
     protected $fillable = [
         'dias_faltantes',
+        'texto',
         'valor',
         'observacao',
     ];

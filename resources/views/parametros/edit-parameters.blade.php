@@ -26,8 +26,8 @@
                         <th class="px-6 py-3 border-b-2 border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-left leading-4 text-blue-500 dark:text-white tracking-wider">ID</th>
                         <th class="px-6 py-3 border-b-2 border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-left leading-4 text-blue-500 dark:text-white tracking-wider">Nome</th>
                         <th class="px-6 py-3 border-b-2 border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-left leading-4 text-blue-500 dark:text-white tracking-wider">Observacão</th>
-                        <th class="px-6 py-3 border-b-2 border-gray-300
-                        dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-left leading-4 text-blue-500 dark:text-white tracking-wider">Valor</th>
+                        <th class="px-6 py-3 border-b border-gray-300 dark:border-gray-700">Texto</th>
+                        <th class="px-6 py-3 border-b border-gray-300 dark:border-gray-700">Valor</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,8 +36,11 @@
                         <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-700">{{ $parametro->id }}</td>
                         <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-700">{{ $parametro->dias_faltantes }}</td>
                         <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-700">{{ $parametro->observacao }}</td>
+                        <td class="px-6 py-4 w-1/3 border-b border-gray-300 dark:border-gray-700">
+                            <input type="text" name="parametros[{{ $parametro->id }}][texto]" value="{{ $parametro->texto }}" class="form-control  w-full border rounded-md px-3 py-2 parameter-value" data-id="{{ $parametro->id }}" data-field="texto">
+                        </td>
                         <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-700">
-                            <input type="number" name="parametros[{{ $parametro->id }}]" value="{{ $parametro->valor }}" class="form-control w-full border rounded-md px-3 py-2 parameter-value" data-id="{{ $parametro->id }}">
+                            <input type="number" name="parametros[{{ $parametro->id }}][valor]" value="{{ $parametro->valor }}" class="form-control w-full border rounded-md px-3 py-2 parameter-value" data-id="{{ $parametro->id }}" data-field="valor">
                         </td>
                     </tr>
                     @endforeach
@@ -64,6 +67,7 @@
         function updateParameter(input) {
             const paramId = input.data('id');
             const paramValue = input.val();
+            const paramField = input.data('field');
 
             $.ajax({
                 url: '{{ route('parametros.update') }}',
@@ -71,7 +75,9 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     parametros: {
-                        [paramId]: paramValue
+                        [paramId]: {
+                            [paramField]: paramValue
+                        }
                     }
                 },
                 success: function(response) {

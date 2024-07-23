@@ -26,6 +26,7 @@ class ParametroController extends Controller
     {
         $request->validate([
             'dias_faltantes' => 'required|string|max:255',
+            'texto' => 'required|string|max:255',
             'valor' => 'required|string|max:255',
             'observacao' => 'required|string|max:255',
         ]);
@@ -42,6 +43,7 @@ class ParametroController extends Controller
     public function update(Request $request, Parametro $parametro)
     {
         $request->validate([
+            'texto' => 'required|string|max:255',
             'valor' => 'required|string|max:255',
         ]);
 
@@ -56,23 +58,28 @@ class ParametroController extends Controller
     }
 
     public function updateParameters(Request $request)
-    {
-        $parametros = $request->input('parametros');
+{
+    $parametros = $request->input('parametros');
 
-        try {
-            foreach ($parametros as $id => $valor) {
-                $parametro = Parametro::find($id);
-                if ($parametro) {
-                    $parametro->valor = $valor;
-                    $parametro->save();
+    try {
+        foreach ($parametros as $id => $data) {
+            $parametro = Parametro::find($id);
+            if ($parametro) {
+                if (is_array($data)) {
+                    // Atualiza todos os campos que foram enviados
+                    foreach ($data as $key => $value) {
+                        $parametro->$key = $value;
+                    }
                 }
+                $parametro->save();
             }
-
-            return response()->json(['success' => true, 'message' => 'Parâmetros atualizados com sucesso.']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Erro ao atualizar os parâmetros.'], 500);
         }
+
+        return response()->json(['success' => true, 'message' => 'Parâmetros atualizados com sucesso.']);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => 'Erro ao atualizar os parâmetros.'], 500);
     }
+}
 
     public function destroy(Parametro $parametro)
     {
