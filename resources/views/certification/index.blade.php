@@ -116,47 +116,56 @@
                 </i>
         </legend>
             <div class="collapse" id="formContent">
-                    <form action="{{ route('certification.validate') }}"
-                    method="POST"
-                    enctype="multipart/form-data"
-                    class="row g-3">
-                        @csrf
-                        <div class="col-md-6">
-                            <label for="certificate" class="form-label">Certificado (.pfx)</label>
-                            <input type="file" class="form-control" id="certificate" name="certificate" required>
+                <form action="{{ route('certification.validate') }}"
+                method="POST"
+                enctype="multipart/form-data"
+                class="row g-3">
+                    @csrf
+                    <div class="col-md-6">
+                        <label for="certificate" class="form-label">Certificado (.pfx)</label>
+                        <input type="file" class="form-control" id="certificate" name="certificate" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="password" class="form-label">Senha do Certificado</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <span class="input-group-text" id="toggle-password">
+                                <i title="Mostar senha" class="fas fa-eye"></i>
+                            </span>
                         </div>
-                        <div class="col-md-6">
-                            <label for="password" class="form-label">Senha do Certificado</label>
-                            <div class="input-group">
-                                <input type="password" class="form-control" id="password" name="password" required>
-                                <span class="input-group-text" id="toggle-password">
-                                    <i title="Mostar senha" class="fas fa-eye"></i>
-                                </span>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="password" class="form-label">Observacão</label>
+                        <input type="text" class="form-control" id="societario" name="societario">
+                    </div>
+                    {{-- <div class="col-md-6">
+                        <label for="tipo_integrante" class="form-label">Tipo Integrante</label>
+                        <select class="form-select" id="tipo_integrante" name="tipo_integrante" required>
+                            <option value="">Selecione</option>
+                            <option value="Membro do quadro societário">Membro do quadro societário</option>
+                            <option value="Representante da pessoa jurídica">Representante da pessoa jurídica</option>
+                        </select>
+                    </div> --}}
+                    <div class="col-md-6">
+                    <label for="numero" class="form-label">Número/Celular</label>
+                    <input type="text" class="form-control numero-input-mask" id="numero" name="numero">
+
+                    <div class="flex items-center p-2 mb-2 text-xs text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300 dark:border-yellow-800" role="alert">
+                        <svg class="flex-shrink-0 inline w-3 h-3 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                        </svg>
+                        <span class="sr-only">Info</span>
+                            <div>
+                                <span class="font-medium text-sm">Atenção!</span> Digite o número com DDD seguido pelo dígito 9. Exemplo: (62) 95555-5555
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="password" class="form-label">Observacão</label>
-                            <input type="text" class="form-control" id="societario" name="societario">
-                        </div>
-                        {{-- <div class="col-md-6">
-                            <label for="tipo_integrante" class="form-label">Tipo Integrante</label>
-                            <select class="form-select" id="tipo_integrante" name="tipo_integrante" required>
-                                <option value="">Selecione</option>
-                                <option value="Membro do quadro societário">Membro do quadro societário</option>
-                                <option value="Representante da pessoa jurídica">Representante da pessoa jurídica</option>
-                            </select>
-                        </div> --}}
-                        <div class="col-md-6">
-                            <label for="numero" class="form-label">Número/Celular</label>
-                            <input type="text" class="form-control numero-input-mask" id="numero" name="numero">
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary">Enviar</button>
-                        </div>
-                    </form>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                </form>
             </div>
         </fieldset>
-
         <div class="modal fade" id="editCertificateModal" tabindex="-1" aria-labelledby="editCertificateModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <form id="editCertificateForm" action="{{ route('certification.update', ['id' => 0]) }}" method="POST" enctype="multipart/form-data">
@@ -200,6 +209,19 @@
                                 <label for="editNumero" class="form-label">Número/Celular</label>
                                 <input type="text" class="form-control numero-input-mask" id="editNumero" name="numero">
                             </div>
+                            <div class="flex items-center p-2 mb-2 text-xs text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300 dark:border-yellow-800" role="alert">
+                                <svg class="flex-shrink-0 inline w-3 h-3 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                </svg>
+                                <span class="sr-only">Info</span>
+                                <div>
+                                  <span class="font-medium text-sm">Atenção!</span> Digite o número com DDD seguido pelo dígito 9. Exemplo: (62) 95555-5555
+                                </div>
+                              </div>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
