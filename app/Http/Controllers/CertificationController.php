@@ -17,10 +17,10 @@ class CertificationController extends Controller
         $certificates = Certification::query(); // Inicia a query
 
         // Filtrar por tipo de integrante
-        $type = $request->input('type', '');
-        if (!empty($type)) {
-            $certificates->where('tipo_integrante', $type);
-        }
+        // $type = $request->input('type', '');
+        // if (!empty($type)) {
+        //     $certificates->where('tipo_integrante', $type);
+        // }
 
         // Filtrar por status
         $status = $request->input('status', 'Todos');
@@ -139,7 +139,7 @@ class CertificationController extends Controller
             'certificate' => 'required|file',
             'password' => 'required|string',
             'societario' => 'nullable|string',
-            'tipo_integrante' => 'required|string|in:Membro do quadro societário,Representante da pessoa jurídica',
+            // 'tipo_integrante' => 'required|string|in:Membro do quadro societário,Representante da pessoa jurídica',
             'numero' => 'nullable|string',
         ]);
 
@@ -147,7 +147,7 @@ class CertificationController extends Controller
         $certificateFile = $request->file('certificate');
         $certPassword = $request->input('password');
         $societario = $request->input('societario');
-        $tipoIntegrante = $request->input('tipo_integrante');
+        // $tipoIntegrante = $request->input('tipo_integrante');
         $numeroIntegrante = $request->input('numero');
 
         // Lê o conteúdo do arquivo do certificado
@@ -181,7 +181,7 @@ class CertificationController extends Controller
         $certification->validTo_time_t = date('Y-m-d', $certInfo['validTo_time_t']);
         $certification->cnpj_cpf = $certInfo['subject']['CN'];
         $certification->societario = $societario;
-        $certification->tipo_integrante = $tipoIntegrante;
+        // $certification->tipo_integrante = $tipoIntegrante;
         $certification->numero = $numeroIntegrante;
         $certification->certificate_path = $filePath; // Armazena o caminho do arquivo
         $certification->senhas = $certPassword; // Armazena a senha
@@ -219,7 +219,7 @@ class CertificationController extends Controller
         'certificate' => 'required|file',
         'password' => 'required|string',
         'societario' => 'nullable|string',
-        'tipo_integrante' => 'nullable|string',
+        // 'tipo_integrante' => 'nullable|string',
         'numero' => 'nullable|string',
     ]);
 
@@ -230,7 +230,7 @@ class CertificationController extends Controller
     $certificateFile = $request->file('certificate');
     $certPassword = $request->input('password');
     $societario = $request->input('societario');
-    $tipo_integrante = $request->input('tipo_integrante');
+    // $tipo_integrante = $request->input('tipo_integrante');
     $numeroIntegrante = $request->input('numero');
 
     // Lê o conteúdo do arquivo do certificado
@@ -271,7 +271,7 @@ class CertificationController extends Controller
     $certificate->validTo_time_t = date('Y-m-d', $certInfo['validTo_time_t']);
     $certificate->cnpj_cpf = $newCnpjCpf;
     $certificate->societario = $societario;
-    $certificate->tipo_integrante = $tipo_integrante;
+    // $certificate->tipo_integrante = $tipo_integrante;
     $certificate->numero = $numeroIntegrante;
     $certificate->certificate_path = $filePath; // Armazena o caminho do arquivo
     $certificate->senhas = $certPassword; // Armazena a senha

@@ -135,17 +135,17 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label for="password" class="form-label">Quadro Societário/Empresa</label>
+                            <label for="password" class="form-label">Observacão</label>
                             <input type="text" class="form-control" id="societario" name="societario">
                         </div>
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <label for="tipo_integrante" class="form-label">Tipo Integrante</label>
                             <select class="form-select" id="tipo_integrante" name="tipo_integrante" required>
                                 <option value="">Selecione</option>
                                 <option value="Membro do quadro societário">Membro do quadro societário</option>
                                 <option value="Representante da pessoa jurídica">Representante da pessoa jurídica</option>
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="col-md-6">
                             <label for="numero" class="form-label">Número/Celular</label>
                             <input type="text" class="form-control numero-input-mask" id="numero" name="numero">
@@ -185,17 +185,17 @@
                             </div>
                         </div>
                             <div class="mb-3">
-                                <label for="editSocietario" class="form-label">Quadro Societário/Empresa</label>
+                                <label for="editSocietario" class="form-label">Observacão</label>
                                 <input type="text" class="form-control" id="editSocietario" name="societario">
                             </div>
-                            <div class="col-md-8">
+                            {{-- <div class="col-md-8">
                                 <label for="tipo_integrante" class="form-label">Tipo Integrante</label>
                                 <select class="form-select" id="editTipoIntegrante" name="tipo_integrante" required>
                                     <option value="">Selecione</option>
                                     <option value="Membro do quadro societário">Membro do quadro societário</option>
                                     <option value="Representante da pessoa jurídica">Representante da pessoa jurídica</option>
                                 </select>
-                            </div>
+                            </div> --}}
                             <div class="col-md-6">
                                 <label for="editNumero" class="form-label">Número/Celular</label>
                                 <input type="text" class="form-control numero-input-mask" id="editNumero" name="numero">
@@ -222,14 +222,14 @@
                     </select>
                 </div>
 
-                <div>
+                {{-- <div>
                     <label for="filter-select" class="form-label"><strong>Filtrar por Tipo de Integrante</strong></label>
                     <select id="filter-select" class="form-control">
                         <option value="">Todos</option>
                         <option value="Representante da pessoa jurídica">Representante Jurídico</option>
                         <option value="Membro do quadro societário">Membro Societário</option>
                     </select>
-                </div>
+                </div> --}}
             </div>
         </fieldset>
         <fieldset class="container mx-auto p-2 px-10">
@@ -240,9 +240,9 @@
                         <th class="text-center name-column">Nome</th>
                         <th class="text-center date-column">Data</th>
                         <th class="text-center cnpj-column">Razão Social e CNPJ/CPF</th>
-                        <th class="text-center societario-column">Societário/Empresa</th>
+                        <th class="text-center societario-column">Observacão</th>
                         <th class="text-center numero-column">Número</th>
-                        <th hidden class="text-center type-column">Tipo Integrante</th>
+                        {{-- <th hidden class="text-center type-column">Tipo Integrante</th> --}}
                         <th class="text-center status-column">Dias Para Vencimento</th>
                         <th class="text-center senha-column">Senhas</th>
                         <th class="text-center download-column">Download</th>
@@ -285,7 +285,7 @@
                                 <td class="numero-column" style="width: 200px; white-space: nowrap;">
                                     <input type="text" value="{{ $certificate->numero }}" class="form-control numero-input numero-input-mask" data-id="{{ $certificate->id }}" />
                                 </td>
-                                <td hidden class="type-column">{{ $certificate->tipo_integrante }}</td>
+                                {{-- <td hidden class="type-column">{{ $certificate->tipo_integrante }}</td> --}}
                                 <td class="status-column" style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
                                     @if ($daysUntilExpiry <= 0)
                                         Vencido
