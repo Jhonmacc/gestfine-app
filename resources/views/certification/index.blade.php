@@ -300,7 +300,7 @@
                                 <td class="cnpj-column">{{ $certificate->cnpj_cpf }}</td>
                                 <td class="societario-column">{{ $certificate->societario }}</td>
                                 <td class="numero-column">
-                                    <input type="text" value="{{ $certificate->numero }}" class="form-control numero-input numero-input-mask" data-id="{{ $certificate->id }}" />
+                                    <input type="text" value="{{ $certificate->numero }}" style="width: 200px; white-space: nowrap;" class="form-control numero-input numero-input-mask" data-id="{{ $certificate->id }}" />
                                 </td>
                                 {{-- <td hidden class="type-column">{{ $certificate->tipo_integrante }}</td> --}}
                                 <td class="status-column" style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
@@ -312,9 +312,9 @@
                                         {{ $daysUntilExpiry }} dias (No Prazo)
                                     @endif
                                 </td>
-                                <td class="senha-column" style="width: 200px; white-space: nowrap;">
+                                <td class="senha-column">
                                     <fieldset class="password-fieldset">
-                                        <input type="password" value="{{ $certificate->senhas }}" class="form-control password-input" data-id="{{ $certificate->id }}">
+                                        <input style="width: 200px; white-space: nowrap;" type="password" value="{{ $certificate->senhas }}" class="form-control password-input" data-id="{{ $certificate->id }}">
                                         <i class="toggle-password fa fa-eye"></i>
                                     </fieldset>
                                 </td>
