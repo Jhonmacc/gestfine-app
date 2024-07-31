@@ -506,7 +506,7 @@
 
         // Requisição AJAX para salvar o número
         $.ajax({
-            url: '/certification/update-number', // Atualize com a rota correta
+            url: window.baseUrl + '/certification/update-number', // Atualize com a rota correta
             type: 'POST',
             data: {
                 "_token": "{{ csrf_token() }}",
