@@ -237,15 +237,15 @@
                 <thead>
                     <tr>
                         <th class="text-center">Ações</th>
-                        <th class="text-center">Nome</th>
-                        <th class="text-center">Data</th>
-                        <th class="text-center">Razão Social e CNPJ/CPF</th>
-                        <th class="text-center">Societário/Empresa</th>
-                        <th class="text-center">Número</th>
-                        <th hidden class="text-center">Tipo Integrante</th>
-                        <th class="text-center">Dias Para Vencimento</th>
-                        <th class="text-center">Senhas</th>
-                        <th class="text-center">Download</th>
+                        <th class="text-center name-column">Nome</th>
+                        <th class="text-center date-column">Data</th>
+                        <th class="text-center cnpj-column">Razão Social e CNPJ/CPF</th>
+                        <th class="text-center societario-column">Societário/Empresa</th>
+                        <th class="text-center numero-column">Número</th>
+                        <th hidden class="text-center type-column">Tipo Integrante</th>
+                        <th class="text-center status-column">Dias Para Vencimento</th>
+                        <th class="text-center senha-column">Senhas</th>
+                        <th class="text-center download-column">Download</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -276,17 +276,17 @@
                                         </ul>
                                     </div>
                                 </td>
-                                <td>{{ $cleanName }}</td>
-                                <td class="text-center align-middle" data-order="{{ $certificate->validTo_time_t }}">
+                                <td class="name-column">{{ $cleanName }}</td>
+                                <td class="text-center align-middle date-column" data-order="{{ $certificate->validTo_time_t }}">
                                     {{ date('d/m/Y', strtotime($certificate->validTo_time_t)) }}
                                 </td>
-                                <td>{{ $certificate->cnpj_cpf }}</td>
-                                <td>{{ $certificate->societario }}</td>
-                                    <td style="width: 200px; white-space: nowrap;">
-                                        <input type="text" value="{{ $certificate->numero }}" class="form-control numero-input numero-input-mask" data-id="{{ $certificate->id }}" />
-                                    </td>
-                                <td hidden >{{ $certificate->tipo_integrante }}</td>
-                                <td style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
+                                <td class="cnpj-column">{{ $certificate->cnpj_cpf }}</td>
+                                <td class="societario-column">{{ $certificate->societario }}</td>
+                                <td class="numero-column" style="width: 200px; white-space: nowrap;">
+                                    <input type="text" value="{{ $certificate->numero }}" class="form-control numero-input numero-input-mask" data-id="{{ $certificate->id }}" />
+                                </td>
+                                <td hidden class="type-column">{{ $certificate->tipo_integrante }}</td>
+                                <td class="status-column" style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
                                     @if ($daysUntilExpiry <= 0)
                                         Vencido
                                     @elseif ($daysUntilExpiry <= $daysUntilWarning)
@@ -295,13 +295,13 @@
                                         {{ $daysUntilExpiry }} dias (No Prazo)
                                     @endif
                                 </td>
-                                <td style="width: 200px; white-space: nowrap;">
+                                <td class="senha-column" style="width: 200px; white-space: nowrap;">
                                     <fieldset class="password-fieldset">
                                         <input type="password" value="{{ $certificate->senhas }}" class="form-control password-input" data-id="{{ $certificate->id }}">
                                         <i class="toggle-password fa fa-eye"></i>
                                     </fieldset>
                                 </td>
-                                <td>
+                                <td class="download-column">
                                     <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded inline-flex items-center"
                                             onclick="window.location.href = '{{ route('certification.download', $certificate->id) }}';">
                                         <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -336,12 +336,16 @@
     });
 
     // Função para aplicar filtros com base no status e tipo de integrante selecionado
-    function applyFilters() {
+     // Função para aplicar filtros com base no status e tipo de integrante selecionado
+     function applyFilters() {
         var status = $('#statusFilter').val();
         var type = $('#filter-select').val();
 
-        table.column(4).search(getStatusSearchTerm(status), true, false);
-        table.column(6).search(type, true, false).draw();
+        // Filtro para o status
+        table.columns('.status-column').search(getStatusSearchTerm(status), true, false);
+
+        // Filtro para o tipo de integrante
+        table.columns('.type-column').search(type, true, false).draw();
     }
 
     // Função para obter o termo de busca baseado no status
@@ -379,9 +383,9 @@
         e.preventDefault();
         var id = $(this).data('id');
         var certificatoName = $(this).data('name');
-        var societario = $(this).closest('tr').find('td').eq(4).text();
-        var numero = $(this).closest('tr').find('.numero-input').val().trim(); // Ajustado para pegar o valor do input
-        var tipo_integrante = $(this).closest('tr').find('td').eq(6).text().trim(); // Ajuste o índice da célula para o tipo de integrante se necessário
+        var societario = $(this).closest('tr').find('.societario-column').text();
+        var numero = $(this).closest('tr').find('.numero-input').val().trim();
+        var tipo_integrante = $(this).closest('tr').find('.type-column').text().trim(); // Ajuste o índice da célula para o tipo de integrante se necessário
 
         // Defina a URL de atualização do formulário
         $('#editCertificateForm').attr('action', window.baseUrl + '/certification/' + id + '/update');
