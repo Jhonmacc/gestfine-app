@@ -277,7 +277,7 @@
                                     </div>
                                 </td>
                                 <td>{{ $cleanName }}</td>
-                                <td class="text-center">{{ date('d/m/Y', strtotime($certificate->validFrom_time_t)) }} - {{ date('d/m/Y', $validTo) }}</td>
+                                <td class="text-center">{{ $certificate->validTo_time_t }} </td>
                                 <td>{{ $certificate->cnpj_cpf }}</td>
                                 <td>{{ $certificate->societario }}</td>
                                     <td style="width: 200px; white-space: nowrap;">
