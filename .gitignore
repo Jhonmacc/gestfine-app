@@ -9,6 +9,12 @@
 .env.backup
 .env.production
 .phpunit.result.cache
+sessions
+sessions_test
+logs
+coverage
+.DS_Store
+.wwebjs_cache
 Homestead.json
 Homestead.yaml
 auth.json

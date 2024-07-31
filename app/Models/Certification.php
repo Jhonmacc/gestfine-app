@@ -16,6 +16,7 @@ class Certification extends Model
     'cnpj_cpf',
     'societario',
     'tipo_integrante ',
+    'numero',
     'certificate_path',
     ];
 

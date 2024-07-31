@@ -116,40 +116,44 @@
                 </i>
         </legend>
             <div class="collapse" id="formContent">
-                <form action="{{ route('certification.validate') }}"
-                method="POST"
-                enctype="multipart/form-data"
-                class="row g-3">
-                    @csrf
-                    <div class="col-md-6">
-                        <label for="certificate" class="form-label">Certificado (.pfx)</label>
-                        <input type="file" class="form-control" id="certificate" name="certificate" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="password" class="form-label">Senha do Certificado</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="password" name="password" required>
-                            <span class="input-group-text" id="toggle-password">
-                                <i title="Mostar senha" class="fas fa-eye"></i>
-                            </span>
+                    <form action="{{ route('certification.validate') }}"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="row g-3">
+                        @csrf
+                        <div class="col-md-6">
+                            <label for="certificate" class="form-label">Certificado (.pfx)</label>
+                            <input type="file" class="form-control" id="certificate" name="certificate" required>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="password" class="form-label">Quadro Societário/Empresa</label>
-                        <input type="text" class="form-control" id="societario" name="societario">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="tipo_integrante" class="form-label">Tipo Integrante</label>
-                        <select class="form-select" id="tipo_integrante" name="tipo_integrante" required>
-                            <option value="">Selecione</option>
-                            <option value="Membro do quadro societário">Membro do quadro societário</option>
-                            <option value="Representante da pessoa jurídica">Representante da pessoa jurídica</option>
-                        </select>
-                    </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary">Enviar</button>
-                    </div>
-                </form>
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">Senha do Certificado</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <span class="input-group-text" id="toggle-password">
+                                    <i title="Mostar senha" class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">Quadro Societário/Empresa</label>
+                            <input type="text" class="form-control" id="societario" name="societario">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tipo_integrante" class="form-label">Tipo Integrante</label>
+                            <select class="form-select" id="tipo_integrante" name="tipo_integrante" required>
+                                <option value="">Selecione</option>
+                                <option value="Membro do quadro societário">Membro do quadro societário</option>
+                                <option value="Representante da pessoa jurídica">Representante da pessoa jurídica</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="numero" class="form-label">Número/Celular</label>
+                            <input type="text" class="form-control numero-input-mask" id="numero" name="numero">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
+                    </form>
             </div>
         </fieldset>
 
@@ -160,8 +164,11 @@
                     @method('PUT')
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editCertificateModalLabel">Substituir Certificado</h5>
+                            <h5 class="modal-title" id="editCertificateModalLabel">Substituir Certificado/Renovar</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="mb-3 modal-header text-center">
+                            <label for="currentCertificateName" class="form-label w-100"><strong><span id="currentCertificateName"></span></strong></label>
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
@@ -188,6 +195,10 @@
                                     <option value="Membro do quadro societário">Membro do quadro societário</option>
                                     <option value="Representante da pessoa jurídica">Representante da pessoa jurídica</option>
                                 </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editNumero" class="form-label">Número/Celular</label>
+                                <input type="text" class="form-control numero-input-mask" id="editNumero" name="numero">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -230,6 +241,7 @@
                         <th class="text-center">Data</th>
                         <th class="text-center">Razão Social e CNPJ/CPF</th>
                         <th class="text-center">Societário/Empresa</th>
+                        <th class="text-center">Número</th>
                         <th hidden class="text-center">Tipo Integrante</th>
                         <th class="text-center">Dias Para Vencimento</th>
                         <th class="text-center">Senhas</th>
@@ -268,6 +280,9 @@
                                 <td class="text-center">{{ date('d/m/Y', strtotime($certificate->validFrom_time_t)) }} - {{ date('d/m/Y', $validTo) }}</td>
                                 <td>{{ $certificate->cnpj_cpf }}</td>
                                 <td>{{ $certificate->societario }}</td>
+                                    <td style="width: 200px; white-space: nowrap;">
+                                        <input type="text" value="{{ $certificate->numero }}" class="form-control numero-input numero-input-mask" data-id="{{ $certificate->id }}" />
+                                    </td>
                                 <td hidden >{{ $certificate->tipo_integrante }}</td>
                                 <td style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
                                     @if ($daysUntilExpiry <= 0)
@@ -323,8 +338,8 @@
         var status = $('#statusFilter').val();
         var type = $('#filter-select').val();
 
-        table.column(6).search(getStatusSearchTerm(status), true, false);
-        table.column(5).search(type, true, false).draw();
+        table.column(4).search(getStatusSearchTerm(status), true, false);
+        table.column(6).search(type, true, false).draw();
     }
 
     // Função para obter o termo de busca baseado no status
@@ -361,10 +376,12 @@
     $(document).on('click', '.edit-btn', function(e) {
         e.preventDefault();
         var id = $(this).data('id');
+        var certificatoName = $(this).data('name');
         var societario = $(this).closest('tr').find('td').eq(4).text();
-        var tipo_integrante = $(this).closest('tr').find('td').eq(5).text().trim(); // Ajuste o índice da célula para o tipo de integrante se necessário
+        var numero = $(this).closest('tr').find('.numero-input').val().trim(); // Ajustado para pegar o valor do input
+        var tipo_integrante = $(this).closest('tr').find('td').eq(6).text().trim(); // Ajuste o índice da célula para o tipo de integrante se necessário
 
-    // Defina a URL de atualização do formulário
+        // Defina a URL de atualização do formulário
         $('#editCertificateForm').attr('action', window.baseUrl + '/certification/' + id + '/update');
 
         // Preencha os campos do modal
@@ -377,9 +394,14 @@
             $('#editTipoIntegrante').val(''); // Define como vazio se o valor for inválido ou null
         }
 
-    // Exiba o modal
-    $('#editCertificateModal').modal('show');
-});
+        $('#editNumero').val(numero);
+
+        // Defina o nome do certificado no label
+        $('#currentCertificateName').text(certificatoName);
+
+        // Exiba o modal
+        $('#editCertificateModal').modal('show');
+    });
 
     $(document).on('click', '.delete-btn', function(e) {
         e.preventDefault();
@@ -461,64 +483,112 @@
                     }
                 });
             });
+              // Inicializa a máscara no campo de número
+    $('.numero-input-mask').mask('55 (00) 00000-0000', {
+        placeholder: '55 (__) ____-____',
+        onComplete: function(value) {
+            // Remove os caracteres não numéricos para manter o formato desejado
+            let cleanValue = value.replace(/\D/g, '');
+            $(this).val(cleanValue);
+        }
+    });
+
+    // Evento blur para salvar o número
+    $(document).on('blur', '.numero-input', function() {
+        const input = $(this);
+        let number = input.val();
+        const certificateId = input.data('id');
+
+        // Se o campo estiver vazio, enviar um valor vazio
+        if (number === '') {
+            number = null;
+        }
+
+        // Requisição AJAX para salvar o número
+        $.ajax({
+            url: '/certification/update-number', // Atualize com a rota correta
+            type: 'POST',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "numero": number, // Nome da coluna no banco de dados
+                "id": certificateId
+            },
+            success: function(response) {
+                swal({
+                    title: "Sucesso!",
+                    text: "Número foi salvo com sucesso!",
+                    icon: "success",
+                    timer: 1000,
+                    buttons: false
+                });
+            },
+            error: function(xhr, status, error) {
+                swal({
+                    title: "Ops!",
+                    text: "Houve um erro ao salvar o número.",
+                    icon: "error"
+                });
+            }
         });
-        </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var collapseElement = document.getElementById('formContent');
-                var toggleIcon = document.getElementById('toggleIcon');
+    });
+});
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var collapseElement = document.getElementById('formContent');
+            var toggleIcon = document.getElementById('toggleIcon');
 
-                collapseElement.addEventListener('show.bs.collapse', function () {
-                    toggleIcon.className = 'bi bi-node-minus-fill'; // Ícone para quando está aberto
-                });
-
-                collapseElement.addEventListener('hide.bs.collapse', function () {
-                    toggleIcon.className = 'bi bi-node-plus-fill'; // Ícone para quando está fechado
-                });
+            collapseElement.addEventListener('show.bs.collapse', function () {
+                toggleIcon.className = 'bi bi-node-minus-fill'; // Ícone para quando está aberto
             });
-        </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const togglePasswordIcons = document.querySelectorAll('.toggle-password');
 
-                togglePasswordIcons.forEach(icon => {
-                    icon.addEventListener('click', function() {
-                        const input = this.previousElementSibling;
-                        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-                        input.setAttribute('type', type);
-                        this.classList.toggle('fa-eye');
-                        this.classList.toggle('fa-eye-slash');
-                    });
-                });
-            });
-        </script>
-        <script>
-         document.addEventListener("DOMContentLoaded", function() {
-            const passwordInput = document.getElementById('password');
-            const togglePassword = document.getElementById('toggle-password');
-
-            togglePassword.addEventListener('click', function() {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-
-                this.querySelector('i').classList.toggle('fa-eye');
-                this.querySelector('i').classList.toggle('fa-eye-slash');
-            });
-        });
-        </script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-            const passwordInput = document.getElementById('editPassword');
-            const togglePassword = document.getElementById('toggle-password-edit');
-
-            togglePassword.addEventListener('click', function() {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-
-                this.querySelector('i').classList.toggle('fa-eye');
-                this.querySelector('i').classList.toggle('fa-eye-slash');
+            collapseElement.addEventListener('hide.bs.collapse', function () {
+                toggleIcon.className = 'bi bi-node-plus-fill'; // Ícone para quando está fechado
             });
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePasswordIcons = document.querySelectorAll('.toggle-password');
+
+            togglePasswordIcons.forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('toggle-password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        const passwordInput = document.getElementById('editPassword');
+        const togglePassword = document.getElementById('toggle-password-edit');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    });
+</script>
 
 @endsection

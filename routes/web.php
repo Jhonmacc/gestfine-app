@@ -46,6 +46,9 @@ Route::middleware([
     Route::post('/parametros/update', [ParametroController::class, 'updateParameters'])->name('parametros.update');
     Route::post('/parametros/create', [ParametroController::class, 'store'])->name('parametros.store');
 
+    // Rotas add números de telefone
+    Route::post('/certification/update-number', [CertificationController::class, 'updateNumber']);
+
     Route::delete('/certification/{id}/destroy', [CertificationController::class, 'destroy'])->name('certification.destroy');
 
     // Rotas de Testes

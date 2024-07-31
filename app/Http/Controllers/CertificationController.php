@@ -140,6 +140,7 @@ class CertificationController extends Controller
             'password' => 'required|string',
             'societario' => 'nullable|string',
             'tipo_integrante' => 'required|string|in:Membro do quadro societário,Representante da pessoa jurídica',
+            'numero' => 'nullable|string',
         ]);
 
         // Captura o arquivo e a senha do certificado do request
@@ -147,6 +148,7 @@ class CertificationController extends Controller
         $certPassword = $request->input('password');
         $societario = $request->input('societario');
         $tipoIntegrante = $request->input('tipo_integrante');
+        $numeroIntegrante = $request->input('numero');
 
         // Lê o conteúdo do arquivo do certificado
         $pfxContent = file_get_contents($certificateFile->getPathName());
@@ -162,11 +164,15 @@ class CertificationController extends Controller
 
         // Descriptografa e processa o certificado
         $certInfo = openssl_x509_parse(openssl_x509_read($x509certdata['cert']));
+
          // Verifica se já existe um certificado com o mesmo CNPJ/CPF
         $cnpjCpf = $certInfo['subject']['CN'];
         if (Certification::where('cnpj_cpf', $cnpjCpf)->exists()) {
             return back()->withErrors('Já existe um certificado com este CNPJ/CPF cadastrado!');
-    }
+       }
+
+        // Remove todos os caracteres não numéricos se houver um número
+        $numeroIntegrante = $request->input('numero') ? preg_replace('/\D/', '', $request->input('numero')) : null;
         // Salva o arquivo no sistema de arquivos do servidor
         $filePath = $certificateFile->storeAs('certificates', $fileName, 'public'); // Salva na pasta storage/app/public/certificates criando um link simbólico
         // Salva os dados do certificado no banco de dados
@@ -176,6 +182,7 @@ class CertificationController extends Controller
         $certification->cnpj_cpf = $certInfo['subject']['CN'];
         $certification->societario = $societario;
         $certification->tipo_integrante = $tipoIntegrante;
+        $certification->numero = $numeroIntegrante;
         $certification->certificate_path = $filePath; // Armazena o caminho do arquivo
         $certification->senhas = $certPassword; // Armazena a senha
         $certification->save();
@@ -207,58 +214,72 @@ class CertificationController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'certificate' => 'required|file',
-            'password' => 'required|string',
-            'societario' => 'nullable|string',
-            'tipo_integrante' => 'nullable|string',
-        ]);
+{
+    $request->validate([
+        'certificate' => 'required|file',
+        'password' => 'required|string',
+        'societario' => 'nullable|string',
+        'tipo_integrante' => 'nullable|string',
+        'numero' => 'nullable|string',
+    ]);
 
-        $certificate = Certification::findOrFail($id);
+    // Encontre o certificado existente
+    $certificate = Certification::findOrFail($id);
 
-        // Captura o arquivo e a senha do certificado do request
-        $certificateFile = $request->file('certificate');
-        $certPassword = $request->input('password');
-        $societario = $request->input('societario');
-        $tipo_integrante = $request->input('tipo_integrante');
+    // Captura o arquivo e a senha do certificado do request
+    $certificateFile = $request->file('certificate');
+    $certPassword = $request->input('password');
+    $societario = $request->input('societario');
+    $tipo_integrante = $request->input('tipo_integrante');
+    $numeroIntegrante = $request->input('numero');
 
-        // Lê o conteúdo do arquivo do certificado
-        $pfxContent = file_get_contents($certificateFile->getPathName());
-        $fileName = 'certificate_' . time() . '.pfx';
+    // Lê o conteúdo do arquivo do certificado
+    $pfxContent = file_get_contents($certificateFile->getPathName());
+    $fileName = 'certificate_' . time() . '.pfx';
 
-        // Tenta ler o certificado
-        if (!openssl_pkcs12_read($pfxContent, $x509certdata, $certPassword)) {
-            return back()->withErrors('O certificado não pode ser lido ou a senha está incorreta!');
-        }
-
-        if (empty($x509certdata)) {
-            return back()->withErrors('A senha do certificado está incorreta!');
-        }
-
-        // Descriptografa e processa o certificado
-        $certInfo = openssl_x509_parse(openssl_x509_read($x509certdata['cert']));
-
-        // Deleta o certificado antigo
-        if (Storage::disk('public')->exists($certificate->certificate_path)) {
-            Storage::disk('public')->delete($certificate->certificate_path);
-        }
-
-        // Salva o novo arquivo no sistema de arquivos do servidor
-        $filePath = $certificateFile->storeAs('certificates', $fileName, 'public'); // Salva na pasta storage/app/public/certificates criando um link simbólico
-
-        // Atualiza os dados do certificado no banco de dados
-        $certificate->name = $certInfo['name'];
-        $certificate->validTo_time_t = date('Y-m-d', $certInfo['validTo_time_t']);
-        $certificate->cnpj_cpf = $certInfo['subject']['CN'];
-        $certificate->societario = $societario;
-        $certificate->tipo_integrante = $tipo_integrante;
-        $certificate->certificate_path = $filePath; // Armazena o caminho do arquivo
-        $certificate->senhas = $certPassword; // Armazena a senha
-        $certificate->save();
-
-        return redirect()->route('certification.index')->with('success', 'Certificado atualizado com sucesso!');
+    // Tenta ler o certificado
+    if (!openssl_pkcs12_read($pfxContent, $x509certdata, $certPassword)) {
+        return back()->withErrors('O certificado não pode ser lido ou a senha está incorreta!');
     }
+
+    if (empty($x509certdata)) {
+        return back()->withErrors('A senha do certificado está incorreta!');
+    }
+
+    // Descriptografa e processa o certificado
+    $certInfo = openssl_x509_parse(openssl_x509_read($x509certdata['cert']));
+
+    // Verifica se o novo CNPJ/CPF corresponde ao CNPJ/CPF do certificado existente
+    $newCnpjCpf = $certInfo['subject']['CN'];
+    if ($certificate->cnpj_cpf !== $newCnpjCpf) {
+        return back()->withErrors('O CNPJ/CPF do novo certificado não corresponde ao CNPJ/CPF do certificado existente!');
+    }
+
+    // Deleta o certificado antigo
+    if (Storage::disk('public')->exists($certificate->certificate_path)) {
+        Storage::disk('public')->delete($certificate->certificate_path);
+    }
+
+    // Remove todos os caracteres não numéricos se houver um número
+    $numeroIntegrante = $request->input('numero') ? preg_replace('/\D/', '', $request->input('numero')) : null;
+
+    // Salva o novo arquivo no sistema de arquivos do servidor
+    $filePath = $certificateFile->storeAs('certificates', $fileName, 'public'); // Salva na pasta storage/app/public/certificates criando um link simbólico
+
+    // Atualiza os dados do certificado no banco de dados
+    $certificate->name = $certInfo['name'];
+    $certificate->validTo_time_t = date('Y-m-d', $certInfo['validTo_time_t']);
+    $certificate->cnpj_cpf = $newCnpjCpf;
+    $certificate->societario = $societario;
+    $certificate->tipo_integrante = $tipo_integrante;
+    $certificate->numero = $numeroIntegrante;
+    $certificate->certificate_path = $filePath; // Armazena o caminho do arquivo
+    $certificate->senhas = $certPassword; // Armazena a senha
+    $certificate->save();
+
+    return redirect()->route('certification.index')->with('success', 'Certificado atualizado com sucesso!');
+}
+
 
     public function store(Request $request)
     {
@@ -292,6 +313,25 @@ class CertificationController extends Controller
             return back()->withErrors('Arquivo não encontrado!');
         }
     }
+
+    public function updateNumber(Request $request)
+    {
+        $request->validate([
+            'numero' => 'nullable|string', // Permitir que o número seja vazio
+            'id' => 'required|integer|exists:certifications,id',
+        ]);
+
+        // Remove todos os caracteres não numéricos se houver um número
+        $cleanNumber = $request->input('numero') ? preg_replace('/\D/', '', $request->input('numero')) : null;
+
+        // Atualiza o número no banco de dados
+        $certificate = Certification::find($request->input('id'));
+        $certificate->numero = $cleanNumber;
+        $certificate->save();
+
+        return response()->json(['message' => 'Número atualizado com sucesso']);
+    }
+
 
     public function destroy($id)
     {
