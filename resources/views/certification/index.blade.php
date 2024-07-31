@@ -299,7 +299,7 @@
                                 </td>
                                 <td class="cnpj-column">{{ $certificate->cnpj_cpf }}</td>
                                 <td class="societario-column">{{ $certificate->societario }}</td>
-                                <td class="numero-column" style="width: 200px; white-space: nowrap;">
+                                <td class="numero-column">
                                     <input type="text" value="{{ $certificate->numero }}" class="form-control numero-input numero-input-mask" data-id="{{ $certificate->id }}" />
                                 </td>
                                 {{-- <td hidden class="type-column">{{ $certificate->tipo_integrante }}</td> --}}
