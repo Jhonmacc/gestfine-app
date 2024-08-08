@@ -19,34 +19,34 @@
     @endif
     <form id="parameters-form" action="{{ route('parametros.update') }}" method="POST">
         @csrf
-        <fieldset class="container mx-auto p-2 px-8">
-            <table id="parameters-table" class="table table-sm table-striped table-bordered" style="width:100%; font-size: 14px;">
-                <thead>
-                    <tr>
-                        <th class="px-6 py-3 border-b-2 border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-left leading-4 text-blue-500 dark:text-white tracking-wider">ID</th>
-                        <th class="px-6 py-3 border-b-2 border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-left leading-4 text-blue-500 dark:text-white tracking-wider">Nome</th>
-                        <th class="px-6 py-3 border-b-2 border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-left leading-4 text-blue-500 dark:text-white tracking-wider">Observacão</th>
-                        <th class="px-6 py-3 border-b border-gray-300 dark:border-gray-700">Texto</th>
-                        <th class="px-6 py-3 border-b border-gray-300 dark:border-gray-700">Valor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($parametros as $parametro)
-                    <tr>
-                        <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-700">{{ $parametro->id }}</td>
-                        <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-700">{{ $parametro->dias_faltantes }}</td>
-                        <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-700">{{ $parametro->observacao }}</td>
-                        <td class="px-6 py-4 w-1/3 border-b border-gray-300 dark:border-gray-700">
-                            <input type="text" name="parametros[{{ $parametro->id }}][texto]" value="{{ $parametro->texto }}" class="form-control  w-full border rounded-md px-3 py-2 parameter-value" data-id="{{ $parametro->id }}" data-field="texto">
-                        </td>
-                        <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-700">
-                            <input type="number" name="parametros[{{ $parametro->id }}][valor]" value="{{ $parametro->valor }}" class="form-control w-full border rounded-md px-3 py-2 parameter-value" data-id="{{ $parametro->id }}" data-field="valor">
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
+            <div class="datatable-container">
+                <table id="parameters-table" class="datatable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Observacão</th>
+                            <th>Texto</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($parametros as $index => $parametro)
+                        <tr>
+                            <td>{{ $parametro->id }}</td>
+                            <td>{{ $parametro->dias_faltantes }}</td>
+                            <td>{{ $parametro->observacao }}</td>
+                            <td>
+                                <input type="text" name="parametros[{{ $parametro->id }}][texto]" value="{{ $parametro->texto }}" class="form-control w-full border rounded-md px-3 py-2 parameter-value" data-id="{{ $parametro->id }}" data-field="texto">
+                            </td>
+                            <td>
+                                <input type="number" name="parametros[{{ $parametro->id }}][valor]" value="{{ $parametro->valor }}" class="form-control w-full border rounded-md px-3 py-2 parameter-value" data-id="{{ $parametro->id }}" data-field="valor">
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
             </table>
-        </fieldset>
+        </div>
     </form>
 </div>
 

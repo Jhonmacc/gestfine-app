@@ -238,7 +238,6 @@
                         <option value="Vencido">Vencido</option>
                     </select>
                 </div>
-
                 {{-- <div>
                     <label for="filter-select" class="form-label"><strong>Filtrar por Tipo de Integrante</strong></label>
                     <select id="filter-select" class="form-control">
@@ -249,312 +248,365 @@
                 </div> --}}
             </div>
         </fieldset>
-        <fieldset class="container mx-auto p-2 px-10">
-            <table id="certificates-table" class="table table-sm table-striped table-bordered" style="width:100%; font-size: 12px;">
-                <thead>
-                    <tr>
-                        <th class="text-center">Ações</th>
-                        <th class="text-center name-column">Nome</th>
-                        <th class="text-center date-column">Data</th>
-                        <th class="text-center cnpj-column">Razão Social e CNPJ/CPF</th>
-                        <th class="text-center societario-column">Observacão</th>
-                        <th class="text-center numero-column">Número</th>
-                        {{-- <th hidden class="text-center type-column">Tipo Integrante</th> --}}
-                        <th class="text-center status-column">Dias Para Vencimento</th>
-                        <th class="text-center senha-column">Senhas</th>
-                        <th class="text-center download-column">Download</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (isset($certificates))
-                    @foreach ($certificates as $certificate)
-                        @php
-                            $validTo = strtotime($certificate->validTo_time_t);
-                            $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
-                            $bgColor = $daysUntilExpiry <= 0 ? 'rgb(255, 0, 0)' : ($daysUntilExpiry <= $daysUntilWarning ? 'rgb(255, 165, 0)' : 'rgb(60, 179, 113)');
-                            $fontColor = $daysUntilExpiry <= 0 || $daysUntilExpiry > $daysUntilWarning ? 'white' : 'black';
+  <style>
+.datatable-container {
+    width: 100%; /* Ajuste a largura conforme necessário */
+    max-width: 1500px; /* Define a largura máxima */
+    margin: 1rem auto; /* Centraliza horizontalmente */
+    padding: 1rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Evita que as bordas arredondadas sejam cortadas */
+}
 
-                            // Tratamento do nome
-                            preg_match('/CN=(.*?):\d+/', $certificate->name, $matches);
-                            $cleanName = $matches[1] ?? 'Nome Indisponível';
-                        @endphp
-                            <tr>
-                                <td>
-                                    <div class="relative inline-block text-left">
-                                        <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-blue-500 px-3 py-2 text font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-700" aria-expanded="true" aria-haspopup="true" type="button" id="dropdownMenuButton{{ $certificate->id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Ações
-                                            <svg class="-mr-1 h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                                              </svg>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $certificate->id }}">
-                                            <li><a class="dropdown-item edit-btn" href="#" data-id="{{ $certificate->id }}" data-name="{{ $cleanName }}">Editar</a></li>
-                                            <li><a class="dropdown-item delete-btn" href="#" data-id="{{ $certificate->id }}" data-name="{{ $cleanName }}">Excluir</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                                <td class="name-column">{{ $cleanName }}</td>
-                                <td class="text-center align-middle date-column" data-order="{{ $certificate->validTo_time_t }}">
-                                    {{ date('d/m/Y', strtotime($certificate->validTo_time_t)) }}
-                                </td>
-                                <td class="cnpj-column">{{ $certificate->cnpj_cpf }}</td>
-                                <td class="societario-column">{{ $certificate->societario }}</td>
-                                <td class="numero-column">
-                                    <input style="width: 160px; white-space: nowrap;" type="text" value="{{ $certificate->numero }}"  class="form-control numero-input numero-input-mask" data-id="{{ $certificate->id }}" />
-                                </td>
-                                {{-- <td hidden class="type-column">{{ $certificate->tipo_integrante }}</td> --}}
-                                <td class="status-column" style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
-                                    @if ($daysUntilExpiry <= 0)
-                                        Vencido
-                                    @elseif ($daysUntilExpiry <= $daysUntilWarning)
-                                        {{ $daysUntilExpiry }} dias (Perto de Vencer)
-                                    @else
-                                        {{ $daysUntilExpiry }} dias (No Prazo)
-                                    @endif
-                                </td>
-                                <td class="senha-column">
-                                    <fieldset class="password-fieldset">
-                                        <input style="width: 160px; white-space: nowrap;" type="password" value="{{ $certificate->senhas }}" class="form-control password-input" data-id="{{ $certificate->id }}">
-                                        <i class="toggle-password fa fa-eye"></i>
-                                    </fieldset>
-                                </td>
-                                <td class="download-column">
-                                    <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded inline-flex items-center"
-                                            onclick="window.location.href = '{{ route('certification.download', $certificate->id) }}';">
-                                        <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                            <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
+.datatable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.datatable thead {
+    background-color: #0d6efd; /* bg-purple-800 */
+    color: #ffffff; /* text-white */
+}
+.datatable thead th {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #e5e7eb; /* border-gray-300 */
+
+}
+
+.datatable thead th:first-child {
+    border-top-left-radius: 8px; /* rounded-tl-lg */
+}
+
+.datatable thead th:last-child {
+    border-top-right-radius: 8px; /* rounded-tr-lg */
+}
+
+.datatable tbody {
+    background-color: #ffffff; /* bg-white */
+}
+
+.datatable tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb; /* border-gray-300 */
+}
+
+.datatable tbody tr:first-child td {
+    border-top-left-radius: 8px; /* rounded-tl-lg */
+}
+
+.datatable tbody tr:last-child td {
+    border-bottom-left-radius: 8px; /* rounded-bl-lg */
+    border-bottom-right-radius: 8px; /* rounded-br-lg */
+}
+  </style>
+    <div class="datatable-container">
+        <table id="certificates-table" class="datatable" style="width:100%; font-size: 12px;">
+            <thead>
+                <tr>
+                    <th class="text-center">Ações</th>
+                    <th class="text-center name-column">Nome</th>
+                    <th class="text-center date-column">Data</th>
+                    <th class="text-center cnpj-column">Razão Social e CNPJ/CPF</th>
+                    <th class="text-center societario-column">Observacão</th>
+                    <th class="text-center numero-column">Número</th>
+                    <th class="text-center status-column">Dias Para Vencimento</th>
+                    <th class="text-center senha-column">Senhas</th>
+                    <th class="text-center download-column">Download</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (isset($certificates))
+                @foreach ($certificates as $certificate)
+                    @php
+                        $validTo = strtotime($certificate->validTo_time_t);
+                        $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
+                        $bgColor = $daysUntilExpiry <= 0 ? 'rgb(255, 0, 0)' : ($daysUntilExpiry <= $daysUntilWarning ? 'rgb(255, 165, 0)' : 'rgb(60, 179, 113)');
+                        $fontColor = $daysUntilExpiry <= 0 || $daysUntilExpiry > $daysUntilWarning ? 'white' : 'black';
+
+                        // Tratamento do nome
+                        preg_match('/CN=(.*?):\d+/', $certificate->name, $matches);
+                        $cleanName = $matches[1] ?? 'Nome Indisponível';
+                    @endphp
+                        <tr>
+                            <td>
+                                <div class="relative inline-block text-left">
+                                    <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-blue-500 px-3 py-2 text font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-700" aria-expanded="true" aria-haspopup="true" type="button" id="dropdownMenuButton{{ $certificate->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Ações
+                                        <svg class="-mr-1 h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                                         </svg>
-                                        <span>Download</span>
                                     </button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
-        </fieldset>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $certificate->id }}">
+                                        <li><a class="dropdown-item edit-btn" href="#" data-id="{{ $certificate->id }}" data-name="{{ $cleanName }}">Editar</a></li>
+                                        <li><a class="dropdown-item delete-btn" href="#" data-id="{{ $certificate->id }}" data-name="{{ $cleanName }}">Excluir</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td class="name-column">{{ $cleanName }}</td>
+                            <td class="text-center align-middle date-column" data-order="{{ $certificate->validTo_time_t }}">
+                                {{ date('d/m/Y', strtotime($certificate->validTo_time_t)) }}
+                            </td>
+                            <td class="cnpj-column">{{ $certificate->cnpj_cpf }}</td>
+                            <td class="societario-column">{{ $certificate->societario }}</td>
+                            <td class="numero-column">
+                                <input style="width: 160px; white-space: nowrap;" type="text" value="{{ $certificate->numero }}" class="form-control numero-input numero-input-mask" data-id="{{ $certificate->id }}" />
+                            </td>
+                            <td class="status-column" style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
+                                @if ($daysUntilExpiry <= 0)
+                                    Vencido
+                                @elseif ($daysUntilExpiry <= $daysUntilWarning)
+                                    {{ $daysUntilExpiry }} dias (Perto de Vencer)
+                                @else
+                                    {{ $daysUntilExpiry }} dias (No Prazo)
+                                @endif
+                            </td>
+                            <td class="senha-column">
+                                <fieldset class="password-fieldset">
+                                    <input style="width: 160px; white-space: nowrap;" type="password" value="{{ $certificate->senhas }}" class="form-control password-input" data-id="{{ $certificate->id }}">
+                                    <i class="toggle-password fa fa-eye"></i>
+                                </fieldset>
+                            </td>
+                            <td class="download-column">
+                                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded inline-flex items-center"
+                                        onclick="window.location.href = '{{ route('certification.download', $certificate->id) }}';">
+                                    <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
+                                    </svg>
+                                    <span>Download</span>
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
+            </tbody>
+        </table>
+    </div>
         <script>
             $(document).ready(function() {
-    var table = $('#certificates-table').DataTable({
-        dom: 'Blfrtip',
-        buttons: [
-            { extend: 'copy', exportOptions: { columns: ':visible' }},
-            { extend: 'csv', exportOptions: { columns: ':visible' }},
-            { extend: 'excel', exportOptions: { columns: ':visible' }},
-            { extend: 'pdfHtml5', orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: ':visible' }},
-            { extend: 'print', exportOptions: { columns: ':visible' }},
-            { extend: 'colvis', text: 'Ocultar Colunas' }
-        ],
-        responsive: true,
-        rowReorder: { selector: 'td:nth-child(2)' },
-        language: { url: '//cdn.datatables.net/plug-ins/2.0.1/i18n/pt-BR.json' },
-        lengthMenu: [10, 25, 50, 100, 1000],
-        pageLength: 10
-    });
+                var table = $('#certificates-table').DataTable({
+                    dom: 'Blfrtip',
+                    buttons: [
+                        { extend: 'copy', exportOptions: { columns: ':visible' }},
+                        { extend: 'csv', exportOptions: { columns: ':visible' }},
+                        { extend: 'excel', exportOptions: { columns: ':visible' }},
+                        { extend: 'pdfHtml5', orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: ':visible' }},
+                        { extend: 'print', exportOptions: { columns: ':visible' }},
+                        { extend: 'colvis', text: 'Ocultar Colunas' }
+                    ],
+                    responsive: true,
+                    rowReorder: { selector: 'td:nth-child(2)' },
+                    language: { url: '//cdn.datatables.net/plug-ins/2.0.1/i18n/pt-BR.json' },
+                    lengthMenu: [10, 25, 50, 100, 1000],
+                    pageLength: 10
+                });
 
-    // Função para aplicar filtros com base no status e tipo de integrante selecionado
-     // Função para aplicar filtros com base no status e tipo de integrante selecionado
-     function applyFilters() {
-        var status = $('#statusFilter').val();
-        var type = $('#filter-select').val();
+                // Função para aplicar filtros com base no status e tipo de integrante selecionado
+                // Função para aplicar filtros com base no status e tipo de integrante selecionado
+                function applyFilters() {
+                    var status = $('#statusFilter').val();
+                    var type = $('#filter-select').val();
 
-        // Filtro para o status
-        table.columns('.status-column').search(getStatusSearchTerm(status), true, false);
+                    // Filtro para o status
+                    table.columns('.status-column').search(getStatusSearchTerm(status), true, false);
 
-        // Filtro para o tipo de integrante
-        table.columns('.type-column').search(type, true, false).draw();
-    }
+                    // Filtro para o tipo de integrante
+                    table.columns('.type-column').search(type, true, false).draw();
+                }
 
-    // Função para obter o termo de busca baseado no status
-    function getStatusSearchTerm(status) {
-        switch (status) {
-            case 'No Prazo':
-                return 'No Prazo';
-            case 'Perto de Vencer':
-                return 'Perto de Vencer';
-            case 'Vencido':
-                return 'Vencido';
-            default:
-                return '';
-        }
-    }
+                // Função para obter o termo de busca baseado no status
+                function getStatusSearchTerm(status) {
+                    switch (status) {
+                        case 'No Prazo':
+                            return 'No Prazo';
+                        case 'Perto de Vencer':
+                            return 'Perto de Vencer';
+                        case 'Vencido':
+                            return 'Vencido';
+                        default:
+                            return '';
+                    }
+                }
 
-    // Evento de mudança no filtro de status
-    $('#statusFilter').on('change', function() {
-        applyFilters();
-    });
+            // Evento de mudança no filtro de status
+            $('#statusFilter').on('change', function() {
+                applyFilters();
+            });
 
-    // Evento de mudança no filtro de tipo de integrante
-    $('#filter-select').on('change', function() {
-        applyFilters();
-    });
+            // Evento de mudança no filtro de tipo de integrante
+            $('#filter-select').on('change', function() {
+                applyFilters();
+            });
 
-    // Reset para voltar ao estado padrão (Todos os certificados)
-    $('#resetFilter').on('click', function() {
-        $('#statusFilter').val('Todos');
-        $('#filter-select').val('');
-        applyFilters();
-    });
+            // Reset para voltar ao estado padrão (Todos os certificados)
+            $('#resetFilter').on('click', function() {
+                $('#statusFilter').val('Todos');
+                $('#filter-select').val('');
+                applyFilters();
+            });
 
-    $(document).on('click', '.edit-btn', function(e) {
-        e.preventDefault();
-        var id = $(this).data('id');
-        var certificatoName = $(this).data('name');
-        var societario = $(this).closest('tr').find('.societario-column').text();
-        var numero = $(this).closest('tr').find('.numero-input').val().trim();
-        var tipo_integrante = $(this).closest('tr').find('.type-column').text().trim(); // Ajuste o índice da célula para o tipo de integrante se necessário
+            $(document).on('click', '.edit-btn', function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                var certificatoName = $(this).data('name');
+                var societario = $(this).closest('tr').find('.societario-column').text();
+                var numero = $(this).closest('tr').find('.numero-input').val().trim();
+                var tipo_integrante = $(this).closest('tr').find('.type-column').text().trim(); // Ajuste o índice da célula para o tipo de integrante se necessário
 
-        // Defina a URL de atualização do formulário
-        $('#editCertificateForm').attr('action', window.baseUrl + '/certification/' + id + '/update');
+                // Defina a URL de atualização do formulário
+                $('#editCertificateForm').attr('action', window.baseUrl + '/certification/' + id + '/update');
 
-        // Preencha os campos do modal
-        $('#editSocietario').val(societario);
+                // Preencha os campos do modal
+                $('#editSocietario').val(societario);
 
-        // Verifique se tipoIntegrante não é null ou vazio
-        if (tipo_integrante === 'Membro do quadro societário' || tipo_integrante === 'Representante da pessoa jurídica') {
-            $('#editTipoIntegrante').val(tipo_integrante);
-        } else {
-            $('#editTipoIntegrante').val(''); // Define como vazio se o valor for inválido ou null
-        }
+                // Verifique se tipoIntegrante não é null ou vazio
+                if (tipo_integrante === 'Membro do quadro societário' || tipo_integrante === 'Representante da pessoa jurídica') {
+                    $('#editTipoIntegrante').val(tipo_integrante);
+                } else {
+                    $('#editTipoIntegrante').val(''); // Define como vazio se o valor for inválido ou null
+                }
 
-        $('#editNumero').val(numero);
+                $('#editNumero').val(numero);
 
-        // Defina o nome do certificado no label
-        $('#currentCertificateName').text(certificatoName);
+                // Defina o nome do certificado no label
+                $('#currentCertificateName').text(certificatoName);
 
-        // Exiba o modal
-        $('#editCertificateModal').modal('show');
-    });
+                // Exiba o modal
+                $('#editCertificateModal').modal('show');
+            });
 
-    $(document).on('click', '.delete-btn', function(e) {
-        e.preventDefault();
-        var id = $(this).data('id');
-        var name = $(this).data('name');
-        confirmDeletion(id, name);
-    });
+            $(document).on('click', '.delete-btn', function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                var name = $(this).data('name');
+                confirmDeletion(id, name);
+            });
 
-            function confirmDeletion(id, name) {
-                swal({
-                    title: "Você tem certeza?",
-                    text: `Você realmente deseja excluir o certificado ${name}?`,
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                }).then((willDelete) => {
-                    if (willDelete) {
-                        $.ajax({
-                            url: "{{ route('certification.destroy', ['id' => '__id__']) }}".replace('__id__', id),
-                            type: 'DELETE',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                            },
-                            success: function(result) {
-                                if (result.success) {
-                                    swal({
-                                        title: "Excluído!",
-                                        text: `O Certificado ${name} foi excluído com sucesso!`,
-                                        icon: "success",
-                                        timer: 2000,
-                                        buttons: false
-                                    }).then(() => {
-                                        location.reload();
-                                    });
-                                } else {
-                                    swal("Erro!", result.message, "error");
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                swal("Erro!", "Ocorreu um erro ao excluir o certificado", "error");
+                    function confirmDeletion(id, name) {
+                        swal({
+                            title: "Você tem certeza?",
+                            text: `Você realmente deseja excluir o certificado ${name}?`,
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        }).then((willDelete) => {
+                            if (willDelete) {
+                                $.ajax({
+                                    url: "{{ route('certification.destroy', ['id' => '__id__']) }}".replace('__id__', id),
+                                    type: 'DELETE',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                    },
+                                    success: function(result) {
+                                        if (result.success) {
+                                            swal({
+                                                title: "Excluído!",
+                                                text: `O Certificado ${name} foi excluído com sucesso!`,
+                                                icon: "success",
+                                                timer: 2000,
+                                                buttons: false
+                                            }).then(() => {
+                                                location.reload();
+                                            });
+                                        } else {
+                                            swal("Erro!", result.message, "error");
+                                        }
+                                    },
+                                    error: function(xhr, status, error) {
+                                        swal("Erro!", "Ocorreu um erro ao excluir o certificado", "error");
+                                    }
+                                });
                             }
                         });
                     }
-                });
-            }
-            // Função para validar e atualizar a senha ao sair do campo input
-            $(document).on('blur', '.password-input', function() {
+                    // Função para validar e atualizar a senha ao sair do campo input
+                    $(document).on('blur', '.password-input', function() {
+                        const input = $(this);
+                        const password = input.val();
+                        const certificateId = input.data('id');
+
+                        $.ajax({
+                            url: window.baseUrl + '/certification/validate-password',
+                            type: 'POST',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                "password": password,
+                                "id": certificateId
+                            },
+                            success: function(response) {
+                                if (response.valid) {
+                                    swal({
+                                        title: "Sucesso!",
+                                        text: "Senha alterada com sucesso!",
+                                        icon: "success",
+                                        timer: 1000,
+                                        buttons: false
+                                    });
+                                } else {
+                                    swal({
+                                        title: "Erro!",
+                                        text: "A senha digitada está incorreta!",
+                                        icon: "error",
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                swal("Erro!", "Ocorreu um erro ao validar a senha", "error");
+                            }
+                        });
+                    });
+                    // Inicializa a máscara no campo de número
+            $('.numero-input-mask').mask('55 (00) 00000-0000', {
+                placeholder: '55 (__) ____-____',
+                onComplete: function(value) {
+                    // Remove os caracteres não numéricos para manter o formato desejado
+                    let cleanValue = value.replace(/\D/g, '');
+                    $(this).val(cleanValue);
+                }
+            });
+
+            // Evento blur para salvar o número
+            $(document).on('blur', '.numero-input', function() {
                 const input = $(this);
-                const password = input.val();
+                let number = input.val();
                 const certificateId = input.data('id');
 
+                // Se o campo estiver vazio, enviar um valor vazio
+                if (number === '') {
+                    number = null;
+                }
+
+                // Requisição AJAX para salvar o número
                 $.ajax({
-                    url: window.baseUrl + '/certification/validate-password',
+                    url: window.baseUrl + '/certification/update-number', // Atualize com a rota correta
                     type: 'POST',
                     data: {
                         "_token": "{{ csrf_token() }}",
-                        "password": password,
+                        "numero": number, // Nome da coluna no banco de dados
                         "id": certificateId
                     },
                     success: function(response) {
-                        if (response.valid) {
-                            swal({
-                                title: "Sucesso!",
-                                text: "Senha alterada com sucesso!",
-                                icon: "success",
-                                timer: 1000,
-                                buttons: false
-                            });
-                        } else {
-                            swal({
-                                title: "Erro!",
-                                text: "A senha digitada está incorreta!",
-                                icon: "error",
-                            });
-                        }
+                        swal({
+                            title: "Sucesso!",
+                            text: "Número foi salvo com sucesso!",
+                            icon: "success",
+                            timer: 1000,
+                            buttons: false
+                        });
                     },
                     error: function(xhr, status, error) {
-                        swal("Erro!", "Ocorreu um erro ao validar a senha", "error");
+                        swal({
+                            title: "Ops!",
+                            text: "Houve um erro ao salvar o número.",
+                            icon: "error"
+                        });
                     }
                 });
             });
-              // Inicializa a máscara no campo de número
-    $('.numero-input-mask').mask('55 (00) 00000-0000', {
-        placeholder: '55 (__) ____-____',
-        onComplete: function(value) {
-            // Remove os caracteres não numéricos para manter o formato desejado
-            let cleanValue = value.replace(/\D/g, '');
-            $(this).val(cleanValue);
-        }
-    });
-
-    // Evento blur para salvar o número
-    $(document).on('blur', '.numero-input', function() {
-        const input = $(this);
-        let number = input.val();
-        const certificateId = input.data('id');
-
-        // Se o campo estiver vazio, enviar um valor vazio
-        if (number === '') {
-            number = null;
-        }
-
-        // Requisição AJAX para salvar o número
-        $.ajax({
-            url: window.baseUrl + '/certification/update-number', // Atualize com a rota correta
-            type: 'POST',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                "numero": number, // Nome da coluna no banco de dados
-                "id": certificateId
-            },
-            success: function(response) {
-                swal({
-                    title: "Sucesso!",
-                    text: "Número foi salvo com sucesso!",
-                    icon: "success",
-                    timer: 1000,
-                    buttons: false
-                });
-            },
-            error: function(xhr, status, error) {
-                swal({
-                    title: "Ops!",
-                    text: "Houve um erro ao salvar o número.",
-                    icon: "error"
-                });
-            }
         });
-    });
-});
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
