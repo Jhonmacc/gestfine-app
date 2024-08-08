@@ -26,8 +26,8 @@
 
 <legend class="badge text-bg-primary span12" style="font-size: 18px;">Gerenciamento de Usuários</legend>
 
-<fieldset class="container mx-auto p-2 px-10">
-    <table id="usersTable" class="table table-sm table-striped table-bordered" style="width:100%; font-size: 14px;">
+<div class="datatable-container">
+    <table id="usersTable" class="datatable">
         <thead>
             <tr>
                 <th class="text-center">Ações</th>
@@ -59,7 +59,7 @@
             @endforeach
         </tbody>
     </table>
-</fieldset>
+  </div>
 
 <!-- Modal para adicionar novo usuário -->
 <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">

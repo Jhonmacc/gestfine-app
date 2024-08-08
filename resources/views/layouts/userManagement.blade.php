@@ -40,6 +40,61 @@
     <script src="https://cdn.jsdelivr.net/npm/livewire/livewire.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 </head>
+<style>
+    .datatable-container {
+        width: 100%; /* Ajuste a largura conforme necessário */
+        max-width: 1480px; /* Define a largura máxima */
+        margin: 1rem auto; /* Centraliza horizontalmente */
+        padding: 1rem;
+        background-color: #ffffff;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden; /* Evita que as bordas arredondadas sejam cortadas */
+    }
+
+    .datatable {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .datatable thead {
+        background-color: #0d6efd; /* bg-purple-800 */
+        color: #ffffff; /* text-white */
+    }
+    .datatable thead th {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 2px solid #e5e7eb; /* border-gray-300 */
+
+    }
+
+    .datatable thead th:first-child {
+        border-top-left-radius: 8px; /* rounded-tl-lg */
+    }
+
+    .datatable thead th:last-child {
+        border-top-right-radius: 8px; /* rounded-tr-lg */
+    }
+
+    .datatable tbody {
+        background-color: #ffffff; /* bg-white */
+    }
+
+    .datatable tbody td {
+        padding: 12px;
+        border-bottom: 1px solid #e5e7eb; /* border-gray-300 */
+    }
+
+    .datatable tbody tr:first-child td {
+        border-top-left-radius: 8px; /* rounded-tl-lg */
+    }
+
+    .datatable tbody tr:last-child td {
+        border-bottom-left-radius: 8px; /* rounded-bl-lg */
+        border-bottom-right-radius: 8px; /* rounded-br-lg */
+    }
+      </style>
 <body class="font-sans antialiased">
     <x-banner />
 
