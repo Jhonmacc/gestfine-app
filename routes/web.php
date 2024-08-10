@@ -8,7 +8,6 @@ use App\Http\Controllers\UserController;
 
 Route::get('/', [LoginController::class, 'welcome']);
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::resource('parametros', ParametroController::class)->except(['show']);
 
 Route::middleware([
     'auth:sanctum',
@@ -22,12 +21,13 @@ Route::middleware([
         })->name('dashboard.index');
     });
 
-    // Registro de usuários
-    Route::get('/register', function () {
-        return view('auth.register');
-    })->name('register');
+    // // Registro de usuários
+    // Route::get('/register', function () {
+    //     return view('auth.register');
+    // })->name('register');
 
     // Gerenciamento de Usuários
+    Route::resource('parametros', ParametroController::class)->except(['show']);
     Route::resource('users', UserController::class)->except(['create', 'edit', 'show']);
 
     // Rotas de Controle de Certificados
