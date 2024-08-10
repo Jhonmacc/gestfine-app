@@ -21,11 +21,12 @@ Route::middleware([
         })->name('dashboard.index');
     });
 
-    // // Registro de usuários
+    // Registro de usuários
     // Route::get('/register', function () {
     //     return view('auth.register');
     // })->name('register');
-
+    //
+    
     // Gerenciamento de Usuários
     Route::resource('parametros', ParametroController::class)->except(['show']);
     Route::resource('users', UserController::class)->except(['create', 'edit', 'show']);
