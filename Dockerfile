@@ -1,5 +1,5 @@
 # Use uma imagem base PHP com suporte a FPM
-FROM php:8.1-fpm
+FROM php:8.1-apache
 
 # Instale dependências do sistema
 RUN apt-get update && apt-get install -y \
@@ -20,7 +20,6 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd \
     && docker-php-ext-install mysqli pdo pdo_mysql zip opcache \
-    && docker-php-ext-intl \
     && docker-php-ext-install intl \
     && docker-php-ext-install bcmath
 
@@ -39,5 +38,12 @@ RUN composer install --no-dev --optimize-autoloader
 # Exponha a porta 80 para o contêiner
 EXPOSE 80
 
-# Defina o comando padrão
-CMD ["php-fpm"]
+# Ajuste permissões
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Configuração do Apache
+COPY apache.conf /etc/apache2/sites-available/000-default.conf
+
+# Ativa o módulo rewrite do Apache
+RUN a2enmod rewrite
