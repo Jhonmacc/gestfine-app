@@ -6,7 +6,7 @@
     <script>
         window.baseUrl = "{{ url('/') }}";
     </script>
-    <title>Controle de Certificados</title>
+    <title>Dashboard</title>
     <!-- Adiciona o favicon -->
     <link rel="icon" href="{{ asset('/public/favicon.ico') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('/public/favicon.ico') }}" type="image/x-icon">
@@ -44,7 +44,6 @@
     <x-banner />
 
     <div class="min-h-screen bg-gray-100">
-        @livewire('navigation-menu')
 
         <!-- Page Heading -->
         @if (isset($header))

@@ -12,6 +12,21 @@
             </div>
         @endif
 
+        <style>
+            body {
+                background-image: url('{{ $backgroundImage }}');
+                background-size: cover;
+                background-position: center;
+                min-height: 100vh; /* Altura mínima de 100% da tela visível */
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: rgba(255, 255, 255, 0.2); /* Cor de fundo com transparência */
+            }
+        </style>
+
         <form method="POST" action="{{ route('login') }}">
             @csrf
 

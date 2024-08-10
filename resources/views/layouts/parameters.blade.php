@@ -6,7 +6,7 @@
     <script>
         window.baseUrl = "{{ url('/') }}";
     </script>
-    <title>Controle de Certificados</title>
+    <title>Parâmetros do Sistema</title>
     <!-- Adiciona o favicon -->
     <link rel="icon" href="{{ asset('/public/favicon.ico') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('/public/favicon.ico') }}" type="image/x-icon">
