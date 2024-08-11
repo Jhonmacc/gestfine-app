@@ -26,9 +26,9 @@ Route::middleware([
     //     return view('auth.register');
     // })->name('register');
     //
-    
+
     // Gerenciamento de Usuários
-    Route::resource('parametros', ParametroController::class)->except(['show']);
+    // Route::resource('parametros', ParametroController::class)->except(['show']);
     Route::resource('users', UserController::class)->except(['create', 'edit', 'show']);
 
     // Rotas de Controle de Certificados
