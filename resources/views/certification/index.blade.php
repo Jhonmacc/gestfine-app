@@ -1,6 +1,5 @@
 @extends('layouts.certControl')
 @section('content')
-<!-- Styles -->
 
 <style>
  /* Estiliza a seção superior */
