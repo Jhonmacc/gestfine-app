@@ -3,31 +3,37 @@
 <!-- Styles -->
 
 <style>
-        @media (min-width: 992px) { /* Aplica estilos para telas grandes */
-        .card {
-            margin: 10px; /* Espaçamento entre os cards */
-        }
-    }
-
-    @media (max-width: 991px) { /* Aplica estilos para telas menores */
-        .card {
-            margin-bottom: 20px; /* Maior espaço entre os cards verticalmente em telas menores */
-        }
-    }
-    .password-fieldset {
-    position: relative;
+.dt-button {
+top: auto !important;
+bottom: 100% !important;
+width: 200px !important;/* Define uma largura para a lista*/
 }
-    .password-input {
-        padding-right: 30px;
-    }
 
-    .toggle-password {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-    }
+@media (min-width: 992px) { /* Aplica estilos para telas grandes */
+.card {
+margin: 10px; /* Espaçamento entre os cards */
+}
+}
+
+@media (max-width: 991px) { /* Aplica estilos para telas menores */
+.card {
+margin-bottom: 20px; /* Maior espaço entre os cards verticalmente em telas menores */
+}
+}
+.password-fieldset {
+position: relative;
+}
+.password-input {
+padding-right: 30px;
+}
+
+.toggle-password {
+position: absolute;
+right: 10px;
+top: 50%;
+transform: translateY(-50%);
+cursor: pointer;
+}
 </style>
 <fieldset class="border p-4 rounded-md">
     <h2 class="text-2xl font-semibold mb-4">Controle de Certificados</h2>
@@ -248,7 +254,7 @@
                 </div> --}}
             </div>
     </fieldset>
-    <div class="datatable-container">
+    <div class="datatable-container overflow-auto" style="position: relative;">
         <table id="certificates-table" class="datatable" style="width:100%; font-size: 12px;">
             <thead>
                 <tr>
@@ -335,12 +341,12 @@
                 var table = $('#certificates-table').DataTable({
                     dom: 'Blfrtip',
                     buttons: [
-                        { extend: 'copy', exportOptions: { columns: ':visible' }},
-                        { extend: 'csv', exportOptions: { columns: ':visible' }},
-                        { extend: 'excel', exportOptions: { columns: ':visible' }},
-                        { extend: 'pdfHtml5', orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: ':visible' }},
-                        { extend: 'print', exportOptions: { columns: ':visible' }},
-                        { extend: 'colvis', text: 'Ocultar Colunas' }
+                        { extend: 'copy', exportOptions: { columns: ':visible' }, text: 'Copiar', className: 'font-bold py-2 px-2 rounded'},
+                        { extend: 'csv', exportOptions: { columns: ':visible' }, className: 'font-bold py-2 px-2 rounded'},
+                        { extend: 'excel', exportOptions: { columns: ':visible' }, className: 'font-bold py-2 px-2 rounded'},
+                        { extend: 'pdfHtml5', orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: ':visible' }, className: 'font-bold py-2 px-2 rounded'},
+                        { extend: 'print', exportOptions: { columns: ':visible' }, className: 'font-bold py-2 px-2 rounded'},
+                        { extend: 'colvis', text: 'Ocultar Colunas', className: 'font-bold py-2 px-2 rounded'},
                     ],
                     responsive: true,
                     rowReorder: { selector: 'td:nth-child(2)' },

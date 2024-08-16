@@ -77,13 +77,30 @@
         background-color: #0d6efd; /* bg-purple-800 */
         color: #ffffff; /* text-white */
     }
+
+/* Estilo personalizado para o campo de busca label dentro da lista "Exibir resultados por página" */
+    div.dataTables_wrapper div.dataTables_length select
+    {
+        width: 50px;
+    }
+    /* Estilo personalizado para o campo de busca label "Pesquisar */
+    div.dataTables_wrapper div.dataTables_filter label
+    {
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+    /* Estilo personalizado para o campo de busca label "Exibir */
+    div.dataTables_wrapper div.dataTables_length label
+    {
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
     .datatable thead th {
         padding: 12px;
         text-align: left;
         border-bottom: 2px solid #e5e7eb; /* border-gray-300 */
 
     }
-
     .datatable thead th:first-child {
         border-top-left-radius: 8px; /* rounded-tl-lg */
     }
