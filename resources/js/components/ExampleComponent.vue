@@ -1,9 +1,17 @@
 <template>
-    <h1>Hello, Vue!</h1>
-</template>
+    <div>
+      <h1>Hello from Vue Component!</h1>
+    </div>
+  </template>
 
-<script>
-export default {
+  <script>
+  export default {
     name: 'ExampleComponent',
-};
-</script>
+  }
+  </script>
+
+  <style scoped>
+  h1 {
+    color: blue;
+  }
+  </style>
