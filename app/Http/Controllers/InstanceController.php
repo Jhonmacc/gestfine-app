@@ -26,22 +26,33 @@ class InstanceController extends Controller
             'token' => $request->input('token'),
         ];
 
-        // Enviando a requisição para a API externa
-        $response = Http::withHeaders([
-            'apikey' => 'J6P756FCDA4D4FD5936555990E718741'
-        ])->post('http://evolution_api:8080/instance/create', $data);
+        try {
+            $response = Http::withHeaders([
+                'apikey' => 'J6P756FCDA4D4FD5936555990E718741'
+            ])->post('http://evolution_api:8080/instance/create', $data);
 
-        // Verificando o status da resposta e retornando JSON
+            return $this->handleApiResponse($response, 'Instância criada com sucesso!');
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Erro ao criar instância',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    private function handleApiResponse($response, $successMessage)
+    {
         if ($response->successful()) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Instância criada com sucesso!',
+                'message' => $successMessage,
                 'data' => $response->json(),
             ]);
         } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Erro ao criar instância',
+                'message' => 'Erro ao processar a requisição',
                 'error' => $response->json(),
             ], $response->status());
         }
