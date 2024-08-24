@@ -33,10 +33,10 @@ Route::middleware([
     Route::resource('users', UserController::class)->except(['create', 'edit', 'show']);
 
     // Rota para o form criar instancias
-    Route::get('/instance/create', [InstanceController::class, 'showForm'])->name('instance.create');
-
-        // Rota para processar a criação da instância
-        Route::post('/create-instance', [InstanceController::class, 'createInstance'])->name('instance.createInstance');
+    route::get('/instance/create', [InstanceController::class, 'showForm'])->name('instance.create');
+    Route::post('/create-instance', [InstanceController::class, 'createInstance'])->name('instance.createInstance');
+    Route::get('/instance/fetchInstances', [InstanceController::class, 'fetchInstances']);
+    route::delete('/instance/deleteAndLogout/{instanceName}', [InstanceController::class, 'deleteAndLogoutInstance']);
 
     // Rotas de Controle de Certificados
     Route::get('/dashboard/chart-data', [CertificationController::class, 'getChartData'])->name('dashboard.chartData');
