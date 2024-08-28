@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
         window.baseUrl = "{{ url('/') }}";
     </script>
@@ -39,6 +40,7 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/livewire/livewire.min.js" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <style>
     /* styles.css */

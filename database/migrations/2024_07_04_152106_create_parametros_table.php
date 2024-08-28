@@ -16,7 +16,7 @@ class CreateParametrosTable extends Migration
         Schema::create('parametros', function (Blueprint $table) {
             $table->id();
             $table->string('dias_faltantes');
-            $table->string('valor');
+            $table->string('valor')->nullable();
             $table->text('observacao')->nullable();
             $table->timestamps();
         });

@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ParametroController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\InstanceController;
+use App\Http\Controllers\NumberController;
 
 Route::get('/', [LoginController::class, 'welcome']);
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -34,11 +35,18 @@ Route::middleware([
 
     // Rota para o form criar instancias
     route::get('/instance/create', [InstanceController::class, 'showForm'])->name('instance.create');
+    route::get('/instance/send-message-api', [InstanceController::class, 'sendMessageApi'])->name('instance.sendMessageApi');
     Route::post('/create-instance', [InstanceController::class, 'createInstance'])->name('instance.createInstance');
     Route::get('/instance/fetchInstances', [InstanceController::class, 'fetchInstances']);
+    route::post('/send-message', [InstanceController::class, 'sendMessage']);
     route::delete('/instance/deleteAndLogout/{instanceName}', [InstanceController::class, 'deleteAndLogoutInstance']);
+    // Rotas de Mensagems Whatsapp
+    Route::get('/message-events', [CertificationController::class, 'showMessageEvents'])->name('certification.message-events');
+    // Rotas add números de telefone
+    Route::post('/certification/update-number', [CertificationController::class, 'updateNumber']);
 
     // Rotas de Controle de Certificados
+    Route::get('/numbers', [NumberController::class, 'getNumbers']);
     Route::get('/dashboard/chart-data', [CertificationController::class, 'getChartData'])->name('dashboard.chartData');
     Route::get('/certification', [CertificationController::class, 'index'])->name('certification.index');
     Route::get('/certification/download/{id}', [CertificationController::class, 'download'])->name('certification.download');
@@ -51,12 +59,9 @@ Route::middleware([
     // Rotas de Parâmetros
     Route::get('/parametros/edit', [ParametroController::class, 'editParameters'])->name('parametros.edit-parameters');
     Route::get('/parametros', [ParametroController::class, 'editParameters'])->name('parametros.editParameters');
-    Route::post('/parametros/update', [ParametroController::class, 'updateParameters'])->name('parametros.update');
+    Route::get('/parametros/create', [ParametroController::class, 'create'])->name('parametros.create');
     Route::post('/parametros/create', [ParametroController::class, 'store'])->name('parametros.store');
-
-    // Rotas add números de telefone
-    Route::post('/certification/update-number', [CertificationController::class, 'updateNumber']);
-
+    Route::post('/parametros/update', [ParametroController::class, 'updateParameters'])->name('parametros.update');
     Route::delete('/certification/{id}/destroy', [CertificationController::class, 'destroy'])->name('certification.destroy');
 
     // --ROTAS DE TESTES--

@@ -16,5 +16,6 @@ class Parametro extends Model
         'texto',
         'valor',
         'observacao',
+        'instancia',
     ];
 }

@@ -1,36 +1,37 @@
 <template>
-    <div class="mx-auto p-6 bg-white shadow-md rounded-lg">
-
-
+    <div class="mx-auto p-6 bg-neutral-900 text-white shadow-md rounded-lg">
         <!-- Botão para abrir o modal -->
         <div class="flex justify-between items-center">
             <h2 class="text-xl font-bold ">Lista de Instâncias</h2>
             <button @click="openModal"
-                class="mb-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
+                class="mb-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md">
                 + INSTÂNCIA
             </button>
         </div>
-
-
         <!-- Modal para criar uma nova instância -->
         <div v-if="showModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-            <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                <h2 class="text-xl font-semibold mb-4">Nova Instância</h2>
+            <div class="bg-neutral-900 text-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                <h2 class="text-xl font-semibold mb-4">
+                    Nova Instância
+                </h2>
                 <form @submit.prevent="createInstance">
                     <div class="mb-4">
-                        <label for="instanceName" class="block text-gray-700 font-semibold mb-2">Nome da
-                            Instância:</label>
+                        <label for="instanceName" class="block text-white font-semibold mb-2">
+                            Nome da Instância:
+                        </label>
                         <input type="text" id="instanceName" v-model="instanceName" required
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                            class="w-full px-3 py-2 border text-gray-700 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                     </div>
                     <div class="mb-4 relative">
-                        <label for="token" class="block text-gray-700 font-semibold mb-2">Chave de API:</label>
-                        <input type="text" id="token" v-model="token" required
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                        <!-- Ícone para gerar nova chave -->
-                        <span @click="generateApiKey"
-                            class="absolute top-2 right-2 cursor-pointer text-gray-500 hover:text-gray-700">
-                            🔄
+                        <label for="token" class="block text-white font-semibold mb-2">
+                            Chave de API:
+                        </label>
+                        <span @click="generateApiKey" class="input-group-text cursor-pointer"><i
+                                class="mdi mdi-lock-reset text-3xl mr-2"></i>
+                            <input type="text" id="token" v-model="token" required
+                                class="w-full px-3 py-2 border text-gray-700 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                            <!-- Ícone para gerar nova chave --></span>
+                        <span class="absolute top-2   text-gray-500 hover:text-gray-700">
                         </span>
                     </div>
                     <div class="flex justify-end mt-6">
@@ -39,58 +40,59 @@
                             Cancelar
                         </button>
                         <button type="submit"
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
+                            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md">
                             Salvar
                         </button>
                     </div>
                 </form>
             </div>
         </div>
-
-         <!-- Modal para exibir o QR Code -->
-    <div v-if="showQrCodeModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-            <h2 class="text-xl font-semibold mb-4">Conectar via QR Code</h2>
-            <div v-if="qrCodeUrl">
-                <img :src="qrCodeUrl" alt="QR Code para conexão" class="mx-auto" />
-            </div>
-            <p v-else>Carregando QR Code...</p>
-            <div class="flex justify-end mt-6">
-                <button @click="closeQrCodeModal"
-                    class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded-md">
-                    Fechar
-                </button>
+        <!-- Modal para exibir o QR Code -->
+        <div v-if="showQrCodeModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div class="bg-neutral-900 text-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                <h2 class="text-xl font-semibold mb-4">Conectar via QR Code</h2>
+                <div v-if="qrCodeUrl">
+                    <img :src="qrCodeUrl" alt="QR Code para conexão" class="mx-auto" />
+                </div>
+                <p v-else>Carregando QR Code...</p>
+                <div class="flex justify-end mt-6">
+                    <button @click="closeQrCodeModal"
+                        class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded-md">
+                        Fechar
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-
         <!-- Lista de Instâncias -->
         <div class="mt-1">
             <input type="text" v-model="searchInstanceName" @input="fetchInstances"
                 placeholder="Buscar por Instâncias..."
-                class="mb-4 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-            <ul v-if="instances.length">
-                <li v-for="(instance, index) in filteredInstances" :key="index"
-                    class="mb-2 p-4 bg-gray-100 border border-gray-300 rounded-md flex justify-between items-center cursor-pointer hover:bg-gray-200"
+                class="mb-4 w-full px-3 py-2 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                <div v-if="instances.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4" style="width: 70rem;">
+                <div v-for="(instance, index) in filteredInstances" :key="index"
+                    class="p-4 bg-neutral-900 border border-gray-300 rounded-md flex justify-between items-center cursor-pointer hover:bg-green-800"
                     @click="showQrCode(instance)">
-                    <div>
-                        <p><strong>Nome:</strong> {{ instance.instanceName }}</p>
-                        <p><strong>Status:</strong> {{ translateStatus(instance.status) }}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2  lg:grid-cols-2 gap-2 text-sm">
+                        <p><strong>Nome Instância:</strong> {{ instance.instanceName }}</p>
+                        <p><strong>Número:</strong> {{ formatPhoneNumber(instance.owner) }}</p>
+                        <p><strong> <img :src="instance.profilePictureUrl" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover"></strong> {{ instance.profileName }}</p>
+                        <p class="p-0 m-0">
+                            <strong></strong> {{ translateStatus(instance.status) }}
+                            <i :class="getStatusIconColor(instance.status)"
+                            class="fas fa-circle m-0 p-0 text-xs mr-2"></i>
+                        </p>
                     </div>
                     <!-- Ações de instância -->
                     <div class="flex space-x-3">
                         <button @click.stop="deleteInstance(instance)"
                             class="relative flex items-center justify-center p-2 rounded-full border-2 border-red-100 cursor-pointer">
-                            <!-- Contêiner para o fundo vermelho -->
                             <span class="absolute inset-0 rounded-full bg-red-200"></span>
-
-                            <!-- Ícone dentro do botão -->
                             <i
                                 class="fa-solid fa-trash lg:text-lg text-red-500 transition-transform duration-300 transform hover:scale-125"></i>
                         </button>
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
             <p v-else>Não há instâncias disponíveis.</p>
         </div>
         <!-- Mensagem de resposta ou erro -->
@@ -146,6 +148,20 @@ export default {
                 Math.random().toString(36).substring(2, 15) +
                 Math.random().toString(36).substring(2, 15);
         },
+        formatPhoneNumber(owner) {
+        // Verifica se o valor existe e se é uma string
+        if (!owner || typeof owner !== 'string') {
+            return ''; // Retorna uma string vazia se não houver número
+        }
+
+        // Extrai apenas o número antes do '@'
+        const rawNumber = owner.split('@')[0];
+
+        // Aplica a máscara ao número
+        const maskedNumber = rawNumber.replace(/(\d{2})(\d{2})(\d{4})(\d{4})/, '+$1 ($2)$3-$4');
+
+        return maskedNumber;
+    },
         async createInstance() {
             try {
                 const formData = new FormData();
@@ -171,94 +187,102 @@ export default {
             }
         },
         async deleteInstance(instance) {
-    try {
-        // Faz a requisição de exclusão usando um caminho relativo
-        const response = await axios.delete(`/instance/deleteAndLogout/${instance.instanceName}`);
+            try {
+                // Faz a requisição de exclusão usando um caminho relativo
+                const response = await axios.delete(`/instance/deleteAndLogout/${instance.instanceName}`);
 
-        if (response.data.status === 'success') {
-            this.response = response.data.message;
-            this.fetchInstances(); // Atualiza a lista de instâncias
-        } else {
-            this.errorMessage = `Erro: ${response.data.message}`;
-        }
-    } catch (error) {
-        if (error.response && error.response.status === 404) {
-            this.errorMessage = `Erro: A instância com o nome "${instance.instanceName}" não foi encontrada.`;
-        } else {
-            this.errorMessage = error.response ? error.response.data.message : error.message;
-        }
-    }
-},
+                if (response.data.status === 'success') {
+                    this.response = response.data.message;
+                    this.fetchInstances(); // Atualiza a lista de instâncias
+                } else {
+                    this.errorMessage = `Erro: ${response.data.message}`;
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    this.errorMessage = `Erro: A instância com o nome "${instance.instanceName}" não foi encontrada.`;
+                } else {
+                    this.errorMessage = error.response ? error.response.data.message : error.message;
+                }
+            }
+        },
 
         async showQrCode(instance) {
-    this.showQrCodeModal = true;
+            this.showQrCodeModal = true;
 
-    // console.log('Instância:', instance); // Log para debug dados da instancia
+            // console.log('Instância:', instance); // Log para debug dados da instancia
 
-    // Busca o QR Code
-    await axios.get(`http://localhost:8002/instance/connect/${instance.instanceName}`, {
-        headers: {
-            apikey: 'J6P756FCDA4D4FD5936555990E718741'
-        }
-    })
-    .then(response => {
-        this.qrCodeBase64 = response.data.base64;
-
-        // Inicia o monitoramento do status de conexão
-        this.monitorConnection(instance.instanceName);
-    })
-    .catch(error => {
-        console.error('Erro ao buscar o QR Code:', error);
-    });
-},
-async monitorConnection(instanceName) {
-    this.monitoringConnection = setInterval(async () => {
-        try {
-            console.log('Verificando status para:', instanceName);
-            const response = await axios.get(`http://localhost:8002/instance/connectionState/${instanceName}`, {
+            // Busca o QR Code
+            await axios.get(`http://localhost:8002/instance/connect/${instance.instanceName}`, {
                 headers: {
                     apikey: 'J6P756FCDA4D4FD5936555990E718741'
                 }
-            });
-            const state = response.data.instance.state; // Ajuste aqui para acessar 'state'
+            })
+                .then(response => {
+                    this.qrCodeBase64 = response.data.base64;
 
-            console.log('Status recebido:', state); // Verifique o status recebido
+                    // Inicia o monitoramento do status de conexão
+                    this.monitorConnection(instance.instanceName);
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar o QR Code:', error);
+                });
+        },
+        async monitorConnection(instanceName) {
+            this.monitoringConnection = setInterval(async () => {
+                try {
+                    console.log('Verificando status para:', instanceName);
+                    const response = await axios.get(`http://localhost:8002/instance/connectionState/${instanceName}`, {
+                        headers: {
+                            apikey: 'J6P756FCDA4D4FD5936555990E718741'
+                        }
+                    });
+                    const state = response.data.instance.state; // Ajuste aqui para acessar 'state'
 
-            if (state === 'open') {
-                // Fecha o modal e exibe a mensagem de sucesso
-                this.showQrCodeModal = false;
-                this.response = "Dispositivo conectado com sucesso!";
-                this.fetchInstances();
-                // Para o monitoramento
+                    console.log('Status recebido:', state); // Verifique o status recebido
+
+                    if (state === 'open') {
+                        // Fecha o modal e exibe a mensagem de sucesso
+                        this.showQrCodeModal = false;
+                        this.response = "Dispositivo conectado com sucesso!";
+                        this.fetchInstances();
+                        // Para o monitoramento
+                        clearInterval(this.monitoringConnection);
+                    }
+                } catch (error) {
+                    console.error('Erro ao verificar o status de conexão:', error);
+                }
+            }, 2000);
+        },
+
+
+        closeQrCodeModal() {
+            this.showQrCodeModal = false;
+
+            // Para o monitoramento se o modal for fechado manualmente
+            if (this.monitoringConnection) {
                 clearInterval(this.monitoringConnection);
+                this.monitoringConnection = null;
             }
-        } catch (error) {
-            console.error('Erro ao verificar o status de conexão:', error);
-        }
-    }, 2000);
-},
 
-
-closeQrCodeModal() {
-    this.showQrCodeModal = false;
-
-    // Para o monitoramento se o modal for fechado manualmente
-    if (this.monitoringConnection) {
-        clearInterval(this.monitoringConnection);
-        this.monitoringConnection = null;
-    }
-
-    this.fetchInstances();
-},
+            this.fetchInstances();
+        },
 
         translateStatus(status) {
-            const statusMap = {
-                'close': 'Não Conectado',
-                'connecting': 'Conectando',
-                'open': 'Conectado',
-            };
-            return statusMap[status] || status; // Retorna o status traduzido ou o status original se não encontrado
-        },
+        const statusMap = {
+            'close': 'Não Conectado',
+            'connecting': 'Conectando',
+            'open': 'Conectado',
+        };
+        return statusMap[status] || status;
+    },
+    getStatusIconColor(status) {
+        const colorMap = {
+            'close': 'text-red-500',        // Cor vermelha para "close"
+            'connecting': 'text-yellow-500', // Cor laranja para "connecting"
+            'open': 'text-green-500'         // Cor verde para "open"
+        };
+        return colorMap[status] || 'text-gray-500'; // Classe padrão se o status não for encontrado
+    },
         mounted() {
             this.showQrCode();
         },
@@ -268,6 +292,4 @@ closeQrCodeModal() {
     }
 };
 </script>
-
-
 <style scoped></style>

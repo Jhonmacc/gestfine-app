@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUniqueConstraintToCnpjCpfInCertificationsTable extends Migration
+class AddInstanciaColumnToParametrosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddUniqueConstraintToCnpjCpfInCertificationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('certifications', function (Blueprint $table) {
-            $table->string('cnpj_cpf')->unique()->change();
+        Schema::table('parametros', function (Blueprint $table) {
+            $table->string('instancia')->nullable()->after('observacao');
         });
     }
 
@@ -25,8 +25,8 @@ class AddUniqueConstraintToCnpjCpfInCertificationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('certifications', function (Blueprint $table) {
-            $table->dropUnique(['cnpj_cpf']);
+        Schema::table('parametros', function (Blueprint $table) {
+            $table->dropColumn('instancia');
         });
     }
 }

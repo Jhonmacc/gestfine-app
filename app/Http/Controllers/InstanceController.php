@@ -19,6 +19,11 @@ class InstanceController extends Controller
         return view('instance.create');
     }
 
+    public function sendMessageApi()
+    {
+        return view('instance.sendMessageApi');
+    }
+
     public function createInstance(Request $request)
     {
         $this->validateInstanceRequest($request);
@@ -97,6 +102,16 @@ class InstanceController extends Controller
         }
     }
 
+    private function sendMessagePostRequest(string $url, array $data, string $successMessage)
+    {
+        try {
+            $response = Http::withHeaders($this->getHeaders())->post($url, $data);
+            return $this->handleApiResponse($response, $successMessage);
+        } catch (\Exception $e) {
+            return $this->handleException($e, 'Erro ao enviar mensagem');
+        }
+    }
+
     private function sendGetRequest(string $url, string $errorMessage)
     {
         try {
@@ -116,6 +131,72 @@ class InstanceController extends Controller
             return $this->handleException($e, 'Erro ao processar a requisição');
         }
     }
+
+    public function sendMessage(Request $request)
+{
+    // Validação
+    $request->validate([
+        'instanceopen' => 'required|string',
+        'number' => 'required|array',
+        'number.*' => 'string',
+        'options' => 'required|array',
+        'options.delay' => 'required|integer',
+        'options.presence' => 'required|string',
+        'options.linkPreview' => 'required|boolean',
+        'textMessage' => 'required|array',
+        'textMessage.text' => 'required|string',
+    ]);
+
+    $instanceOpen = $request->input('instanceopen'); // Nome da instância
+    $numbers = $request->input('number');
+    $options = $request->input('options');
+    $textMessage = $request->input('textMessage');
+
+    $failureNumbers = [];
+    $successCount = 0;
+
+    foreach ($numbers as $number) {
+        $url = "http://evolution_api:8080/message/sendText/{$instanceOpen}";
+
+        try {
+            $data = [
+                'number' => $number, // Número individual para o payload
+                'options' => $options,
+                'textMessage' => $textMessage,
+            ];
+
+            $response = Http::withHeaders($this->getHeaders())->post($url, $data);
+
+            // Log da resposta para depuração
+            \Log::info('API Response:', ['response' => $response->json()]);
+
+            if ($response->successful()) {
+                $successCount++;
+            } else {
+                $failureNumbers[] = $number;
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error sending message:', ['exception' => $e->getMessage()]);
+            $failureNumbers[] = $number;
+        }
+    }
+
+    $total = count($numbers);
+    $percentage = ($total > 0) ? ($successCount / $total) * 100 : 0;
+
+    $status = $successCount === $total ? 'success' : 'error';
+    $message = $successCount === $total
+        ? 'Todas as mensagens foram enviadas com sucesso!'
+        : 'Algumas mensagens falharam ao serem enviadas.';
+
+    return response()->json([
+        'status' => $status,
+        'message' => $message,
+        'percentage' => $percentage,
+        'failureNumbers' => $failureNumbers,
+    ]);
+}
+
 
     private function getHeaders(): array
     {
