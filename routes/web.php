@@ -1,12 +1,15 @@
 <?php
 
-use App\Http\Controllers\CertificationController;
+use App\Mail\MyTestEmail;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\ParametroController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\InstanceController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\JobLogController;
 use App\Http\Controllers\NumberController;
+use App\Http\Controllers\InstanceController;
+use App\Http\Controllers\ParametroController;
+use App\Http\Controllers\CertificationController;
+use App\Http\Controllers\EnviaEmailParametroController;
 
 Route::get('/', [LoginController::class, 'welcome']);
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -44,6 +47,7 @@ Route::middleware([
     Route::get('/message-events', [CertificationController::class, 'showMessageEvents'])->name('certification.message-events');
     // Rotas add números de telefone
     Route::post('/certification/update-number', [CertificationController::class, 'updateNumber']);
+    Route::post('/certification/update-email', [CertificationController::class, 'updateEmail']);
 
     // Rotas de Controle de Certificados
     Route::get('/numbers', [NumberController::class, 'getNumbers']);
@@ -64,7 +68,18 @@ Route::middleware([
     Route::post('/parametros/update', [ParametroController::class, 'updateParameters'])->name('parametros.update');
     Route::delete('/certification/{id}/destroy', [CertificationController::class, 'destroy'])->name('certification.destroy');
 
+    // --ROTAS DE ENVIO DE EMAIL--
+    route::get('/parametros/parameter-send-email', [EnviaEmailParametroController::class, 'parameterSendEmail'])->name('parametros.parameter-send-email');
+    route::get('/envia-email-parametro', [EnviaEmailParametroController::class, 'index']);
+    Route::post('/envia-email-parametro', [EnviaEmailParametroController::class, 'store']);
+    Route::put('/envia-email-parametro/{id}', [EnviaEmailParametroController::class, 'update']);
+    Route::delete('/envia-email-parametro/{id}', [EnviaEmailParametroController::class, 'destroy']);
+    Route::post('/envia-email-parametro/toggle/{id}', [EnviaEmailParametroController::class, 'toggleStatus']);
+    route::get('/logs/monitor-logs', [JobLogController::class, 'index'])->name('logs.monitor-logs');
+
+
     // --ROTAS DE TESTES--
+
     // Chega a conexão com a API do Whatsapp
     Route::get('/check-connection', function () {
         try {
@@ -84,6 +99,14 @@ Route::middleware([
         return view('check.check-connection', compact('status'));
     });
 
+    // Rota para personalizar o email de teste
+    Route::get('/emails/certificado_notificacao', [EnviaEmailParametroController::class, 'personalizeEmail'])->name('emails.certificado_notificacao');
+
+    // Teste de envio de email
+    route::get('/test-envio-email', function () {
+        $name = 'Jhon Amorim';
+        Mail::to('jhon.macc92@gmail.com')->send(new MyTestEmail($name));
+    });
     // Testa o funcionamento do no laravel
     Route::get('/vue-test', function () {
         return view('vue.index');

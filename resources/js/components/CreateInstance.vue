@@ -2,7 +2,9 @@
     <div class="mx-auto p-6 bg-neutral-900 text-white shadow-md rounded-lg">
         <!-- Botão para abrir o modal -->
         <div class="flex justify-between items-center">
+            <Tag class="text-3xl bg-gray-800 text-white">
             <h2 class="text-xl font-bold ">Lista de Instâncias</h2>
+            </Tag>
             <button @click="openModal"
                 class="mb-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md">
                 + INSTÂNCIA
@@ -47,20 +49,26 @@
                 </form>
             </div>
         </div>
-        <!-- Modal para exibir o QR Code -->
+       <!-- Modal para exibir o QR Code -->
         <div v-if="showQrCodeModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div class="bg-neutral-900 text-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                <h2 class="text-xl font-semibold mb-4">Conectar via QR Code</h2>
-                <div v-if="qrCodeUrl">
-                    <img :src="qrCodeUrl" alt="QR Code para conexão" class="mx-auto" />
-                </div>
-                <p v-else>Carregando QR Code...</p>
-                <div class="flex justify-end mt-6">
-                    <button @click="closeQrCodeModal"
-                        class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded-md">
-                        Fechar
-                    </button>
-                </div>
+            <h2 class="text-xl font-semibold mb-4">Conectar via QR Code</h2>
+
+            <div v-if="qrCodeUrl">
+                <img :src="qrCodeUrl" alt="QR Code para conexão" class="mx-auto" />
+            </div>
+
+            <div v-else class="flex justify-center items-center">
+                <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="transparent"
+                                animationDuration=".5s" aria-label="Carregando QR Code..." />
+                <p class="ml-2">Carregando QR Code...</p>
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button @click="closeQrCodeModal" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded-md">
+                Fechar
+                </button>
+            </div>
             </div>
         </div>
         <!-- Lista de Instâncias -->
@@ -70,17 +78,26 @@
                 class="mb-4 w-full px-3 py-2 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 <div v-if="instances.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4" style="width: 70rem;">
                 <div v-for="(instance, index) in filteredInstances" :key="index"
-                    class="p-4 bg-neutral-900 border border-gray-300 rounded-md flex justify-between items-center cursor-pointer hover:bg-green-800"
+                    class="p-4 bg-neutral-900 border-b-4 border-gray-700 border-t-4 border-r-4 border-l-4 shadow-sm rounded-2xl flex justify-between items-center cursor-pointer hover:bg-gray-700 "
                     @click="showQrCode(instance)">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2  lg:grid-cols-2 gap-2 text-sm">
-                        <p><strong>Nome Instância:</strong> {{ instance.instanceName }}</p>
-                        <p><strong>Número:</strong> {{ formatPhoneNumber(instance.owner) }}</p>
-                        <p><strong> <img :src="instance.profilePictureUrl" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover"></strong> {{ instance.profileName }}</p>
-                        <p class="p-0 m-0">
-                            <strong></strong> {{ translateStatus(instance.status) }}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-2 text-sm">
+                        <Tag><strong>Nome Instância:</strong> {{ instance.instanceName }}</Tag>
+                        <Tag><strong>Número:</strong> {{ formatPhoneNumber(instance.owner) }}</Tag>
+                        <Tag>
+                       <img :src="instance.profilePictureUrl" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover">
+                    </Tag>
+                        <Tag class="p-0 m-0">
+                            {{ translateStatus(instance.status) }}
                             <i :class="getStatusIconColor(instance.status)"
                             class="fas fa-circle m-0 p-0 text-xs mr-2"></i>
-                        </p>
+                        </Tag>
+                        <Tag> {{ instance.profileName }} </Tag>
+                        <div class="card flex justify-center">
+                             <!-- Botão 'Ir para a Tela' -->
+                <div class="card flex justify-center">
+                    <Button label="Enviar Mensagens" :href="instance.url" class="p-button-primary" />
+                </div>
+                    </div>
                     </div>
                     <!-- Ações de instância -->
                     <div class="flex space-x-3">
@@ -96,19 +113,38 @@
             <p v-else>Não há instâncias disponíveis.</p>
         </div>
         <!-- Mensagem de resposta ou erro -->
-        <div v-if="response" class="mt-6 p-4 bg-green-100 text-green-800 border border-green-300 rounded-md">
+        <!-- <div v-if="response" class="mt-6 p-4 bg-green-100 text-green-800 border border-green-300 rounded-md">
             <strong>Sucesso:</strong> {{ response }}
         </div>
         <div v-if="errorMessage" class="mt-6 p-4 bg-red-100 text-red-800 border border-red-300 rounded-md">
             <strong>Erro:</strong> {{ errorMessage }}
-        </div>
+        </div> -->
     </div>
+     <!-- Barra Loading -->
+     <div v-if="isLoading" class="items-center justify-center z-50 bg-black bg-opacity-50">
+            <ProgressBar mode="indeterminate"  style="height: 6px"></ProgressBar>
+        </div>
 </template>
 
 <script>
 import axios from 'axios';
+import ProgressBar from 'primevue/progressbar';
+import ProgressSpinner from 'primevue/progressspinner';
+import Tag from 'primevue/tag';
+import Button from 'primevue/button';
 
 export default {
+    props: {
+    url: {
+      type: String,
+      required: true
+    }
+  },
+    components: {
+    ProgressBar,
+    ProgressSpinner,
+    Tag
+},
     data() {
         return {
             instanceName: '',
@@ -121,6 +157,7 @@ export default {
             showQrCodeModal: false,
             qrCodeBase64: '',
             monitoringConnection: null,
+            isLoading: false,
         };
     },
     computed: {
@@ -164,6 +201,7 @@ export default {
     },
         async createInstance() {
             try {
+                this.isLoading = true;
                 const formData = new FormData();
                 formData.append('instanceName', this.instanceName);
                 formData.append('token', this.token);
@@ -175,20 +213,25 @@ export default {
                 this.closeModal(); // Fecha o modal
             } catch (error) {
                 this.errorMessage = error.response ? error.response.data.message : error.message;
+            } finally {
+                this.isLoading = false; // Oculta a barra de progresso
             }
         },
         async fetchInstances() {
             try {
+                this.isLoading = true;
                 const response = await axios.get('/instance/fetchInstances');
                 this.instances = response.data.data.map(item => item.instance);
             } catch (error) {
                 this.instances = [];
                 this.errorMessage = error.response ? error.response.data.message : 'Erro ao listar as instâncias.';
+            } finally {
+                this.isLoading = false; // Oculta a barra de progresso
             }
         },
         async deleteInstance(instance) {
             try {
-                // Faz a requisição de exclusão usando um caminho relativo
+                this.isLoading = true; // Exibe a barra de progresso
                 const response = await axios.delete(`/instance/deleteAndLogout/${instance.instanceName}`);
 
                 if (response.data.status === 'success') {
@@ -203,29 +246,30 @@ export default {
                 } else {
                     this.errorMessage = error.response ? error.response.data.message : error.message;
                 }
+            } finally {
+                this.isLoading = false; // Oculta a barra de progresso
             }
         },
-
         async showQrCode(instance) {
             this.showQrCodeModal = true;
+            this.qrCodeUrl = null; // Limpa o QR Code anterior
 
-            // console.log('Instância:', instance); // Log para debug dados da instancia
-
-            // Busca o QR Code
-            await axios.get(`http://localhost:8002/instance/connect/${instance.instanceName}`, {
+            try {
+                const response = await axios.get(`http://localhost:8002/instance/connect/${instance.instanceName}`, {
                 headers: {
                     apikey: 'J6P756FCDA4D4FD5936555990E718741'
                 }
-            })
-                .then(response => {
-                    this.qrCodeBase64 = response.data.base64;
-
-                    // Inicia o monitoramento do status de conexão
-                    this.monitorConnection(instance.instanceName);
-                })
-                .catch(error => {
-                    console.error('Erro ao buscar o QR Code:', error);
                 });
+
+                this.qrCodeBase64 = response.data.base64;
+                this.qrCodeUrl = `data:image/png;base64,${this.qrCodeBase64}`;
+
+                // Inicia o monitoramento do status de conexão
+                this.monitorConnection(instance.instanceName);
+
+            } catch (error) {
+                console.error('Erro ao buscar o QR Code:', error);
+            }
         },
         async monitorConnection(instanceName) {
             this.monitoringConnection = setInterval(async () => {
@@ -253,17 +297,13 @@ export default {
                 }
             }, 2000);
         },
-
-
         closeQrCodeModal() {
             this.showQrCodeModal = false;
-
             // Para o monitoramento se o modal for fechado manualmente
             if (this.monitoringConnection) {
                 clearInterval(this.monitoringConnection);
                 this.monitoringConnection = null;
             }
-
             this.fetchInstances();
         },
 

@@ -24,6 +24,7 @@
         "alpinejs": "^3.14.1",
         "bootstrap": "^5.3.3",
         "bootstrap-select": "^1.13.18",
+        "primeicons": "^7.0.0",
         "primevue": "^4.0.5",
         "vue": "^3.4.33",
         "vue-multiselect": "^3.0.0",

@@ -12,6 +12,7 @@ class Certification extends Model
     protected $fillable =
     [
     'name',
+    'email',
     'validTo_time_t',
     'cnpj_cpf',
     'societario',

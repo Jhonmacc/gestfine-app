@@ -237,7 +237,6 @@ class InstanceController extends Controller
             ], $response->status());
         }
     }
-
     private function handleException(\Exception $e, string $message)
     {
         return response()->json([

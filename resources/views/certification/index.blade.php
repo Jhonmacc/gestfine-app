@@ -174,14 +174,27 @@ cursor: pointer;
                     <div class="col-md-6">
                         <label for="numero" class="form-label">Número/Celular</label>
                         <input type="text" class="form-control numero-input-mask" id="numero" name="numero">
-                            <div class="flex items-center p-2 mb-2 text-xs text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300 dark:border-yellow-800" role="alert">
+                            <span class="flex absolute items-center p-2 mb-2 text-xs text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300 dark:border-yellow-800" role="alert">
                                 <svg class="flex-shrink-0 inline w-3 h-3 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                                 </svg>
                                 <span class="sr-only">Info</span>
-                        <div>
-                            <span class="font-medium text-sm">Atenção!</span> Digite o número com DDD seguido pelo dígito 9. Exemplo: (62) 95555-5555
-                            </div>
+                        <p>
+                            <span class="font-medium text-sm flex ">Atenção!</span> Digite o número com DDD seguido pelo dígito 9. Exemplo: (62) 95555-5555
+                            </p>
+                        </span>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">E-mail</label>
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                            placeholder="example@example.com"
+                        >
+                        <div class="invalid-feedback">
+                            Por favor, insira um e-mail válido.
                         </div>
                     </div>
                     <div class="col-12">
@@ -242,6 +255,19 @@ cursor: pointer;
                                   <span class="font-medium text-sm">Atenção!</span> Digite o número com DDD seguido pelo dígito 9. Exemplo: (62) 95555-5555
                                 </div>
                               </div>
+                              <div class="col-md-6">
+                                <label for="editEmail" class="form-label">E-mail</label>
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    id="editEmail"
+                                    name="email"
+                                    placeholder="example@example.com"
+                                >
+                                <div class="invalid-feedback">
+                                    Por favor, insira um e-mail válido.
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -282,6 +308,7 @@ cursor: pointer;
                     <th class="text-center cnpj-column">Razão Social e CNPJ/CPF</th>
                     <th class="text-center societario-column">Observacão</th>
                     <th class="text-center numero-column">Número</th>
+                    <th class="text-center email-column">E-mail</th>
                     <th class="text-center status-column">Dias Para Vencimento</th>
                     <th class="text-center senha-column">Senhas</th>
                     <th class="text-center download-column">Download</th>
@@ -324,6 +351,9 @@ cursor: pointer;
                             <td class="numero-column">
                                 <input style="width: 160px; white-space: nowrap;" type="text" value="{{ $certificate->numero }}" class="form-control numero-input numero-input-mask" data-id="{{ $certificate->id }}" />
                             </td>
+                            <td class="email-column">
+                                <input style="width: 160px; white-space: nowrap;" type="email" value="{{ $certificate->email }}" class="form-control email-input" data-id="{{ $certificate->id }}" />
+                            </td>
                             <td class="status-column" style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
                                 @if ($daysUntilExpiry <= 0)
                                     Vencido
@@ -361,24 +391,29 @@ cursor: pointer;
             buttons: [
                 {
                     extend: 'collection',
-                    text: 'Imprimir',
-                    className: 'font-bold py-2 px-2 rounded',
-                    buttons: [
-                        { extend: 'copy', exportOptions: { columns: ':visible' }, text: 'Copiar', className: 'font-bold py-2 px-2 rounded' },
-                        { extend: 'csv', exportOptions: { columns: ':visible' }, text: 'Exportar CSV', className: 'font-bold py-2 px-2 rounded' },
-                        { extend: 'excel', exportOptions: { columns: ':visible' }, text: 'Exportar Excel', className: 'font-bold py-2 px-2 rounded' },
-                        { extend: 'pdfHtml5', orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: ':visible' }, text: 'Exportar PDF', className: 'font-bold py-2 px-2 rounded' },
-                        { extend: 'print', exportOptions: { columns: ':visible' }, text: 'Imprimir', className: 'font-bold py-2 px-2 rounded' },
-                    ]
-                },
-                { extend: 'colvis', text: 'Ocultar Colunas', className: 'font-bold py-2 px-2 rounded' },
-            ],
-            responsive: true,
-            rowReorder: { selector: 'td:nth-child(2)' },
-            language: { url: '//cdn.datatables.net/plug-ins/2.0.1/i18n/pt-BR.json' },
-            lengthMenu: [10, 25, 50, 100, 1000],
-            pageLength: 10
-        });
+                text: 'Imprimir',
+                className: 'font-bold py-2 px-2 rounded',
+                buttons: [
+                    { extend: 'copy', text: 'Copiar', className: 'font-bold py-2 px-2 rounded', exportOptions: { columns: ':visible', format: { body: (data, row, column, node) => getInputValue(node) } } },
+                    { extend: 'csv', text: 'Exportar CSV', className: 'font-bold py-2 px-2 rounded', exportOptions: { columns: ':visible', format: { body: (data, row, column, node) => getInputValue(node) } } },
+                    { extend: 'excel', text: 'Exportar Excel', className: 'font-bold py-2 px-2 rounded', exportOptions: { columns: ':visible', format: { body: (data, row, column, node) => getInputValue(node) } } },
+                    { extend: 'pdfHtml5', text: 'Exportar PDF', orientation: 'landscape', pageSize: 'LEGAL', className: 'font-bold py-2 px-2 rounded', exportOptions: { columns: ':visible', format: { body: (data, row, column, node) => getInputValue(node) } } },
+                    { extend: 'print', text: 'Imprimir', className: 'font-bold py-2 px-2 rounded', exportOptions: { columns: ':visible', format: { body: (data, row, column, node) => getInputValue(node) } } }
+                ]
+            },
+            { extend: 'colvis', text: 'Ocultar Colunas', className: 'font-bold py-2 px-2 rounded' }
+        ],
+        responsive: true,
+        rowReorder: { selector: 'td:nth-child(2)' },
+        language: { url: '//cdn.datatables.net/plug-ins/2.0.1/i18n/pt-BR.json' },
+        lengthMenu: [10, 25, 50, 100, 1000],
+        pageLength: 10
+    });
+
+        // Função para obter o valor de um input ou texto
+        function getInputValue(node) {
+            return $(node).find('input').length ? $(node).find('input').val() : $(node).text();
+        }
         // Função para aplicar filtros com base no status e tipo de integrante selecionado
         function applyFilters() {
           var status = $('#statusFilter').val();
@@ -428,6 +463,7 @@ cursor: pointer;
           var certificatoName = $(this).data('name');
           var societario = $(this).closest('tr').find('.societario-column').text();
           var numero = $(this).closest('tr').find('.numero-input').val().trim();
+          var email = $(this).closest('tr').find('.email-input').val().trim();
           var tipo_integrante = $(this).closest('tr').find('.type-column').text().trim(); // Ajuste o índice da célula para o tipo de integrante se necessário
 
           // Defina a URL de atualização do formulário
@@ -444,6 +480,8 @@ cursor: pointer;
           }
 
           $('#editNumero').val(numero);
+
+          $('#editEmail').val(email);
 
           // Defina o nome do certificado no label
           $('#currentCertificateName').text(certificatoName);
@@ -555,7 +593,7 @@ cursor: pointer;
 
           // Requisição AJAX para salvar o número
           $.ajax({
-            url: window.baseUrl + '/certification/update-number', // Atualize com a rota correta
+            url: window.baseUrl + '/certification/update-number',
             type: 'POST'
             , data: {
               "_token": "{{ csrf_token() }}"
@@ -581,6 +619,43 @@ cursor: pointer;
           });
         });
       });
+      // Evento blur para salvar o email
+      $(document).on('blur', '.email-input', function() {
+          const input = $(this);
+          let email = input.val();
+          const certificateId = input.data('id');
+
+          // Se o campo estiver vazio, enviar um valor vazio
+          if (email === '') {
+            email = null;
+          }
+          // Requisição AJAX para salvar o Email
+          $.ajax({
+            url: window.baseUrl + '/certification/update-email',
+            type: 'POST'
+            , data: {
+              "_token": "{{ csrf_token() }}"
+              , "email": email, // Nome da coluna no banco de dados
+              "id": certificateId
+            }
+            , success: function(response) {
+              swal({
+                title: "Sucesso!"
+                , text: "O Email foi salvo com sucesso!"
+                , icon: "success"
+                , timer: 1000
+                , buttons: false
+              });
+            }
+            , error: function(xhr, status, error) {
+              swal({
+                title: "Ops!"
+                , text: "Houve um erro ao salvar o Email."
+                , icon: "error"
+              });
+            }
+          });
+        });
 
     </script>
     <script>

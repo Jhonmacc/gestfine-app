@@ -1,10 +1,9 @@
 <template>
     <div class="w-1/2 mx-auto p-8 bg-neutral-900 text-white shadow-md rounded-full">
         <Tag
-        class="text-4xl font-semibold mb-4">
-        <h4 class="text-white font-bold"> Enviar Mensagem via WhatsApp</h4>
-    </Tag>
-
+            class="text-4xl font-semibold mb-4">
+            <h4 class="text-white font-bold"> Enviar Mensagem via WhatsApp</h4>
+        </Tag>
         <form @submit.prevent="sendMessage">
             <div class="mb-4">
                 <Tag for="instanceopen" class="card block text-sm font-medium mb-1">Instância</Tag>
@@ -59,12 +58,14 @@ Para quebrar uma linha, insira uma quebra de linha \n na mensagem."
             </button>
             <div v-if="progress" class="mt-4">
                 <p :class="progress.percentage === 100 ? 'text-green-500' : 'text-red-500'">{{ progress.message }}</p>
-                <p v-if="progress.percentage !== 100" class="text-green-500">Progresso: {{ progress.percentage }}%</p>
-                <p v-if="progress.failureNumbers.length > 0" class="text-red-500">
+                <ProgressBar :value="progress.percentage" class="mt-2" />
+                <Message severity="error" v-if="progress.failureNumbers.length > 0">
                     Esses são os números que falharam no recebimento da mensagem
                     ({{ progress.failureNumbers.join(', ') }}).
-                </p>
-                <p class="text-green-500">O restantes dos números receberam a mensagem com sucesso! 😁</p>
+                </Message>
+                    <Message class="mt-4" v-if="progress.failureNumbers.length > 0" severity="success">
+                        O restante dos números receberam a mensagem com sucesso! 😁
+                    </Message>
             </div>
             <div v-if="errorMessage" class="mt-4 text-red-500">{{ errorMessage }}</div>
         </form>
@@ -75,6 +76,8 @@ Para quebrar uma linha, insira uma quebra de linha \n na mensagem."
 import { ref, computed } from 'vue';
 import MultiSelect from 'primevue/multiselect';
 import Tag from 'primevue/tag';
+import ProgressBar from 'primevue/progressbar';
+import Message from 'primevue/message';
 import axios from 'axios';
 
 const textMessage = ref('');
@@ -84,7 +87,7 @@ const instances = ref([]);
 const selectedInstance = ref('');
 const selectedNumbers = ref([]);
 const numbers = ref([]);
-const progress = ref(null);
+const progress = ref({ percentage: 0, message: '', failureNumbers: [] });
 
 const openInstances = computed(() => {
     return instances.value.filter(instance => instance.status === 'open');

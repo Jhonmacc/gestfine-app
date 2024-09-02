@@ -141,6 +141,7 @@ class CertificationController extends Controller
             'societario' => 'nullable|string',
             // 'tipo_integrante' => 'required|string|in:Membro do quadro societário,Representante da pessoa jurídica',
             'numero' => 'nullable|string',
+            'email' => 'nullable|string',
         ]);
 
         // Captura o arquivo e a senha do certificado do request
@@ -149,6 +150,7 @@ class CertificationController extends Controller
         $societario = $request->input('societario');
         // $tipoIntegrante = $request->input('tipo_integrante');
         $numeroIntegrante = $request->input('numero');
+        $email = $request->input('email');
 
         // Lê o conteúdo do arquivo do certificado
         $pfxContent = file_get_contents($certificateFile->getPathName());
@@ -183,6 +185,7 @@ class CertificationController extends Controller
         $certification->societario = $societario;
         // $certification->tipo_integrante = $tipoIntegrante;
         $certification->numero = $numeroIntegrante;
+        $certification->email = $email;
         $certification->certificate_path = $filePath; // Armazena o caminho do arquivo
         $certification->senhas = $certPassword; // Armazena a senha
         $certification->save();
@@ -221,6 +224,7 @@ class CertificationController extends Controller
         'societario' => 'nullable|string',
         // 'tipo_integrante' => 'nullable|string',
         'numero' => 'nullable|string',
+        'email' => 'nullable|string',
     ]);
 
     // Encontre o certificado existente
@@ -232,6 +236,7 @@ class CertificationController extends Controller
     $societario = $request->input('societario');
     // $tipo_integrante = $request->input('tipo_integrante');
     $numeroIntegrante = $request->input('numero');
+    $email = $request->input('email');
 
     // Lê o conteúdo do arquivo do certificado
     $pfxContent = file_get_contents($certificateFile->getPathName());
@@ -273,6 +278,7 @@ class CertificationController extends Controller
     $certificate->societario = $societario;
     // $certificate->tipo_integrante = $tipo_integrante;
     $certificate->numero = $numeroIntegrante;
+    $certificate->email = $email;
     $certificate->certificate_path = $filePath; // Armazena o caminho do arquivo
     $certificate->senhas = $certPassword; // Armazena a senha
     $certificate->save();
@@ -332,6 +338,20 @@ class CertificationController extends Controller
         return response()->json(['message' => 'Número atualizado com sucesso']);
     }
 
+    public function updateEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'nullable|string', // Permitir que o email seja vazio
+            'id' => 'required|integer|exists:certifications,id',
+        ]);
+
+        // Atualiza o email no banco de dados
+        $certificate = Certification::find($request->input('id'));
+        $certificate->email = $request->input('email');
+        $certificate->save();
+
+        return response()->json(['message' => 'Email atualizado com sucesso']);
+    }
 
     public function destroy($id)
     {
