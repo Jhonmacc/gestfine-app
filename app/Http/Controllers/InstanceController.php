@@ -37,7 +37,58 @@ class InstanceController extends Controller
     {
         return $this->sendGetRequest('http://evolution_api:8080/instance/fetchInstances', 'Erro ao buscar instâncias');
     }
+        public function connectInstance($instanceName)
+    {
+        $url = "http://evolution_api:8080/instance/connect/{$instanceName}";
 
+        try {
+            $response = Http::withHeaders($this->getHeaders())->get($url);
+
+            if ($response->successful()) {
+                return response()->json([
+                    'status' => 'success',
+                    'base64' => $response->json()['base64'],
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Erro ao buscar o QR Code.',
+                    'error' => $response->json(),
+                ], $response->status());
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Erro ao processar a requisição.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getConnectionState($instanceName)
+    {
+        $url = "http://evolution_api:8080/instance/connectionState/{$instanceName}";
+
+        try {
+            $response = Http::withHeaders($this->getHeaders())->get($url);
+
+            if ($response->successful()) {
+                return response()->json($response->json());
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Erro ao buscar o estado da conexão.',
+                    'error' => $response->json(),
+                ], $response->status());
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Erro ao processar a requisição.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
     public function deleteAndLogoutInstance($instanceName)
     {
         // Primeiro, buscar o status da instância

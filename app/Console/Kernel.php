@@ -10,9 +10,8 @@ class Kernel extends ConsoleKernel
 {
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->job(new MonitorCertificadosJob)->dailyAt('00:00');
+        $schedule->job(new MonitorCertificadosJob)->dailyAt('8:10');
     }
-
     protected function commands(): void
     {
         $this->load(__DIR__.'/Commands');

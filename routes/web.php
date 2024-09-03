@@ -41,6 +41,8 @@ Route::middleware([
     route::get('/instance/send-message-api', [InstanceController::class, 'sendMessageApi'])->name('instance.sendMessageApi');
     Route::post('/create-instance', [InstanceController::class, 'createInstance'])->name('instance.createInstance');
     Route::get('/instance/fetchInstances', [InstanceController::class, 'fetchInstances']);
+    route::get('/instance/connect/{instanceName}', [InstanceController::class, 'connectInstance']);
+    route::get('/instance/connectionState/{instanceName}', [InstanceController::class, 'getConnectionState']);
     route::post('/send-message', [InstanceController::class, 'sendMessage']);
     route::delete('/instance/deleteAndLogout/{instanceName}', [InstanceController::class, 'deleteAndLogoutInstance']);
     // Rotas de Mensagems Whatsapp
@@ -105,7 +107,7 @@ Route::middleware([
     // Teste de envio de email
     route::get('/test-envio-email', function () {
         $name = 'Jhon Amorim';
-        Mail::to('jhon.macc92@gmail.com')->send(new MyTestEmail($name));
+        Mail::to('example@example.com')->send(new MyTestEmail($name));
     });
     // Testa o funcionamento do no laravel
     Route::get('/vue-test', function () {

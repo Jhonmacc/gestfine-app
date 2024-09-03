@@ -76,16 +76,16 @@
             <input type="text" v-model="searchInstanceName" @input="fetchInstances"
                 placeholder="Buscar por Instâncias..."
                 class="mb-4 w-full px-3 py-2 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                <div v-if="instances.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4" style="width: 70rem;">
+            <div v-if="instances.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4" style="width: 70rem;">
                 <div v-for="(instance, index) in filteredInstances" :key="index"
-                    class="p-4 bg-neutral-900 border-b-4 border-gray-700 border-t-4 border-r-4 border-l-4 shadow-sm rounded-2xl flex justify-between items-center cursor-pointer hover:bg-gray-700 "
+                    class="p-4 bg-neutral-900 border-b-4 border-gray-700 border-t-4 border-r-4 border-l-4 shadow-sm rounded-2xl flex justify-between items-center cursor-pointer hover:bg-gray-700"
                     @click="showQrCode(instance)">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-2 text-sm">
                         <Tag><strong>Nome Instância:</strong> {{ instance.instanceName }}</Tag>
                         <Tag><strong>Número:</strong> {{ formatPhoneNumber(instance.owner) }}</Tag>
                         <Tag>
-                       <img :src="instance.profilePictureUrl" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover">
-                    </Tag>
+                            <img :src="instance.profilePictureUrl" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover">
+                        </Tag>
                         <Tag class="p-0 m-0">
                             {{ translateStatus(instance.status) }}
                             <i :class="getStatusIconColor(instance.status)"
@@ -93,11 +93,9 @@
                         </Tag>
                         <Tag> {{ instance.profileName }} </Tag>
                         <div class="card flex justify-center">
-                             <!-- Botão 'Ir para a Tela' -->
-                <div class="card flex justify-center">
-                    <Button label="Enviar Mensagens" :href="instance.url" class="p-button-primary" />
-                </div>
-                    </div>
+                            <!-- Botão 'Enviar Mensagens' -->
+                            <Button  label="Enviar Mensagens" class="p-button-primary" @click.stop="redirectToSendMessage" />
+                        </div>
                     </div>
                     <!-- Ações de instância -->
                     <div class="flex space-x-3">
@@ -132,6 +130,7 @@ import ProgressBar from 'primevue/progressbar';
 import ProgressSpinner from 'primevue/progressspinner';
 import Tag from 'primevue/tag';
 import Button from 'primevue/button';
+const sendMessageUrl = 'send-message-api';
 
 export default {
     props: {
@@ -171,6 +170,9 @@ export default {
         },
     },
     methods: {
+        redirectToSendMessage() {
+        window.location.href = sendMessageUrl;
+         },
         openModal() {
             this.showModal = true;
             this.generateApiKey(); // Gera uma chave de API quando o modal é aberto
@@ -250,17 +252,12 @@ export default {
                 this.isLoading = false; // Oculta a barra de progresso
             }
         },
-        async showQrCode(instance) {
-            this.showQrCodeModal = true;
-            this.qrCodeUrl = null; // Limpa o QR Code anterior
+                async showQrCode(instance) {
+                this.showQrCodeModal = true;
+                this.qrCodeUrl = null; // Limpa o QR Code anterior
 
             try {
-                const response = await axios.get(`http://localhost:8002/instance/connect/${instance.instanceName}`, {
-                headers: {
-                    apikey: 'J6P756FCDA4D4FD5936555990E718741'
-                }
-                });
-
+                const response = await axios.get(`/instance/connect/${instance.instanceName}`);
                 this.qrCodeBase64 = response.data.base64;
                 this.qrCodeUrl = `data:image/png;base64,${this.qrCodeBase64}`;
 
@@ -271,11 +268,12 @@ export default {
                 console.error('Erro ao buscar o QR Code:', error);
             }
         },
+
         async monitorConnection(instanceName) {
             this.monitoringConnection = setInterval(async () => {
                 try {
                     console.log('Verificando status para:', instanceName);
-                    const response = await axios.get(`http://localhost:8002/instance/connectionState/${instanceName}`, {
+                    const response = await axios.get(`/instance/connectionState/${instanceName}`, {
                         headers: {
                             apikey: 'J6P756FCDA4D4FD5936555990E718741'
                         }
