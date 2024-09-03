@@ -11,6 +11,7 @@ import SendMessageApi from './components/SendMessageApi.vue';
 import SelectInstance from './components/SelectInstance.vue';
 import MultiSelect from './components/MultiSelect.vue';
 import TestApi from './components/TestApi.vue';
+import PontoForm from './components/PontoForm.vue';
 import ParameterSendEmail from './components/ParameterSendEmail.vue';
 import LogViewer from './components/LogViewer.vue';
 
@@ -85,7 +86,7 @@ const app = createApp({
 //     unstyled: true
 // });
 app.use(ToastService);
-
+app.component('ponto-form', PontoForm);
 app.component('create-instance', CreateInstance);
 app.component('send-message-api', SendMessageApi);
 app.component('select-instance', SelectInstance);

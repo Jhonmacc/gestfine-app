@@ -10,6 +10,7 @@ use App\Http\Controllers\InstanceController;
 use App\Http\Controllers\ParametroController;
 use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\EnviaEmailParametroController;
+use App\Http\Controllers\ControlePontoController;
 
 Route::get('/', [LoginController::class, 'welcome']);
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -50,6 +51,7 @@ Route::middleware([
     // Rotas add números de telefone
     Route::post('/certification/update-number', [CertificationController::class, 'updateNumber']);
     Route::post('/certification/update-email', [CertificationController::class, 'updateEmail']);
+    Route::get('/folha/folha-ponto', [ControlePontoController::class, 'showForm'])->name('folha.folha-ponto');
 
     // Rotas de Controle de Certificados
     Route::get('/numbers', [NumberController::class, 'getNumbers']);
