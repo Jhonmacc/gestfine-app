@@ -2,14 +2,17 @@
 
 use App\Mail\MyTestEmail;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CnpjController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\JobLogController;
 use App\Http\Controllers\NumberController;
+use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\InstanceController;
 use App\Http\Controllers\ParametroController;
 use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\EnviaEmailParametroController;
+use App\Http\Controllers\ConsultaCnpjDatatableController;
 
 Route::get('/', [LoginController::class, 'welcome']);
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -71,17 +74,20 @@ Route::middleware([
     Route::delete('/certification/{id}/destroy', [CertificationController::class, 'destroy'])->name('certification.destroy');
 
     // --ROTAS DE ENVIO DE EMAIL--
-    route::get('/parametros/parameter-send-email', [EnviaEmailParametroController::class, 'parameterSendEmail'])->name('parametros.parameter-send-email');
-    route::get('/envia-email-parametro', [EnviaEmailParametroController::class, 'index']);
+    Route::get('/parametros/parameter-send-email', [EnviaEmailParametroController::class, 'parameterSendEmail'])->name('parametros.parameter-send-email');
+    Route::get('/envia-email-parametro', [EnviaEmailParametroController::class, 'index']);
     Route::post('/envia-email-parametro', [EnviaEmailParametroController::class, 'store']);
     Route::put('/envia-email-parametro/{id}', [EnviaEmailParametroController::class, 'update']);
     Route::delete('/envia-email-parametro/{id}', [EnviaEmailParametroController::class, 'destroy']);
     Route::post('/envia-email-parametro/toggle/{id}', [EnviaEmailParametroController::class, 'toggleStatus']);
-    route::get('/logs/monitor-logs', [JobLogController::class, 'index'])->name('logs.monitor-logs');
+    Route::get('/logs/monitor-logs', [JobLogController::class, 'index'])->name('logs.monitor-logs');
 
+    // --ROTAS DE CONSULTA DE CNPJ -
+    Route::get('/queries/queries-cnpj', [CnpjController::class, 'index'])->name('queries.queries-cnpj');
+    Route::post('/consultar-receita', [CnpjController::class, 'consultar']);
+    Route::get('/consultar-receita/{cnpj}', [ConsultaCnpjDatatableController::class, 'consultar'])->name('consultar-receita');
 
     // --ROTAS DE TESTES--
-
     // Chega a conexão com a API do Whatsapp
     Route::get('/check-connection', function () {
         try {

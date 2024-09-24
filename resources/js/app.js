@@ -13,6 +13,7 @@ import MultiSelect from './components/MultiSelect.vue';
 import TestApi from './components/TestApi.vue';
 import ParameterSendEmail from './components/ParameterSendEmail.vue';
 import LogViewer from './components/LogViewer.vue';
+import CnpjConsulta from './components/CnpjConsulta.vue';
 
 import '@mdi/font/css/materialdesignicons.min.css';
 
@@ -92,6 +93,7 @@ app.component('select-instance', SelectInstance);
 app.component('multiselect', MultiSelect);
 app.component("parameter-send-email", ParameterSendEmail);
 app.component("log-viewer", LogViewer);
+app.component("cnpj-consulta", CnpjConsulta);
 
 app.component('test-api', TestApi);
 
