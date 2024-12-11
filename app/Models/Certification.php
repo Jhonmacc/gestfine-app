@@ -8,11 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Certification extends Model
 {
     use HasFactory;
+
     protected $fillable =
     [
     'name',
+    'email',
     'validTo_time_t',
     'cnpj_cpf',
+    'societario',
+    'tipo_integrante ',
+    'numero',
+    'certificate_path',
     ];
 
 }
