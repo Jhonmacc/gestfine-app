@@ -12,11 +12,14 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link class="no-underline" href="{{ route('dashboard.index') }}" :active="request()->routeIs('dashboard')">
+                    <x-nav-link class="no-underline " href="{{ route('dashboard.index') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link class="no-underline" href="{{ route('certification.index') }}" :active="request()->routeIs('certification.index')">
+                    <x-nav-link class="no-underline text-green-500" href="{{ route('certification.index') }}" :active="request()->routeIs('certification.index')">
                         {{ __('Controle de Certificados') }}
+                    </x-nav-link>
+                    <x-nav-link class="no-underline text-blue-500" href="{{ route('queries.queries-cnpj') }}" :active="request()->routeIs('queries.queries-cnpj')">
+                        {{ __('Consuta CNPJ') }}
                     </x-nav-link>
                 </div>
             </div>

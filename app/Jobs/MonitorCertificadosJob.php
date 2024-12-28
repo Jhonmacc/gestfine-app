@@ -163,7 +163,7 @@ class MonitorCertificadosJob implements ShouldQueue
         $cleanName = $matches[1] ?? 'Nome Indisponível';
 
         // Gera o conteúdo da mensagem em texto simples
-        return "Olá, {$cleanName},\n\n{$mensagem}\n\nAtenciosamente,\nAWN Soluções Contábeis";
+        return "Olá, {$cleanName},\n\n{$mensagem}\n\nAtenciosamente,\nNome da Empresa";
     }
 
     protected function logMessage($message, $email = null, $certificado = null, $numero = null, $instancia = null)

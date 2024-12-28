@@ -298,92 +298,110 @@ cursor: pointer;
                 </div> --}}
             </div>
 
-    <div class="datatable-container overflow-auto" style="position: relative;">
-        <table id="certificates-table" class="datatable" style="width:100%; font-size: 12px;">
-            <thead>
-                <tr>
-                    <th class="text-center">Ações</th>
-                    <th class="text-center name-column">Nome</th>
-                    <th class="text-center date-column">Data</th>
-                    <th class="text-center cnpj-column">Razão Social e CNPJ/CPF</th>
-                    <th class="text-center societario-column">Observacão</th>
-                    <th class="text-center numero-column">Número</th>
-                    <th class="text-center email-column">E-mail</th>
-                    <th class="text-center status-column">Dias Para Vencimento</th>
-                    <th class="text-center senha-column">Senhas</th>
-                    <th class="text-center download-column">Download</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (isset($certificates))
-                @foreach ($certificates as $certificate)
-                    @php
-                        $validTo = strtotime($certificate->validTo_time_t);
-                        $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
-                        $bgColor = $daysUntilExpiry <= 0 ? 'rgb(255, 0, 0)' : ($daysUntilExpiry <= $daysUntilWarning ? 'rgb(255, 165, 0)' : 'rgb(60, 179, 113)');
-                        $fontColor = $daysUntilExpiry <= 0 || $daysUntilExpiry > $daysUntilWarning ? 'white' : 'black';
+            <div class="datatable-container overflow-auto" style="position: relative;">
+              <table id="certificates-table" class="datatable" style="width:100%; font-size: 12px;">
+                  <thead>
+                      <tr>
+                          <th class="text-center">Ações</th>
+                          <th class="text-center name-column">Nome</th>
+                          <th class="text-center date-column">Data</th>
+                          <th class="text-center cnpj-column">Razão Social e CNPJ/CPF</th>
+                          <th class="text-center societario-column">Observacão</th>
+                          <th class="text-center numero-column">Número</th>
+                          <th class="text-center email-column">E-mail</th>
+                          <th class="text-center status-column">Dias Para Vencimento</th>
+                          <th class="text-center senha-column">Senhas</th>
+                          <th class="text-center download-column">Download</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      @if (isset($certificates))
+                      @foreach ($certificates as $certificate)
+                          @php
+                              $validTo = strtotime($certificate->validTo_time_t);
+                              $daysUntilExpiry = ceil(($validTo - time()) / (60 * 60 * 24));
+                              $bgColor = $daysUntilExpiry <= 0 ? 'rgb(255, 0, 0)' : ($daysUntilExpiry <= $daysUntilWarning ? 'rgb(255, 165, 0)' : 'rgb(60, 179, 113)');
+                              $fontColor = $daysUntilExpiry <= 0 || $daysUntilExpiry > $daysUntilWarning ? 'white' : 'black';
 
-                        // Tratamento do nome
-                        preg_match('/CN=(.*?):\d+/', $certificate->name, $matches);
-                        $cleanName = $matches[1] ?? 'Nome Indisponível';
-                    @endphp
-                        <tr>
-                            <td>
-                                <div class="relative inline-block text-left">
-                                    <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-blue-500 px-3 py-2 text font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-700" aria-expanded="true" aria-haspopup="true" type="button" id="dropdownMenuButton{{ $certificate->id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Ações
-                                        <svg class="-mr-1 h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                                        </svg>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $certificate->id }}">
-                                        <li><a class="dropdown-item edit-btn" href="#" data-id="{{ $certificate->id }}" data-name="{{ $cleanName }}">Editar</a></li>
-                                        <li><a class="dropdown-item delete-btn" href="#" data-id="{{ $certificate->id }}" data-name="{{ $cleanName }}">Excluir</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                            <td class="name-column">{{ $cleanName }}</td>
-                            <td class="text-center align-middle date-column" data-order="{{ $certificate->validTo_time_t }}">
-                                {{ date('d/m/Y', strtotime($certificate->validTo_time_t)) }}
-                            </td>
-                            <td class="cnpj-column">{{ $certificate->cnpj_cpf }}</td>
-                            <td class="societario-column">{{ $certificate->societario }}</td>
-                            <td class="numero-column">
-                                <input style="width: 160px; white-space: nowrap;" type="text" value="{{ $certificate->numero }}" class="form-control numero-input numero-input-mask" data-id="{{ $certificate->id }}" />
-                            </td>
-                            <td class="email-column">
-                                <input style="width: 160px; white-space: nowrap;" type="email" value="{{ $certificate->email }}" class="form-control email-input" data-id="{{ $certificate->id }}" />
-                            </td>
-                            <td class="status-column" style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
-                                @if ($daysUntilExpiry <= 0)
-                                    Vencido
-                                @elseif ($daysUntilExpiry <= $daysUntilWarning)
-                                    {{ $daysUntilExpiry }} dias (Perto de Vencer)
-                                @else
-                                    {{ $daysUntilExpiry }} dias (No Prazo)
-                                @endif
-                            </td>
-                            <td class="senha-column">
-                                <fieldset class="password-fieldset">
-                                    <input style="width: 160px; white-space: nowrap;" type="password" value="{{ $certificate->senhas }}" class="form-control password-input" data-id="{{ $certificate->id }}">
-                                    <i class="toggle-password fa fa-eye"></i>
-                                </fieldset>
-                            </td>
-                            <td class="download-column">
-                                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded inline-flex items-center"
-                                        onclick="window.location.href = '{{ route('certification.download', $certificate->id) }}';">
-                                    <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
-                                    </svg>
-                                    <span>Download</span>
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                @endif
-            </tbody>
-        </table>
+                              // Tratamento do nome
+                              preg_match('/CN=(.*?):\d+/', $certificate->name, $matches);
+                              $cleanName = $matches[1] ?? 'Nome Indisponível';
+                          @endphp
+                              <tr>
+                                  <td>
+                                      <div class="relative inline-block text-left">
+                                          <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-blue-500 px-3 py-2 text font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-700" aria-expanded="true" aria-haspopup="true" type="button" id="dropdownMenuButton{{ $certificate->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                              Ações
+                                              <svg class="-mr-1 h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                              </svg>
+                                          </button>
+                                          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $certificate->id }}">
+                                              <li><a class="dropdown-item edit-btn" href="#" data-id="{{ $certificate->id }}" data-name="{{ $cleanName }}">Editar</a></li>
+                                              <li><a class="dropdown-item delete-btn" href="#" data-id="{{ $certificate->id }}" data-name="{{ $cleanName }}">Excluir</a></li>
+                                              <li><a class="dropdown-item consult-cnpj-btn" href="#" data-cnpj="{{ trim(preg_replace('/[^0-9]/', '', $certificate->cnpj_cpf)) }}">Consultar CNPJ</a></li>
+                                          </ul>
+                                      </div>
+                                  </td>
+                                  <td class="name-column">{{ $cleanName }}</td>
+                                  <td class="text-center align-middle date-column" data-order="{{ $certificate->validTo_time_t }}">
+                                      {{ date('d/m/Y', strtotime($certificate->validTo_time_t)) }}
+                                  </td>
+                                  <td class="cnpj-column">{{ $certificate->cnpj_cpf }}</td>
+                                  <td class="societario-column">{{ $certificate->societario }}</td>
+                                  <td class="numero-column">
+                                      <input style="width: 160px; white-space: nowrap;" type="text" value="{{ $certificate->numero }}" class="form-control numero-input numero-input-mask" data-id="{{ $certificate->id }}" />
+                                  </td>
+                                  <td class="email-column">
+                                      <input style="width: 160px; white-space: nowrap;" type="email" value="{{ $certificate->email }}" class="form-control email-input" data-id="{{ $certificate->id }}" />
+                                  </td>
+                                  <td class="status-column" style="background-color: {{ $bgColor }}; color: {{ $fontColor }};">
+                                      @if ($daysUntilExpiry <= 0)
+                                          Vencido
+                                      @elseif ($daysUntilExpiry <= $daysUntilWarning)
+                                          {{ $daysUntilExpiry }} dias (Perto de Vencer)
+                                      @else
+                                          {{ $daysUntilExpiry }} dias (No Prazo)
+                                      @endif
+                                  </td>
+                                  <td class="senha-column">
+                                      <fieldset class="password-fieldset">
+                                          <input style="width: 160px; white-space: nowrap;" type="password" value="{{ $certificate->senhas }}" class="form-control password-input" data-id="{{ $certificate->id }}">
+                                          <i class="toggle-password fa fa-eye"></i>
+                                      </fieldset>
+                                  </td>
+                                  <td class="download-column">
+                                      <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded inline-flex items-center"
+                                              onclick="window.location.href = '{{ route('certification.download', $certificate->id) }}';">
+                                          <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                              <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
+                                          </svg>
+                                          <span>Download</span>
+                                      </button>
+                                  </td>
+                              </tr>
+                          @endforeach
+                      @endif
+                  </tbody>
+              </table>
+          </div>
+
+         <!-- Modal for CNPJ Consultation -->
+<div class="modal fade" id="cnpjModal" tabindex="-1" aria-labelledby="cnpjModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg"> <!-- Ajuste aqui para aumentar a largura -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cnpjModalLabel">Consultar CNPJ</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="cnpjInfo"></div>
+        </div>
+      </div>
     </div>
+  </div>
+
+
     <script>
       $(document).ready(function() {
         var table = $('#certificates-table').DataTable({
@@ -719,5 +737,85 @@ cursor: pointer;
       });
 
     </script>
+   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.consult-cnpj-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                const cnpj = e.currentTarget.dataset.cnpj;
+                const modalBody = document.querySelector('#cnpjInfo');
+
+                try {
+                    const url = `/consultar-receita/${cnpj}`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+
+                    // Formatar as datas
+                    const formatDate = (dateString) => {
+                        if (!dateString) return '';
+                        return new Date(dateString).toLocaleDateString('pt-BR');
+                    };
+
+                    // Atualizar o conteúdo do modal com as informações retornadas
+                    modalBody.innerHTML = `
+                        <div class="mt-8">
+                            <h3 class="text-lg font-semibold">Dados da Empresa</h3>
+                            <ul class="list-disc ml-4">
+                                ${data.status ? `<li><strong>Status:</strong> ${data.status}</li>` : ''}
+                                ${data.ultima_atualizacao ? `<li><strong>Última Atualização:</strong> ${formatDate(data.ultima_atualizacao)}</li>` : ''}
+                                ${data.cnpj ? `<li><strong>CNPJ:</strong> ${data.cnpj}</li>` : ''}
+                                ${data.tipo ? `<li><strong>Tipo:</strong> ${data.tipo}</li>` : ''}
+                                ${data.porte ? `<li><strong>Porte:</strong> ${data.porte}</li>` : ''}
+                                ${data.nome ? `<li><strong>Nome:</strong> ${data.nome}</li>` : ''}
+                                ${data.fantasia ? `<li><strong>Nome Fantasia:</strong> ${data.fantasia}</li>` : ''}
+                                ${data.abertura ? `<li><strong>Abertura:</strong> ${formatDate(data.abertura)}</li>` : ''}
+                                ${data.atividade_principal ? `
+                                    <li><strong>Atividade Principal:</strong>
+                                        <ul class="ml-4 list-disc">
+                                            ${data.atividade_principal.map(a => `<li>${a.code} - ${a.text}</li>`).join('')}
+                                        </ul>
+                                    </li>` : ''}
+                                ${data.atividades_secundarias ? `
+                                    <li><strong>Atividades Secundárias:</strong>
+                                        <ul class="ml-4 list-disc">
+                                            ${data.atividades_secundarias.map(a => `<li>${a.code} - ${a.text}</li>`).join('')}
+                                        </ul>
+                                    </li>` : ''}
+                                ${data.logradouro || data.numero || data.bairro ? `<li><strong>Endereço:</strong> ${data.logradouro}, ${data.numero}, ${data.bairro}</li>` : ''}
+                                ${data.cep ? `<li><strong>CEP:</strong> ${data.cep}</li>` : ''}
+                                ${data.municipio ? `<li><strong>Município:</strong> ${data.municipio}</li>` : ''}
+                                ${data.uf ? `<li><strong>Estado:</strong> ${data.uf}</li>` : ''}
+                                ${data.email ? `<li><strong>Email:</strong> ${data.email}</li>` : ''}
+                                ${data.telefone ? `<li><strong>Telefone:</strong> ${data.telefone}</li>` : ''}
+                                ${data.efr ? `<li><strong>Ente Federativo Responsável:</strong> ${data.efr}</li>` : ''}
+                                ${data.situacao ? `<li><strong>Situação:</strong> ${data.situacao}</li>` : ''}
+                                ${data.data_situacao ? `<li><strong>Data da Situação:</strong> ${formatDate(data.data_situacao)}</li>` : ''}
+                                ${data.capital_social ? `<li><strong>Capital Social:</strong> R$ ${data.capital_social}</li>` : ''}
+                                ${data.qsa ? `
+                                    <li><strong>Quadro Societário:</strong>
+                                        <ul class="ml-4 list-disc">
+                                            ${data.qsa.map(socio => `<li>Nome: ${socio.nome}, Qualificação: ${socio.qual}, País de Origem: ${socio.pais_origem}, Nome do Representante Legal: ${socio.nome_rep_legal}, Qualificação do Representante Legal: ${socio.qual_rep_legal}</li>`).join('')}
+                                        </ul>
+                                    </li>` : ''}
+                                ${data.simples ? `<li><strong>Simples Nacional:</strong> Optante: ${data.simples.optante ? 'Sim' : 'Não'}, Data de Opção: ${formatDate(data.simples.data_opcao)}, Data de Exclusão: ${formatDate(data.simples.data_exclusao)}, Última Atualização: ${formatDate(data.simples.ultima_atualizacao)}</li>` : ''}
+                                ${data.simei ? `<li><strong>MEI:</strong> Optante: ${data.simei.optante ? 'Sim' : 'Não'}, Data de Opção: ${formatDate(data.simei.data_opcao)}, Data de Exclusão: ${formatDate(data.simei.data_exclusao)}, Última Atualização: ${formatDate(data.simei.ultima_atualizacao)}</li>` : ''}
+                                ${data.billing ? `<li><strong>Billing:</strong> Gratuita: ${data.billing.free ? 'Sim' : 'Não'}, Banco de Dados: ${data.billing.database ? 'Sim' : 'Não'}</li>` : ''}
+                            </ul>
+                        </div>
+                    `;
+
+                    // Mostrar o modal
+                    new bootstrap.Modal(document.getElementById('cnpjModal')).show();
+                } catch (error) {
+                    console.error('Erro ao consultar CNPJ:', error);
+                    modalBody.innerHTML = `<p>Erro ao consultar CNPJ. Tente novamente mais tarde.</p>`;
+                    new bootstrap.Modal(document.getElementById('cnpjModal')).show();
+                }
+            });
+        });
+    });
+    </script>
+
 
     @endsection
