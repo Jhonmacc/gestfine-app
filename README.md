@@ -1,66 +1,79 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Gest-Fine - Sistema de Gestão de Certificados Digitais 🚀
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Bem-vindo ao **Gest-Fine**, uma solução inovadora desenvolvida para **contabilidades** que oferece uma gestão eficiente e intuitiva de certificados digitais. Este sistema combina tecnologias modernas e funcionalidades robustas para facilitar o monitoramento e renovação de certificados, proporcionando segurança e agilidade para os seus usuários.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🛠️ Tecnologias Utilizadas
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Back-end:** PHP + Laravel
+- **Containerização:** Docker Compose      
+- **Banco de Dados:** MariaDB  
+- **Front-end:** Vue.js + Tailwind CSS  
+- **Workers:** Gerenciamento de tarefas em segundo plano (envio de e-mails, notificações, processamento de arquivos e integração com filas de mensagens).  
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ✨ Funcionalidades Principais
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Monitoramento em Tempo Real**  
+  Receba notificações automáticas sobre os prazos de vencimento dos certificados.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Integração Completa**  
+  Envio de mensagens via WhatsApp e E-mail para alertar os clientes sobre certificados vencidos ou próximos do vencimento, com configurações totalmente personalizáveis.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Renovação Simplificada**  
+  Facilita o processo de renovação de certificados expirados.
 
-## Laravel Sponsors
+- **Quadro Societário Atualizado**  
+  Controle e gestão do quadro societário dos clientes com praticidade e precisão.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Dashboard Intuitivo**  
+  Gráficos e visualizações claras para monitoramento eficiente.
 
-### Premium Partners
+- **Gestão de Usuários**  
+  Gerencie usuários e níveis de permissão para maior segurança e controle.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- **Autenticação Segura**  
+  Sistema robusto de login com verificação de status (ativo/inativo).
 
-## Contributing
+- **Parametrização Avançada**  
+  Altamente configurável para atender às necessidades específicas dos clientes.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Integração com Pexels**  
+  Imagens de fundo dinâmicas e aleatórias na tela de login, garantindo um visual moderno e atrativo.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🔒 Segurança e Confiabilidade
 
-## Security Vulnerabilities
+- Validação de senhas de certificados.
+- Gerenciamento completo e seguro de arquivos de certificados, garantindo a integridade dos dados.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 📷 Preview
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+![Tela de Controle Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQHBntEeX6S3Ug/feedshare-shrink_1280/feedshare-shrink_1280/0/1720791296334?e=1736380800&v=beta&t=GDmZcPRGNia4odpFOJ5VC-N74kiEP4dYPHz3yjiL_JM)
+
+![Dashboard do Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQHYUVH3sf7pdQ/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1720791296251?e=1736380800&v=beta&t=J6PcSA8zr2SprNaPGAB5wFV3xSHCsls6ck5xC2t6bDM)
+
+![Parâmetros do Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQFX8_fKLuIUBw/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1720791296551?e=1736380800&v=beta&t=uFmNxm-KHLoBNlsxeXCn8DtHPa6u2djf8t20-P6npEk)
+
+![Perfil Usuário no Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQHSn2c3nwoPxg/feedshare-shrink_1280/feedshare-shrink_1280/0/1720791296405?e=1736380800&v=beta&t=uqsxnknhhLSQVqDXZhW1xf8DDwM2DoX-twhkUkwJblo)
+
+![Gerenciamento de Usuário no Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQFiKhk91auytg/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1720791296034?e=1736380800&v=beta&t=RIWJDMOvhWSIVH7BnHVuxJ5W7X5-ocAZoIeZ6h3Uo7E)
+
+![Alerts Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQFpPr_2neG63g/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1720791297410?e=1736380800&v=beta&t=BWVi8MQrygpuMlhXbWsbHblabIiCoS7P0kyXfq5GqAc)
+
+![Alerts Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQHBfYr4yFcdhw/feedshare-shrink_1280/feedshare-shrink_1280/0/1720791298071?e=1736380800&v=beta&t=-P3G36Sm5qVD3yoW_haGH_v4k5vMFnpujD_idxz4fNo)
+
+---
+
+## 🏷️ Tags
+
+`#Php` `#Laravel` `#Vuejs` `#TailwindCSS` `#MariaDB` `#DesenvolvimentoWeb` `#GestãoDeCertificados` `#Inovação` `#Tecnologia`
+
+---
+
+💻 Desenvolvido com ❤️ e muita dedicação para simplificar a gestão de certificados digitais.
