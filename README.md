@@ -54,19 +54,19 @@ Bem-vindo ao **Gest-Fine**, uma solução inovadora desenvolvida para **contabil
 
 ## 📷 Preview
 
-![Tela de Controle Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQHBntEeX6S3Ug/feedshare-shrink_1280/feedshare-shrink_1280/0/1720791296334?e=1736380800&v=beta&t=GDmZcPRGNia4odpFOJ5VC-N74kiEP4dYPHz3yjiL_JM)
+![Tela de Controle Gest-Fine](https://i.imgur.com/Iajchrk.jpeg)
 
-![Dashboard do Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQHYUVH3sf7pdQ/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1720791296251?e=1736380800&v=beta&t=J6PcSA8zr2SprNaPGAB5wFV3xSHCsls6ck5xC2t6bDM)
+![Dashboard do Gest-Fine](https://i.imgur.com/xd1NRkD.jpeg)
 
-![Parâmetros do Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQFX8_fKLuIUBw/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1720791296551?e=1736380800&v=beta&t=uFmNxm-KHLoBNlsxeXCn8DtHPa6u2djf8t20-P6npEk)
+![Parâmetros do Gest-Fine](https://i.imgur.com/efexYqt.jpeg)
 
-![Perfil Usuário no Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQHSn2c3nwoPxg/feedshare-shrink_1280/feedshare-shrink_1280/0/1720791296405?e=1736380800&v=beta&t=uqsxnknhhLSQVqDXZhW1xf8DDwM2DoX-twhkUkwJblo)
+![Perfil Usuário no Gest-Fine](http://i.imgur.com/aNE76nM.jpeg)
 
-![Gerenciamento de Usuário no Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQFiKhk91auytg/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1720791296034?e=1736380800&v=beta&t=RIWJDMOvhWSIVH7BnHVuxJ5W7X5-ocAZoIeZ6h3Uo7E)
+![Gerenciamento de Usuário no Gest-Fine](https://i.imgur.com/eK1aY5d.jpeg)
 
-![Alerts Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQFpPr_2neG63g/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1720791297410?e=1736380800&v=beta&t=BWVi8MQrygpuMlhXbWsbHblabIiCoS7P0kyXfq5GqAc)
+![Alerts Gest-Fine](https://i.imgur.com/Fyxf3Ov.jpeg)
 
-![Alerts Gest-Fine]([https://media.licdn.com/dms/image/v2/D4D22AQHBfYr4yFcdhw/feedshare-shrink_1280/feedshare-shrink_1280/0/1720791298071?e=1736380800&v=beta&t=-P3G36Sm5qVD3yoW_haGH_v4k5vMFnpujD_idxz4fNo](https://drive.google.com/file/d/1-6Wy2w1YH5b1rLOnx98ByIN1gJ8vWVlI/view?usp=drive_link))
+![Alerts Gest-Fine](https://i.imgur.com/Ht1J6mg.jpeg)
 
 ---
 
