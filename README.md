@@ -66,7 +66,7 @@ Bem-vindo ao **Gest-Fine**, uma solução inovadora desenvolvida para **contabil
 
 ![Alerts Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQFpPr_2neG63g/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1720791297410?e=1736380800&v=beta&t=BWVi8MQrygpuMlhXbWsbHblabIiCoS7P0kyXfq5GqAc)
 
-![Alerts Gest-Fine](https://media.licdn.com/dms/image/v2/D4D22AQHBfYr4yFcdhw/feedshare-shrink_1280/feedshare-shrink_1280/0/1720791298071?e=1736380800&v=beta&t=-P3G36Sm5qVD3yoW_haGH_v4k5vMFnpujD_idxz4fNo)
+![Alerts Gest-Fine]([https://media.licdn.com/dms/image/v2/D4D22AQHBfYr4yFcdhw/feedshare-shrink_1280/feedshare-shrink_1280/0/1720791298071?e=1736380800&v=beta&t=-P3G36Sm5qVD3yoW_haGH_v4k5vMFnpujD_idxz4fNo](https://drive.google.com/file/d/1-6Wy2w1YH5b1rLOnx98ByIN1gJ8vWVlI/view?usp=drive_link))
 
 ---
 
