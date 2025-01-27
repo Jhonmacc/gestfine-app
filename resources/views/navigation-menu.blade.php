@@ -5,18 +5,21 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('dashboard.index') }}">
                         <x-application-mark class="block h-9 w-auto" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                    <x-nav-link class="no-underline " href="{{ route('dashboard.index') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('certification.index') }}" :active="request()->routeIs('certification.index')">
+                    <x-nav-link class="no-underline text-green-500" href="{{ route('certification.index') }}" :active="request()->routeIs('certification.index')">
                         {{ __('Controle de Certificados') }}
+                    </x-nav-link>
+                    <x-nav-link class="no-underline text-blue-500" href="{{ route('queries.queries-cnpj') }}" :active="request()->routeIs('queries.queries-cnpj')">
+                        {{ __('Consuta CNPJ') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -96,35 +99,38 @@
                     </button>
                     <div id="profile-dropdown" class="hidden absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-10">
                         <!-- Dropdown content -->
-                        <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Perfil</a>
+                        <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 no-underline">Perfil</a>
                         @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                             <a href="{{ route('api-tokens.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">API Tokens</a>
                         @endif
+                        <a href="{{ route('parametros.edit-parameters') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 no-underline">Parâmetros</a>
+                        <a href="{{ route('users.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 no-underline">Usuários</a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                             @csrf
                         </form>
-                        <a href="#" onclick="document.getElementById('logout-form').submit();" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sair</a>
+                        <a href="#" onclick="document.getElementById('logout-form').submit();" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 no-underline">Sair</a>
                     </div>
                 </div>
-                <script>document.addEventListener("DOMContentLoaded", function() {
-                    var dropdownTrigger = document.getElementById('profile-dropdown-trigger');
-                    var dropdown = document.getElementById('profile-dropdown');
-                    var dropdownIcon = document.getElementById('dropdown-icon');
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        var dropdownTrigger = document.getElementById('profile-dropdown-trigger');
+                        var dropdown = document.getElementById('profile-dropdown');
+                        var dropdownIcon = document.getElementById('dropdown-icon');
 
-                    dropdownTrigger.addEventListener('click', function() {
-                        dropdown.classList.toggle('open');
-                        dropdownIcon.classList.toggle('rotate-180'); // Rotate icon when dropdown is opened
-                    });
+                        dropdownTrigger.addEventListener('click', function() {
+                            dropdown.classList.toggle('open');
+                            dropdownIcon.classList.toggle('rotate-180'); // Rotate icon when dropdown is opened
+                        });
 
-                    // Close dropdown when clicking outside
-                    document.addEventListener('click', function(event) {
-                        if (!dropdownTrigger.contains(event.target) && !dropdown.contains(event.target)) {
-                            dropdown.classList.remove('open');
-                            dropdownIcon.classList.remove('rotate-180');
-                        }
+                        // Close dropdown when clicking outside
+                        document.addEventListener('click', function(event) {
+                            if (!dropdownTrigger.contains(event.target) && !dropdown.contains(event.target)) {
+                                dropdown.classList.remove('open');
+                                dropdownIcon.classList.remove('rotate-180');
+                            }
+                        });
                     });
-                });
-                </script>
+                    </script>
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
@@ -140,7 +146,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link href="{{ route('dashboard.index') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>

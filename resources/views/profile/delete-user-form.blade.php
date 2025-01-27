@@ -8,14 +8,14 @@
     </x-slot>
 
     <x-slot name="content">
-        <div class="max-w-xl text-sm text-gray-600 dark:text-gray-400">
-            {{ __('Depois que sua conta for excluída, todos os seus recursos e dados serão excluídos permanentemente. Antes de excluir sua conta, baixe todos os dados ou informações que deseja reter.') }}
-        </div>
+        {{-- <div class="max-w-xl text-sm text-gray-600 dark:text-gray-400">
+            {{ __('Depois que sua conta for excluída, todos os seus recursos e dados serão excluídos permanentemente.') }}
+        </div> --}}
 
         <div class="mt-5">
-            <x-danger-button wire:click="confirmUserDeletion" wire:loading.attr="disabled">
-                {{ __('Deletar conta') }}
-            </x-danger-button>
+            {{-- <x-danger-button wire:click="confirmUserDeletion" wire:loading.attr="disabled">
+                {{ __('Deletar contass') }}
+            </x-danger-button> --}}
         </div>
 
         <!-- Delete User Confirmation Modal -->
